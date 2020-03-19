@@ -1,0 +1,4221 @@
+@INPROCEEDINGS{Mistry2008,
+  author = {Mistry, M. and Nakanishi, J. and Cheng, G. and Schaal, S.},
+  title = {inverse kinematics with floating base and constraints for full body
+	humanoid robot control},
+  booktitle = Humanoids,
+  year = {2008},
+  crossref = {p10199},
+  file = {Mistry2008.pdf:Mistry2008.pdf:PDF},
+  review = {This paper gives a good overview of how to do IK with a floating base
+	kinematic formulation. It also discusses prioritizing the control
+	of various limbs in various ways and describes how to get the Jacobian
+	of the robot's center of mass. A good reference for straightforward
+	jacobian and null-space control.}
+}
+
+@INPROCEEDINGS{Aboaf1989,
+  author = {E. W. Aboaf and S. M. Drucker and C. G. Atkeson},
+  title = {Task-level robot learning: Juggling a tennis ball more accurately},
+  booktitle = {},
+  year = {1989},
+  owner = {dmitry},
+  timestamp = {2009.09.18}
+}
+
+@INPROCEEDINGS{Alami1994,
+  author = {R. Alami and J.P. Laumond and T. SimÃ©on},
+  title = {Two Manipulation Planning Algorithms},
+  booktitle = WAFR,
+  year = {1994},
+  file = {:Alami1994.ps:PostScript},
+  keywords = {re-grasping, manipulation planning},
+  owner = {dmitry},
+  review = {This paper talks about the c-space of an object manipulation task
+	as composed of the c-space of the robot and the c-space of the object.
+	There is a simple example with a 2D robot re-grasping an object multiple
+	times to move it from start to goal.},
+  timestamp = {2009.01.05}
+}
+
+@INPROCEEDINGS{Arvo1995,
+  author = {James Arvo},
+  title = {Stratified Sampling of Spherical Triangles},
+  booktitle = SIGGRAPH,
+  year = {1995},
+  file = {Arvo1995.pdf:Arvo1995.pdf:PDF},
+  owner = {dmitry},
+  review = {Really short paper about how to sample uniformly from a spherical
+	triangle.},
+  timestamp = {2009.01.05}
+}
+
+@INPROCEEDINGS{Atkeson1997,
+  author = {Atkeson, C. G. and Schaal, S. },
+  title = {Learning tasks from a single demonstration},
+  booktitle = ICRA,
+  year = {1997},
+  pages = {1706--1712},
+  abstract = {Learning a complex dynamic robot manoeuvre from a single human demonstration
+	is difficult. This paper explores an approach to learning from demonstration
+	based on learning an optimization criterion from the demonstration
+	and a task model from repeated attempts to perform the task, and
+	using the learned criterion and model to compute an appropriate robot
+	movement. A preliminary version of the approach has been implemented
+	on an anthropomorphic robot arm using a pendulum swing up task as
+	an example},
+  doi = {10.1109/ROBOT.1997.614389},
+  file = {Atkeson1997.pdf:Atkeson1997.pdf:PDF},
+  keywords = {knowledge based systems, learning by example, learning systems, manipulator
+	dynamics, optimisation, anthropomorphic robot arm, dynamic robot
+	manoeuvre, knowledge based system, learning from demonstration, manipulators,
+	optimization criterion, robot movement, task learning},
+  owner = {dmitry},
+  timestamp = {2009.08.18}
+}
+
+@INPROCEEDINGS{Bayazit2005,
+  author = {Bayazit, O. B. and Xie, Dawen and Amato, N. M.},
+  title = {Iterative relaxation of constraints: a framework for improving automated
+	motion planning},
+  booktitle = IROS,
+  year = {2005},
+  pages = {3433--3440},
+  abstract = {This paper presents a technique for improving the efficiency of automated
+	motion planners. Motion planning has application in many areas such
+	as robotics, virtual reality systems, computer-aided design, and
+	even computational biology. Although there have been steady advances
+	in motion planning algorithms, especially in randomized approaches
+	such as probabilistic roadmap methods (PRMs) or rapidly-exploring
+	random trees (RRTs), there are still some classes of problems that
+	cannot be solved efficiently using these state-of-the-art motion
+	planners. In this paper, we suggest an iterative strategy addressing
+	this problem where we first simplify the problem by relaxing some
+	feasibility constraints, solve the easier version of the problem,
+	and then use that solution to help us find a solution for the harder
+	problem. We show how this strategy can be applied to rigid bodies
+	and to linkages with high degrees of freedom, including both open
+	and closed chain systems. Experimental results are presented for
+	linkages composed of 9-98 links. Although we use PRMs as the automated
+	planner, the framework is general and can be applied with other motion
+	planning techniques as well.},
+  file = {Bayazit2005.pdf:Bayazit2005.pdf:PDF},
+  keywords = {path planning, probability, automated motion planning, iterative constraint
+	relaxation, probabilistic roadmap},
+  owner = {Dmitry},
+  review = {This paper proposes to solve constrained planning by first solving
+	a relaxed version of the problem and then using that solution as
+	a starting point for more and more constrained versions of the problem.
+	It is unclear whether the solution to a less constrained problem
+	will provide any speed-up to a more constrained problem. For instance,
+	if there is a narrow passage in the less-constrained problem and
+	the planner plans a path through this region, the passage may close
+	in a more constrained version of the problem and the previous solution
+	will be useless or potentially harmful because the planner starts
+	with a bad initial guess that it has to escape from.},
+  timestamp = {2009.03.14}
+}
+
+@BOOK{Bellman1957,
+  title = {Dynamic Programming},
+  publisher = {Princeton University Press},
+  year = {1957},
+  author = {Bellman, R.},
+  address = {Princeton, NJ},
+  owner = {dmitry},
+  timestamp = {2009.08.18}
+}
+
+@INPROCEEDINGS{Berenson2009b,
+  author = {Berenson, D. and Srinivasa, S. S. and Ferguson, D. and Collet, A.
+	and Kuffner, J.},
+  title = {Manipulation Planning with Workspace Goal Regions},
+  booktitle = ICRA,
+  year = {2009},
+  pages = {618--624},
+  file = {Berenson2009b.pdf:Berenson2009b.pdf:PDF},
+  issn = {1050-4729},
+  owner = {dmitry},
+  timestamp = {2009.02.28}
+}
+
+@INPROCEEDINGS{Bernheisel2005,
+  author = {Bernheisel, J. D. and Lynch, K. M.},
+  title = {Stable Pushing of Assemblies},
+  booktitle = ICRA,
+  year = {2005},
+  pages = {3280--3287},
+  abstract = {This paper presents a method to determine whether an assembly of planar
+	parts will stay assembled as it is pushed over a support surface.
+	For a given pushing motion, an assembly is classified into one of
+	three categories: (P = possible) any force necessary to assure stability
+	of the assembly can be generated by the pushing contacts; (I = impossible)
+	stability of the assembly is impossible; and (U = undecided) pushing
+	forces may or may not be able to stabilize the assembly. This classification
+	is made based on the solution of linear constraint satisfaction problems.
+	If the pushing contacts are frictionless, motions labeled P are guaranteed
+	to preserve the assembly. The results are based on bounds on the
+	possible support friction acting on individual parts in the face
+	of indeterminacy in the distribution of support forces. Experimental
+	results supporting the analysis are given.},
+  file = {Bernheisel2005.pdf:Bernheisel2005.pdf:PDF},
+  keywords = {Stable pushing, assemblies, friction, Stable pushing, assemblies,
+	friction},
+  owner = {dmitry},
+  timestamp = {2009.01.05}
+}
+
+@INPROCEEDINGS{Bertram2006,
+  author = {Bertram, D. and Kuffner, J. and Dillmann, R. and Asfour, T.},
+  title = {An integrated approach to inverse kinematics and path planning for
+	redundant manipulators},
+  booktitle = ICRA,
+  year = {2006},
+  pages = {1874--1879},
+  abstract = {We propose a novel solution to the problem of inverse kinematics for
+	redundant robotic manipulators for the purposes of goal selection
+	for path planning. We unify the calculation of the goal configuration
+	with searching for a path in order to avoid the uncertainties inherent
+	to selecting goal configurations which may be unreachable because
+	they currently lie in components of the free configuration space
+	disconnected from the initial configuration. We adopt workspace heuristic
+	functions that implicitly define goal regions of the configuration
+	space and guide the extension of rapidly-exploring random trees (RRTs),
+	which are used to search for these regions. The algorithm has successfully
+	been used to efficiently plan reaching and grasping motions for a
+	humanoid robot equipped with redundant manipulator arms},
+  doi = {10.1109/ROBOT.2006.1641979},
+  file = {Bertram2006.pdf:Bertram2006.pdf:PDF},
+  issn = {1050-4729},
+  keywords = {path planning, redundant manipulators, trees (mathematics), inverse
+	kinematics, path planning, rapidly-exploring random trees, redundant
+	robotic manipulators, workspace heuristic functions},
+  owner = {Dmitry},
+  timestamp = {2009.05.13}
+}
+
+@ARTICLE{Bobrow1985,
+  author = {Bobrow, J.E. and Dubowsky, S. and Gibson, J.S.},
+  title = {Time-Optimal Control of Robotic Manipulators Along Specified Paths},
+  journal = IJRR,
+  year = {1985},
+  volume = {4},
+  pages = {3--17},
+  doi = {10.1177/027836498500400301},
+  owner = {dmitry},
+  timestamp = {2009.08.19}
+}
+
+@ARTICLE{Boender1991,
+  author = {C. G. E. Boender and R. J. Caron and J. F. McDonald and A. H. G.
+	Rinnooy Kan and H. E. Romeijn and R. L. Smith and J. Telgen and A.
+	C. F. Vorst},
+  title = {Shake-And-Bake Algorithms for Generating Uniform Points on the Boundary
+	of Bounded Polyhedra},
+  journal = {Operations Research},
+  year = {1991},
+  volume = {39},
+  month = {November-December},
+  file = {Boender1991.pdf:Boender1991.pdf:PDF},
+  owner = {dmitry},
+  review = {This paper describes a method to sample the surface of a full-dimensional
+	bounded polyhedron. The method is basically to shoot a point to the
+	surface and then bounce it around between the surfaces of the polyhedron.
+	This seems to be limited to only convex polyhedra.},
+  timestamp = {2009.04.28}
+}
+
+@INPROCEEDINGS{Branicky2003,
+  author = {Branicky, M.S. and Curtiss, M.M. and Levine, J.A. and Morgan, S.B.},
+  title = {{RRT}s for nonlinear, discrete, and hybrid planning and control},
+  booktitle = CDC,
+  year = {2003},
+  pages = {657--663}
+}
+
+@INPROCEEDINGS{Burdick1989,
+  author = {Burdick, J.W.},
+  title = {On the inverse kinematics of redundant manipulators: characterization of the self-motion manifolds},
+  booktitle = ICRA,
+  year = {1989},
+  pages = {264--270 vol.1},
+  month = {May},
+  abstract = {The author takes a global rather than instantaneous look at the inverse
+	kinematics of redundant manipulators. This approach is based on a
+	manifold mapping reformulation of manipulator kinematics. While the
+	kinematic problem has an infinite number of solutions for redundant
+	manipulators, the infinity of solutions can be grouped into a finite
+	and bounded set of disjoint continuous manifolds. Each of these manifolds,
+	termed self-motion manifolds, physically corresponds to a distinct
+	self-motion of the manipulator, and the number, geometry, and characterizations
+	of the self-motion manifolds are investigated},
+  doi = {10.1109/ROBOT.1989.99999},
+  file = {Burdick1989.pdf:Burdick1989.pdf:PDF},
+  keywords = {inverse problems, kinematics, redundancy, robotsdisjoint continuous
+	manifolds, inverse kinematics, manifold mapping reformulation, redundant
+	manipulators, self-motion manifolds},
+  review = {This paper describes self-motion manifolds in c-space. Self-motions
+	are motions of the manipulator that are in the null-space of some
+	IK target. The author shows that there can be no more self-motion
+	manifolds for a redundant manipulator than the number of unique IK
+	solution possible for a non-redundant manipulator in the same workspace.
+	So for a 3D manipulator, there can be at most 16 self-motion manifolds.
+	Note that this does not consider any joint limits.}
+}
+
+
+@ARTICLE{Chen1998,
+  author = {Chen, P.C. and Hwang, Y.K.},
+  title = {{SANDROS}: a dynamic graph search algorithm for motion planning},
+  journal = IEEE_J_RA,
+  year = {1998},
+  volume = {14},
+  pages = {390--403},
+  number = {3},
+  month = {Jun}
+}
+
+@PHDTHESIS{Cheng2005,
+  author = {Peng Cheng},
+  title = {Sampling-Based Motion Planning With Differential Constraints},
+  school = {Department of Computer Science, University of Illinois at Urbana-Champaign},
+  year = {2005},
+  file = {Cheng2005.pdf:Cheng2005.pdf:PDF},
+  keywords = {differential constraints, rrt, motion planning},
+  owner = {dmitry},
+  review = {LaValle's student. Planning with differential constraints.},
+  timestamp = {2009.01.05}
+}
+
+@ARTICLE{Cheng2008,
+  author = {P. Cheng and J. Fink and V. Kumar and J. S. Pang},
+  title = { Cooperative towing with multiple robots },
+  journal = { ASME Journal of Mechanism and Robotics },
+  year = { 2008 },
+  note = { submitted },
+  added = { 2008-06-11 05:28:44 -0400 },
+  modified = { 2008-06-11 05:28:44 -0400 }
+}
+
+@INPROCEEDINGS{Cherif1998,
+  author = {Cherif, M. and Gupta, K. K. },
+  title = {3D in-hand manipulation planning},
+  booktitle = IROS,
+  year = {1998},
+  volume = {1},
+  pages = {146--151 vol.1},
+  abstract = {This paper describes a global motion planner for dextrous manipulation
+	of 3D objects by a multifingered robotic hand. We focus on the reconfiguration
+	problem: find a feasible quasi-static trajectory (motions and contact
+	forces) that moves a hand-object system from an initial grasp to
+	a final desired configuration of the object. The planner is designed
+	as a two-level process: a global level that expands a tree of sub-goals
+	in the configuration space of the object, and a local level that
+	searches for feasible quasi-static trajectories of the entire manipulation
+	system between adjacent sub-goals. A key feature of the planner is
+	that it exploits the redundancy of the system by using, in a complementary
+	way, different canonical manipulation modes and tackles the high
+	dimensionality of the solution space (configuration and control spaces)
+	by making use, instantaneously, of a random search over it. The planner
+	is applied in simulation for achieving several nontrivial reconfiguration
+	tasks for (piecewise-) smooth convex objects demonstrating the promise
+	of our approach},
+  doi = {10.1109/IROS.1998.724611},
+  file = {Cherif1998.pdf:Cherif1998.pdf:PDF},
+  keywords = {dexterous manipulators, redundancy, trees (mathematics), 3D in-hand
+	manipulation planning, adjacent subgoals, canonical manipulation
+	modes, configuration space, contact forces, control space, dextrous
+	manipulation, feasible quasi-static trajectories, global motion planner,
+	hand-object system, initial grasp, multifingered robotic hand, nontrivial
+	reconfiguration tasks, piecewise-smooth convex objects, quasi-static
+	trajectory, reconfiguration problem, redundancy, subgoal tree expansion},
+  owner = {dmitry},
+  timestamp = {2009.09.18}
+}
+
+@INPROCEEDINGS{Cortes2004,
+  author = {J. Cortes and T Simeon},
+  title = {Sampling-Based Motion Planning Under Kinematic Loop-Closure Constraints},
+  booktitle = WAFR,
+  year = {2004},
+  file = {Cortes2004.pdf:Cortes2004.pdf:PDF},
+  keywords = {closed-chain kinematics, random loop generator, planning with constraints},
+  owner = {dmitry},
+  review = {This paper centers around a heurisitc of sampling configurations of
+	closed-chain mechanisms. It containts a lot of references about closed-chain
+	kinematics and planning with this constraint.},
+  timestamp = {2009.01.05}
+}
+
+@INBOOK{Devroye1986,
+  pages = {567--571},
+  title = {Non-Uniform Random Variate Generation},
+  publisher = {Springer-Verlag, New York},
+  year = {1986},
+  author = {Luc Devroye},
+  file = {:Devroye1986.pdf:PDF},
+  owner = {dmitry},
+  review = {This book section describes how to sample inside arbitrarily-dimensional
+	polytopes.},
+  timestamp = {2009.02.28}
+}
+
+@INPROCEEDINGS{Diankov2008,
+  author = {Diankov, R. and Srinivasa, S. S. and Ferguson, D. and Kuffner, J.},
+  title = {Manipulation planning with caging grasps},
+  booktitle = Humanoids,
+  year = {2008},
+  abstract = {We present a novel motion planning algorithm for performing constrained
+	tasks such as opening doors and drawers by robots such as humanoid
+	robots or mobile manipulators. Previous work on constrained manipulation
+	transfers rigid constraints imposed by the target object motion directly
+	into the robot configuration space. This often unnecessarily restricts
+	the allowable robot motion, which can prevent the robot from performing
+	even simple tasks, particularly if the robot has limited reachability
+	or low number of joints. Our method computes ldquocaging graspsrdquo
+	specific to the object and uses efficient search algorithms to produce
+	motion plans that satisfy the task constraints. The major advantages
+	of our technique significantly increase the range of possible motions
+	of the robot by not having to enforce rigid constraints between the
+	end-effector and the target object. We illustrate our approach with
+	experimental results and examples running on two robot platforms.},
+  doi = {10.1109/ICHR.2008.4755966},
+  file = {Diankov2008.pdf:Diankov2008.pdf:PDF},
+  keywords = {humanoid robots, mobile robots, motion control, path planning, caging
+	grasps, humanoid robots, manipulation planning, mobile manipulators,
+	motion planning algorithm, search algorithms},
+  owner = {dmitry},
+  timestamp = {2009.06.10}
+}
+
+@INPROCEEDINGS{Drumwright2006,
+  author = {Drumwright, E. and Ng-Thow-Hing, V. },
+  title = {Toward Interactive Reaching in Static Environments for Humanoid Robots},
+  booktitle = IROS,
+  year = {2006},
+  pages = {846--851},
+  abstract = {Reaching is a critical task for humanoid robots, requiring the application
+	of state-of-the-art algorithms for motion planning and inverse kinematics.
+	Practical algorithms for solving these subproblems are currently
+	not complete, offering resolution completeness or probabilistic completeness
+	instead. While this lesser provision of completeness is acceptable
+	in many cases, naively combining state-of-the-art approaches in motion
+	planning and inverse kinematics can lead to a method that provides
+	no measure of completeness. We present a probabilistically complete
+	solution to the reaching problem for humanoid robots in static environments,
+	and evaluate it against two other methods using a kinematically simulated
+	humanoid in a virtual environment.},
+  doi = {10.1109/IROS.2006.281735},
+  file = {Drumwright2006.pdf:Drumwright2006.pdf:PDF},
+  keywords = {humanoid robots, manipulator kinematics, mobile robots, path planning,
+	humanoid robots, interactive reaching, inverse kinematics, motion
+	planning, static environments},
+  owner = {dmitry},
+  review = {This paper describes growing a single-tree RRT which occasionaly extends
+	toward a randomly-generated IK solution for a workspace point. Experiments
+	on a high-dof human model.},
+  timestamp = {2009.01.16}
+}
+
+@INPROCEEDINGS{Edsinger-Gonzalez2004,
+  author = {Edsinger-Gonzalez, A. and Webber, J.},
+  title = {Domo: a force sensing humanoid robot for manipulation research},
+  booktitle = Humanoids,
+  year = {2004}
+}
+
+@ARTICLE{Eggert1997,
+  author = {Eggert, D.W. and Lorusso, A. and Fisher, R.B.},
+  title = {Estimating 3-D rigid body transformations: a comparison of four major
+	algorithms},
+  journal = {Machine Vision and Applications},
+  year = {1997},
+  volume = {9},
+  pages = {272--290},
+  file = {Eggert1997.pdf:Eggert1997.pdf:PDF}
+}
+
+@ARTICLE{Fikes1971,
+  author = {Fikes, R.E. and Nilsson, N.J.},
+  title = {{STRIPS}: A new approach to the application of theorem proving},
+  journal = {Artificial Intelligence Journal},
+  year = {1971},
+  volume = {2},
+  pages = {189â-208},
+  owner = {dmitry},
+  review = {Reference for the first STRIPS},
+  timestamp = {2009.08.19}
+}
+
+@BOOK{Ghallab2004,
+  title = {Automated Planning: Theory and Practice},
+  publisher = {Morgan Kaufman},
+  year = {2004},
+  author = {Ghallab, M. and Nau, D. and Traverso, P.},
+  address = {San Francisco, CA},
+  owner = {dmitry},
+  review = {Logic-based planning overview},
+  timestamp = {2009.08.19}
+}
+
+@INPROCEEDINGS{Gienger2005,
+  author = {Gienger, M. and Janssen, H. and Goerick, C. },
+  title = {Task-oriented whole body motion for humanoid robots},
+  booktitle = Humanoids,
+  year = {2005},
+  pages = {238--244},
+  abstract = {We present a whole body motion control algorithm for humanoid robots.
+	It is based on the framework of Liegeois and solves the redundant
+	inverse kinematics problem on velocity level. We control the hand
+	positions as well as the hand and head attitude. The attitude is
+	described with a novel 2-dof description suited for symmetrical problems.
+	Task-specific command elements can be assigned to the command vector
+	at any time, such enabling the system to control one or multiple
+	effectors and to seamlessly switch between such modes while generating
+	a smooth, natural motion. Further, kinematic constraints can be assigned
+	to individual degrees of freedom. The underlying kinematic model
+	does not consider the leg joints explicitly. Nevertheless, the method
+	can be used in combination with an independent balance or walking
+	control system, such reducing the complexity of a complete system
+	control. We show how to incorporate walking in this control scheme
+	and present experimental results on ASIMO},
+  doi = {10.1109/ICHR.2005.1573574},
+  file = {Gienger2005.pdf:Gienger2005.pdf:PDF},
+  keywords = {humanoid robots, legged locomotion, motion control, position control,
+	robot kinematics, command vector, hand position control, humanoid
+	robots, independent balance, kinematic constraints, redundant inverse
+	kinematics problem, task-oriented whole body motion control, walking
+	control system},
+  owner = {dmitry},
+  timestamp = {2009.01.05}
+}
+
+@INPROCEEDINGS{Harada2005,
+  author = {Harada, K. and Kajita, S. and Saito, H. and Morisawa, M. and Kanehiro,
+	F. and Fujiwara, K. and Kaneko, K. and Hirukawa, H.},
+  title = {A Humanoid Robot Carrying a Heavy Object},
+  booktitle = ICRA,
+  year = {2005}
+}
+
+@INPROCEEDINGS{Hirano2005,
+  author = {Hirano, Y. and Kitahama, K. and Yoshizawa, S. },
+  title = {Image-based object recognition and dexterous hand/arm motion planning
+	using RRTs for grasping in cluttered scene},
+  booktitle = IROS,
+  year = {2005},
+  abstract = {This paper describes a new approach to realize grasping of an unknown
+	object by a dexterous hand robot among freely placed multiple unknown
+	objects even if they are occluded each other. This technology consists
+	of major three functions: 1) image-based 3D reconstruction and separation
+	of multiple objects using graph-cut theory, 2) recognition of the
+	shape, size and orientation of each object as an object with primitive
+	shape, i.e. either of box, cylinder or sphere, 3) multigoal and multicriteria
+	path planning for 7 DOF arm with 13 DOF dexterous hand using enhanced
+	RRTs (rapidly exploring random trees) algorithm to cope with multiple
+	possible grasping strategy according to the object shape and orientation.},
+  doi = {10.1109/IROS.2005.1545590},
+  file = {Hirano2005.pdf:Hirano2005.pdf:PDF},
+  keywords = {dexterous manipulators, graph theory, image reconstruction, object
+	recognition, path planning, robot vision, dexterous arm motion planning,
+	dexterous hand motion planning, dexterous hand robot, graph-cut theory,
+	grasping strategy, image reconstruction, object recognition, path
+	planning, rapidly exploring random trees, grasping, image, motion
+	planning, object recognition},
+  owner = {dmitry},
+  timestamp = {2009.06.10}
+}
+
+@BOOK{Hormann2004,
+  title = {Automatic Nonuniform Random Variate Generation},
+  publisher = {Springer-Verlag, Berlin},
+  year = {2004},
+  author = {W. Hormann and J. Leydold and G. Derflinger},
+  pages = {245--301},
+  keywords = {sampling from various distributions, sampling from polytopes},
+  owner = {Dmitry},
+  review = {This chapter is a really good overview of current methods for sampling
+	from polyhedra. The rest of the book is a good explanation of methods
+	for sampling from arbitrary probability distributions (mostly limited
+	to univariate distributions). The book's website contains code for
+	doing a lot of this kind of sampling. Also, somewhere in the book
+	is a method for sampling on the surface of a sphere without rejection
+	sampling (which scales poorly with increasing dimension). You can
+	extend this method to generating points inside the sphere. Pg. 32
+	contains an interesting method called Ratio-of-Uniforms which may
+	allow sampling from subsets of a distribution's preimage and it might
+	be possible to extend this concept to sampling from regions on a
+	sphere.},
+  timestamp = {2009.04.26},
+  url = {http://statmath.wu.ac.at/arvag/monograph/index.html}
+}
+
+@INPROCEEDINGS{Howard2008,
+  author = {Howard, M. and Klanke, S. and Gienger, M. and Goerick, C. and Vijayakumar,
+	S.},
+  title = {Learning potential-based policies from constrained motion},
+  booktitle = Humanoids,
+  year = {2008},
+  abstract = {We present a method for learning potential-based policies from constrained
+	motion data. In contrast to previous approaches to direct policy
+	learning, our method can combine observations from a variety of contexts
+	where different constraints are in force, to learn the underlying
+	unconstrained policy in form of its potential function. This allows
+	us to generalise and predict behaviour where novel constraints apply.
+	As a key ingredient, we first create multiple simple local models
+	of the potential, and align those using an efficient algorithm. We
+	can then detect and discard unsuitable subsets of the data and learn
+	a global model from a cleanly pre-processed training set. We demonstrate
+	our approach on systems of varying complexity, including kinematic
+	data from the ASIMO humanoid robot with 22 degrees of freedom.},
+  doi = {10.1109/ICHR.2008.4755977},
+  file = {Howard2008.pdf:Howard2008.pdf:PDF},
+  keywords = {humanoid robots, motion control, robot dynamics, ASIMO humanoid robot,
+	constrained motion, global model, learning potential-based policies,
+	unconstrained policy},
+  owner = {dmitry},
+  timestamp = {2009.08.11}
+}
+
+@ARTICLE{Kavraki1996,
+  author = {Kavraki, L. E. and Svestka, P. and Latombe, J. -C. and Overmars,
+	M. H.},
+  title = {Probabilistic roadmaps for path planning in high-dimensional configuration
+	spaces},
+  journal = IEEE_J_RA,
+  year = {1996},
+  volume = {12},
+  pages = {566--580},
+  number = {4},
+  abstract = {A new motion planning method for robots in static workspaces is presented.
+	This method proceeds in two phases: a learning phase and a query
+	phase. In the learning phase, a probabilistic roadmap is constructed
+	and stored as a graph whose nodes correspond to collision-free configurations
+	and whose edges correspond to feasible paths between these configurations.
+	These paths are computed using a simple and fast local planner. In
+	the query phase, any given start and goal configurations of the robot
+	are connected to two nodes of the roadmap; the roadmap is then searched
+	for a path joining these two nodes. The method is general and easy
+	to implement. It can be applied to virtually any type of holonomic
+	robot. It requires selecting certain parameters (e.g., the duration
+	of the learning phase) whose values depend on the scene, that is
+	the robot and its workspace. But these values turn out to be relatively
+	easy to choose, Increased efficiency can also be achieved by tailoring
+	some components of the method (e.g., the local planner) to the considered
+	robots. In this paper the method is applied to planar articulated
+	robots with many degrees of freedom. Experimental results show that
+	path planning can be done in a fraction of a second on a contemporary
+	workstation (&ap;150 MIPS), after learning for relatively short periods
+	of time (a few dozen seconds)},
+  file = {Kavraki1996.pdf:Kavraki1996.pdf:PDF},
+  issn = {1042-296X},
+  keywords = {graph theory, learning (artificial intelligence), mobile robots, path
+	planning, probability, collision-free configurations, goal configurations,
+	graph, high-dimensional configuration spaces, holonomic robot, learning
+	phase, local planner, motion planning, multi-DOF planar articulated
+	robots, path planning, probabilistic roadmaps, query phase, robots,
+	start configurations, static workspaces},
+  owner = {dmitry},
+  timestamp = {2009.08.10}
+}
+
+@BOOK{Khalil2002,
+  title = {Nonlinear Systems},
+  publisher = {Prentice Hall},
+  year = {2002},
+  author = {Hassan K. Khalil},
+  address = {Upper Saddle River, NJ},
+  edition = {3},
+  owner = {dmitry},
+  timestamp = {2009.09.14}
+}
+
+@ARTICLE{Khatib1987,
+  author = {Khatib, O.},
+  title = {A unified approach for motion and force control of robot manipulators:
+	The operational space formulation},
+  journal = IEEE_J_RA,
+  year = {1987},
+  volume = {3},
+  pages = {43--53},
+  number = {1},
+  abstract = {A framework for the analysis and control of manipulator systems with
+	respect to the dynamic behavior of their end-effectors is developed.
+	First, issues related to the description of end-effector tasks that
+	involve constrained motion and active force control are discussed.
+	The fundamentals of the operational space formulation are then presented,
+	and the unified approach for motion and force control is developed.
+	The extension of this formulation to redundant manipulator systems
+	is also presented, constructing the end-effector equations of motion
+	and describing their behavior with respect to joint forces. These
+	results are used in the development of a new and systematic approach
+	for dealing with the problems arising at kinematic singularities.
+	At a singular configuration, the manipulator is treated as a mechanism
+	that is redundant with respect to the motion of the end-effector
+	in the subspace of operational space orthogonal to the singular direction.},
+  file = {Khatib1987.pdf:Khatib1987.pdf:PDF},
+  issn = {0882-4967},
+  keywords = {Force control, Motion control},
+  owner = {dmitry},
+  review = {This is a huge paper about operational space control, can be cited
+	for general workspace stuff.},
+  timestamp = {2009.01.15}
+}
+
+@INPROCEEDINGS{Koga1994,
+  author = {Yoshihito Koga and Koichi Kondo and James Kuffner and Jean-claude
+	Latombe},
+  title = {Planning Motions with Intentions},
+  booktitle = SIGGRAPH,
+  year = {1994},
+  abstract = {We apply manipulation planning to computer animation. A new path planner
+	is presented that automatically computes the collision-free trajectories
+	for several cooperating arms to manipulate a movable object between
+	two configurations. This implemented planner is capable of dealing
+	with complicated tasks where regrasping is involved. In addition,
+	we present a new inverse kinematics algorithm for the human arms.
+	This algorithm is utilized by the planner for the generation of realistic
+	human arm motions as they manipulate objects. We view our system
+	as a tool for facilitating the production of animation.},
+  file = {Koga1994.pdf:Koga1994.pdf:PDF},
+  owner = {dmitry},
+  timestamp = {2009.01.05}
+}
+
+@INPROCEEDINGS{Kuffner2004,
+  author = {Kuffner, J. J.},
+  title = {Effective sampling and distance metrics for 3D rigid body path planning},
+  booktitle = ICRA,
+  year = {2004},
+  volume = {4},
+  pages = {3993--3998 Vol.4},
+  abstract = {Important implementation issues in rigid body path planning are often
+	overlooked. In particular, sampling-based motion planning algorithms
+	typically require a distance metric defined on the configuration
+	space, a sampling function, and a method for interpolating sampled
+	points. The configuration space of a 3D rigid body is identified
+	with the Lie group SE(3). Defining proper metrics, sampling, and
+	interpolation techniques for SE(3) is not obvious, and can become
+	a hidden source of failure for many planning algorithm implementations.
+	This paper examines some of these issues and presents techniques
+	which have been found to be effective experimentally for Rigid Body
+	path planning.},
+  doi = {10.1109/ROBOT.2004.1308895},
+  file = {Kuffner2004.pdf:Kuffner2004.pdf:PDF},
+  issn = {1050-4729},
+  keywords = {Lie groups, interpolation, path planning, sampling methods, 3D rigid
+	body path planning, Lie group, SE(3) group, configuration space,
+	distance metrics, interpolation techniques, motion planning algorithms,
+	robots, sampling function, sampling methods},
+  owner = {dmitry},
+  review = {This paper describes how to sample euler angles and quaternions uniformly
+	as well as defining distance metrics between Euler angles and quaternions.
+	It also has a bunch of references to other work on sampling and characterizing
+	rotations.},
+  timestamp = {2009.04.08}
+}
+
+@INPROCEEDINGS{Kuffner2000,
+  author = {Kuffner, J. J. , Jr. and LaValle, S. M.},
+  title = {{RRT}-connect: An efficient approach to single-query path planning},
+  booktitle = ICRA,
+  year = {2000},
+  abstract = {A simple and efficient randomized algorithm is presented for solving
+	single-query path planning problems in high-dimensional configuration
+	spaces. The method works by incrementally building two rapidly-exploring
+	random trees (RRTs) rooted at the start and the goal configurations.
+	The trees each explore space around them and also advance towards
+	each other through, the use of a simple greedy heuristic. Although
+	originally designed to plan motions for a human arm (modeled as a
+	7-DOF kinematic chain) for the automatic graphic animation of collision-free
+	grasping and manipulation tasks, the algorithm has been successfully
+	applied to a variety of path planning problems. Computed examples
+	include generating collision-free motions for rigid objects in 2D
+	and 3D, and collision-free manipulation motions for a 6-DOF PUMA
+	arm in a 3D workspace. Some basic theoretical analysis is also presented},
+  doi = {10.1109/ROBOT.2000.844730},
+  file = {Kuffner2000.pdf:Kuffner2000.pdf:PDF},
+  keywords = {computational geometry, path planning, robots, search problems, 3D
+	workspace, 6-DOF PUMA arm, 7-DOF kinematic chain, RRT-connect, automatic
+	graphic animation, collision-free grasping, collision-free manipulation,
+	collision-free motions, high-dimensional configuration spaces, human
+	arm, randomized algorithm, rapidly-exploring random trees, rigid
+	objects, simple greedy heuristic, single-query path planning},
+  owner = {dmitry},
+  timestamp = {2009.07.23}
+}
+
+@INPROCEEDINGS{Lamiraux2004,
+  author = {Lamiraux, F. and Ferre, E. and Vallee, E. },
+  title = {Kinodynamic motion planning: connecting exploration trees using trajectory
+	optimization Methods},
+  booktitle = ICRA,
+  year = {2004},
+  volume = {4},
+  pages = {3987--3992 Vol.4},
+  abstract = {Motion planning for complex dynamic systems as well as kinodynamic
+	motion planning are still problems difficult to solve in their generic
+	formulation. For systems for which no steering method is known, the
+	only existing algorithms consist in building an exploration tree
+	in the configuration space by exploring the input space of the system.
+	The main drawback of this type of methods is that they never reach
+	exactly the goal but stops the search when a small neighborhood of
+	the goal has been reached. If the neighborhood is small, the exploration
+	method needs to produce a lot of nodes. In this paper, we propose
+	a solution to cope with this complexity issue. We run a tree exploration
+	method with a big neighborhood and then we locally modify the trajectory
+	in order to make it reach exactly the goal. Our solution is based
+	on a trajectory optimization method we have developed earlier in
+	a mobile robot context and that we have adapted for the problem raised
+	here. The method is generic and can be applied to any dynamic system.
+	A few experimental results are given at the end of the paper.},
+  doi = {10.1109/ROBOT.2004.1308894},
+  file = {Lamiraux2004.pdf:Lamiraux2004.pdf:PDF},
+  issn = {1050-4729},
+  keywords = {mobile robots, optimisation, path planning, tree searching, complex
+	dynamic systems, kinodynamic motion planning, mobile robot, trajectory
+	optimization method, tree exploration method, tree searching},
+  owner = {dmitry},
+  timestamp = {2009.01.05}
+}
+
+@INPROCEEDINGS{Larsen2000,
+  author = {Larsen, E. and Gottschalk, S. and Lin, M.C. and Manocha, D.},
+  title = {Fast Proximity Queries with Swept Sphere Volumes},
+  booktitle = ICRA,
+  year = {2000}
+}
+
+@TECHREPORT{Larsen1999,
+  author = {Larsen, E. and Gottschalk, S. and Lin, M.C. and Manocha, D.},
+  title = {Fast Proximity Queries with Swept Sphere Volumes},
+  institution = {Department of Computer Science, UNC Chapel Hill},
+  year = {1999},
+  number = {TR99-018},
+  file = {Larsen1999.pdf:Larsen1999.pdf:PDF},
+  owner = {dmitry}
+}
+
+@ARTICLE{LaValle2001,
+  author = {LaValle, S. and Kuffner, J.},
+  title = {Randomized Kinodynamic Planning},
+  journal = IJRR,
+  year = {2001},
+  volume = {20},
+  month = {May},
+  file = {LaValle2001.pdf:LaValle2001.pdf:PDF},
+  owner = {dmitry},
+  timestamp = {2009.02.27}
+}
+
+@INPROCEEDINGS{LaValle2000,
+  author = {LaValle, S.M. and Kuffner, J.J.},
+  title = {Rapidly-exploring random trees: Progress and prospects},
+  booktitle = WAFR,
+  year = {2000}
+}
+
+@BOOK{LaValle2006,
+  title = {Planning Algorithms},
+  publisher = {Cambridge University Press},
+  year = {2006},
+  author = {S. M. LaValle},
+  address = {Cambridge, U.K.},
+}
+
+@INPROCEEDINGS{LaValle1999,
+  author = {LaValle, S. M. and Yakey, J. and Kavraki, L. E.},
+  title = {A probabilistic roadmap approach for systems with closed kinematic
+	chains},
+  booktitle = ICRA,
+  year = {1999}
+}
+
+@INPROCEEDINGS{Li1987,
+  author = {Li, Zexiang and Sastry, S. },
+  title = {Task oriented optimal grasping by multifingered robot hands},
+  booktitle = ICRA,
+  year = {1987},
+  volume = {4},
+  pages = {389--394},
+  abstract = {We discuss the problem of optimal grasping to an object by a multifingered
+	robot hand. We axiomatize using screw theory and elementary differential
+	geometry the concept of a grasp and characterize its stability. Three
+	quality measures for evaluating a grasp are then proposed. The last
+	quality measure is task oriented and needs the development of a procedure
+	for modeling tasks as ellipsoids in the wrench space of the object.
+	Numerical computations of these quality measures and the selection
+	of an optimal grasp are addressed in detail. Several examples are
+	given using these quality measures to show that they are consistent
+	with human grasping experience.},
+  file = {Li1987.pdf:Li1987.pdf:PDF},
+  owner = {dmitry},
+  timestamp = {2009.01.05}
+}
+
+@ARTICLE{Lozano-Perez1984,
+  author = {Tomas Lozano-Perez and Matthew Mason and Russell H. Taylor},
+  title = {Automatic Synthesis of Fine-Motion Strategies for Robots},
+  journal = IJRR,
+  year = {1984},
+  volume = {3},
+  number = {1},
+  file = {Lozano-Perez1984.pdf:Lozano-Perez1984.pdf:PDF},
+  review = {This is the paper that introduces pre-image backchaining as a method
+	for dealing with execution uncertainty.}
+}
+
+@INPROCEEDINGS{Martin2004,
+  author = {Martin, T. and Ambrose, R. and Diftler, M. and Platt, R. and Butzer,
+	M.},
+  title = {Tactile gloves for autonomous grasping with the NASA/DARPA Robonaut},
+  booktitle = ICRA,
+  year = {2004}
+}
+
+@BOOK{Mason2001,
+  title = {Mechanics of Robotic Manipulation},
+  publisher = {MIT Press},
+  year = {2001},
+  author = {Matthew T. Mason},
+  file = {:Mason2001errata.txt:Text},
+  owner = {dmitry},
+  review = {Overview of kinematic constraint: pg. 25 - 33. Close chain linkage
+	mobility: pg 34 - 36. Contains possibly good references on constraints
+	and a good overview of manipulation in general.},
+  timestamp = {2009.04.28}
+}
+
+@ARTICLE{Mason1981,
+  author = {Mason, Matthew T.},
+  title = {Compliance and Force Control for Computer Controlled Manipulators},
+  journal = IEEE_J_SMC,
+  year = {1981},
+  volume = {11},
+  pages = {418--432},
+  number = {6},
+  abstract = {Compliant motion of a manipulator occurs when the manipulator position
+	is constrained by the task geometry. Compliant motion may be produced
+	either by a passive mechanical compliance built in to the manipulator,
+	or by an active compliance implemented in the control servo loop.
+	The second method, called force control, is the subject of this paper.
+	In particular a theory of force control based on formal models of
+	the manipulator and the task geometry is presented. The ideal effector
+	is used to model the manipulator, the ideal surface is used to model
+	the task geometry, and the goal trajectory is used to model the desired
+	behavior of the manipulator. Models are also defined for position
+	control and force control, providing a precise semantics for compliant
+	motion primitives in manipulation programming languages. The formalism
+	serves as a simple interface between the manipulator and the programmer,
+	isolating the programmer from the fundamental complexity of low-level
+	manipulator control. A method of automatically synthesizing a restricted
+	class of manipulator programs based on the formal models of task
+	and goal trajectory is also provided by the formalism.},
+  doi = {10.1109/TSMC.1981.4308708},
+  file = {Mason1981.pdf:Mason1981.pdf:PDF},
+  issn = {0018-9472},
+  owner = {dmitry},
+  timestamp = {2009.01.16}
+}
+
+@ARTICLE{Mattikalli1996,
+  author = {Mattikalli, R. and Baraff, D. and Khosla, P.},
+  title = {Finding all stable orientations of assemblies with friction},
+  journal = IEEE_J_RA,
+  year = {1996},
+  volume = {12},
+  pages = {290--301},
+  number = {2},
+  abstract = {In this paper, we include Coulomb friction at contacts between bodies
+	and give a characterization of the entire set of stable orientations
+	of an assembly under uniform gravity. Our characterization is based
+	on the concept of potential stability, which describes a necessary
+	but not sufficient condition for the stability of an assembly. Orientations
+	that are computed as being unstable, however, are guaranteed to fall
+	apart. Our characterization reveals that the set of stable orientations
+	maps out a convex region on the unit-sphere of directions and corresponds
+	to a spherical analog of a planar polygon-the region is bounded by
+	a sequence of vertices joined by great arcs. Linear programming techniques
+	are used to automatically find this set of vertices, yielding a description
+	of the range of stable orientations for any assembly. For frictionless
+	assemblies, our characterization of stable orientations is exact.
+	For assemblies with friction, some conservative approximations associated
+	with the use of a linearized Coulomb law are made},
+  doi = {10.1109/70.488948},
+  file = {Mattikalli1996.pdf:Mattikalli1996.pdf:PDF},
+  issn = {1042-296X},
+  keywords = {assembling, computational geometry, computer aided production planning,
+	friction, linear programming, mechanical contact, production control,
+	Coulomb friction, assembly, convex region, gravity, linear programming,
+	planar polygon, potential stability concept, process planning, production
+	control, stable orientations},
+  owner = {dmitry},
+  timestamp = {2009.01.05}
+}
+
+@INPROCEEDINGS{Melchior2007,
+  author = {Melchior, N. A. and Simmons, R.},
+  title = {Particle RRT for Path Planning with Uncertainty},
+  booktitle = ICRA,
+  year = {2007},
+  pages = {1617--1624},
+  abstract = {This paper describes a new extension to the rapidly-exploring random
+	tree (RRT) path planning algorithm. The particle RRT algorithm explicitly
+	considers uncertainty in its domain, similar to the operation of
+	a particle filter. Each extension to the search tree is treated as
+	a stochastic process and is simulated multiple times. The behavior
+	of the robot can be characterized based on the specified uncertainty
+	in the environment, and guarantees can be made as to the performance
+	under this uncertainty. Extensions to the search tree, and therefore
+	entire paths, may be chosen based on the expected probability of
+	successful execution. The benefit of this algorithm is demonstrated
+	in the simulation of a rover operating in rough terrain with unknown
+	coefficients of friction},
+  doi = {10.1109/ROBOT.2007.363555},
+  file = {Melchior2007.pdf:Melchior2007.pdf:PDF},
+  issn = {1050-4729},
+  keywords = {path planning, random processes, stochastic processes, tree searching,
+	particle rapidly-exploring random tree algorithm, path planning,
+	robot behavior, search tree, stochastic process},
+  owner = {dmitry},
+  timestamp = {2009.07.21}
+}
+
+@INPROCEEDINGS{Miller2003,
+  author = {Miller, A. T. and Knoop, S. and Christensen, H. I. and Allen, P.
+	K. },
+  title = {Automatic grasp planning using shape primitives},
+  booktitle = ICRA,
+  year = {2003},
+  volume = {2},
+  pages = {1824--1829 vol.2},
+  abstract = {Automatic grasp planning for robotic hands is a difficult problem
+	because of the huge number of possible hand configurations. However,
+	humans simplify the problem by choosing an appropriate prehensile
+	posture appropriate for the object and task to be performed. By modeling
+	an object as a set of shape primitives, such as spheres, cylinders,
+	cones and boxes, we can use a set of rules to generate a set of grasp
+	starting positions and pregrasp shapes that can then be tested on
+	the object model. Each grasp is tested and evaluated within our grasping
+	simulator "GraspIt!", and the best grasps are presented to the user.
+	The simulator can also plan grasps in a complex environment involving
+	obstacles and the reachability constraints of a robot arm.},
+  file = {Miller2003.pdf:Miller2003.pdf:PDF},
+  issn = {1050-4729},
+  keywords = {control system CAD, dexterous manipulators, path planning, automatic
+	grasp planning, grasping simulator, multifingered hands, pregrasp
+	shapes, prehensile posture, robot arm, shape primitives},
+  owner = {dmitry},
+  timestamp = {2009.08.10}
+}
+
+@BOOK{Mitchell1998,
+  title = {An Introduction to Genetic Algorithms},
+  publisher = {MIT Press},
+  year = {1998},
+  author = {Melanie Mitchell},
+  address = {Cambridge, MA},
+  owner = {dmitry},
+  timestamp = {2009.08.13}
+}
+
+@INPROCEEDINGS{Morales2006,
+  author = {Morales, A. and Asfour, T. and Azad, P. and Knoop, S. and Dillmann,
+	R. },
+  title = {Integrated Grasp Planning and Visual Object Localization For a Humanoid
+	Robot with Five-Fingered Hands},
+  booktitle = IROS,
+  year = {2006},
+  pages = {5663--5668},
+  abstract = {In this paper we present a framework for grasp planning with a humanoid
+	robot arm and a five-fingered hand. The aim is to provide the humanoid
+	robot with the ability of grasping objects that appear in a kitchen
+	environment. Our approach is based on the use of an object model
+	database that contains the description of all the objects that can
+	appear in the robot workspace. This database is completed with two
+	modules that make use of this object representation: an exhaustive
+	offline grasp analysis system and a real-time stereo vision system.
+	The offline grasp analysis system determines the best grasp for the
+	objects by employing a simulation system, together with CAD models
+	of the objects and the five-fingered hand. The results of this analysis
+	are added to the object database using a description suited to the
+	requirements of the grasp execution modules. A stereo camera system
+	is used for a real-time object localization using a combination of
+	appearance-based and model-based methods. The different components
+	are integrated in a controller architecture to achieve manipulation
+	task goals for the humanoid robot},
+  doi = {10.1109/IROS.2006.282367},
+  file = {Morales2006.pdf:Morales2006.pdf:PDF},
+  keywords = {CAD, control engineering computing, dexterous manipulators, humanoid
+	robots, robot vision, stereo image processing, CAD models, exhaustive
+	offline grasp analysis system, five-fingered hands, grasp execution
+	modules, grasp planning, humanoid robot arm, kitchen environment,
+	manipulation task goals, object grasping, object model database,
+	object representation, real-time object localization, real-time stereo
+	vision system, stereo camera system, visual object localization},
+  owner = {dmitry},
+  timestamp = {2009.08.10}
+}
+
+@ARTICLE{Mosemann1997,
+  author = {Mosemann, H. and Rohrdanz, F. and Wahl, F. M. },
+  title = {Stability analysis of assemblies considering friction},
+  journal = IEEE_J_RA,
+  year = {1997},
+  volume = {13},
+  pages = {805--813},
+  number = {6},
+  abstract = {We discuss the stability of assemblies consisting of arbitrary configurations
+	of rigid bodies considering Coulomb friction under uniform gravity.
+	We give a method to calculate the set of all stable orientations
+	of an assembly considering the frictional properties. The presented
+	algorithm is a new method for automatically determining all stable
+	orientations of assemblies considering friction. The potential stability
+	criterion describes a necessary but not a sufficient condition for
+	the stability of assemblies. To compute the potential stability of
+	an assembly we consider the forces which arise at contact points
+	of objects touching each other. Constraints which must be satisfied
+	for a set of valid contact forces are expressed by linear inequalities;
+	we use linear programming to determine such valid contact forces.
+	Beside this we describe a method based on the concepts of the enumeration
+	of vertices of polyhedra to compute the set of stable orientations
+	considering Coulomb friction even in the case of degeneracy in the
+	linear program, Furthermore, we discuss the space and time complexity
+	of the underlying algorithm},
+  doi = {10.1109/70.650159},
+  file = {Mosemann1997.pdf:Mosemann1997.pdf:PDF},
+  issn = {1042-296X},
+  keywords = {assembling, computational complexity, computer aided production planning,
+	friction, linear programming, stability, Coulomb friction, assemblies,
+	contact forces, degeneracy, rigid bodies, space complexity, stability
+	analysis, stable orientations, time complexity, uniform gravity},
+  owner = {dmitry},
+  timestamp = {2009.01.05}
+}
+
+@BOOK{Nilsson1980,
+  title = {Principles of Artificial Intelligence},
+  publisher = {Tioga Publishing Company},
+  year = {1980},
+  author = {Nilsson, N.J.},
+  address = {Wellsboro, PA},
+  owner = {dmitry},
+  review = {STRIPS using prepositional logic instead of first-order logic},
+  timestamp = {2009.08.19}
+}
+
+@INPROCEEDINGS{Okada2004,
+  author = {Okada, K. and Haneda, A. and Nakai, H. and Inaba, M. and Inoue, H.
+	},
+  title = {Environment manipulation planner for humanoid robots using task graph
+	that generates action sequence},
+  booktitle = IROS,
+  year = {2004},
+  volume = {2},
+  pages = {1174--1179 vol.2},
+  abstract = {In this paper, we describe a planner for a humanoid robot that is
+	capable of finding a path in an environment with movable objects,
+	whereas previous motion planner only deals with an environment with
+	fixed objects. We address an environment manipulation problem for
+	a humanoid robot that finds a walking path from the given start location
+	to the goal location while displacing obstructing objects on the
+	walking path. This problem requires more complex configuration space
+	than previous researches using a mobile robot especially in a manipulation
+	phase, since a humanoid robot has many degrees of freedom in its
+	arm than a forklift type robot. Our approach is to build environment
+	manipulation task graph that decompose the given task into subtasks
+	which are solved using navigation path planner or whole body motion
+	planner. We also propose a standing location search and a displacing
+	obstacle location search for connecting subtasks. Efficient method
+	to solve manipulation planning that relies on whole body inverse
+	kinematics and motion planning technology is also shown. Finally,
+	we show experimental results in an environment with movable objects
+	such as chairs and trash boxes. The planner finds an action sequence
+	consists of walking paths and manipulating obstructing objects to
+	walk from the start position to the goal position.},
+  doi = {10.1109/IROS.2004.1389555},
+  file = {Okada2004.pdf:Okada2004.pdf:PDF},
+  keywords = {graph theory, humanoid robots, mobile robots, motion control, path
+	planning, complex configuration space, environment manipulation planner,
+	humanoid robots, inverse kinematics, mobile robot, motion planning
+	technology, navigation path planner, obstacle location search, standing
+	location search, task graph},
+  owner = {dmitry},
+  timestamp = {2009.08.10}
+}
+
+@INPROCEEDINGS{Okada2005,
+  author = {Okada, K. and Ogura, T. and Haneda, A. and Fujimoto, J. and Gravot,
+	F. and Inaba, M.},
+  title = {Humanoid motion generation system on HRP2-JSK for daily life environment},
+  booktitle = {Proceedings of the IEEE International Conference on Mechatronics and Automation},
+  year = {2005}
+}
+
+@INPROCEEDINGS{Oriolo2005,
+  author = {Oriolo, G. and Mongillo, C.},
+  title = {Motion Planning for Mobile Manipulators along Given End-effector Paths},
+  booktitle = ICRA,
+  year = {2005},
+  abstract = {We consider the problem of planning collision-free motions for a mobile
+	manipulator whose end-effector must travel along a given path. Algorithmic
+	solutions are devised by adapting a technique developed for fixed-base
+	redundant robots. In particular, we exploit the natural partition
+	of generalized coordinates between the manipulator and the mobile
+	base, whose nonholonomy is accounted for at the planning stage. The
+	approach is based on the randomized generation of configurations
+	that are compatible with the end-effector path constraint. The performance
+	of the proposed algorithms is illustrated by several planning experiments.},
+  file = {Oriolo2005.pdf:Oriolo2005.pdf:PDF},
+  keywords = {Mobile manipulators, probabilistic motion planning, Mobile manipulators,
+	probabilistic motion planning},
+  owner = {dmitry},
+  timestamp = {2009.08.20}
+}
+
+@INPROCEEDINGS{Oriolo2002,
+  author = {Oriolo, G. and Ottavi, M. and Vendittelli, M. },
+  title = {Probabilistic motion planning for redundant robots along given end-effector paths},
+  booktitle = IROS,
+  year = {2002},
+  abstract = {We consider the problem of planning collision-free motions for a redundant
+	robot whose end-effector must travel along a given path. Although
+	collision avoidance is one of the main reasons for introducing kinematic
+	redundancy in manipulators, the planning methods so far proposed
+	for this particular problem are neither efficient nor complete. In
+	this paper, we introduce some algorithms that may be considered as
+	an extension of probabilistic planning techniques to the problem
+	at hand. All the algorithms are based on the same simple mechanism
+	for generating random samples of the configuration space that are
+	compatible with the end-effector path constraint. Experimental results
+	illustrate the performance of the planners.},
+  doi = {10.1109/IRDS.2002.1043993},
+  file = {Oriolo2002.pdf:Oriolo2002.pdf:PDF},
+  keywords = {path planning, probability, redundant manipulators, collision avoidance,
+	collision-free motion planning, end-effector path constraint, kinematic
+	redundancy, probabilistic motion planning, redundant manipulators,
+	redundant robots},
+  owner = {dmitry},
+  timestamp = {2009.08.20}
+}
+
+@ARTICLE{Oztop2002,
+  author = {Oztop, E. and Arbib, M.A.},
+  title = {Schema design and implementation of the grasp-related mirror neuron
+	system},
+  journal = {Biological Cybernetics},
+  year = {2002},
+  volume = {87},
+  pages = {116--140},
+  file = {Oztop2002.pdf:Oztop2002.pdf:PDF}
+}
+
+@INPROCEEDINGS{Pelossof2004,
+  author = {Pelossof, R. and Miller, A. and Allen, P. and Jebara, T. },
+  title = {An SVM learning approach to robotic grasping},
+  booktitle = ICRA,
+  year = {2004},
+  volume = {4},
+  pages = {3512--3518 Vol.4},
+  abstract = {Finding appropriate stable grasps for a hand (either robotic or human)
+	on an arbitrary object has proved to be a challenging and difficult
+	problem. The space of grasping parameters coupled with the degrees-of-freedom
+	and geometry of the object to be grasped creates a high-dimensional,
+	non-smooth manifold. Traditional search methods applied to this manifold
+	are typically not powerful enough to find appropriate stable grasping
+	solutions, let alone optimal grasps. We address this issue in this
+	paper, which attempts to find optimal grasps of objects using a grasping
+	simulator. Our unique approach to the problem involves a combination
+	of numerical methods to recover parts of the grasp quality surface
+	with any robotic hand, and contemporary machine learning methods
+	to interpolate that surface, in order to find the optimal grasp.},
+  file = {Pelossof2004.pdf:Pelossof2004.pdf:PDF},
+  issn = {1050-4729},
+  keywords = {learning (artificial intelligence), manipulators, numerical analysis,
+	support vector machines, SVM learning, grasp quality surface, grasping
+	simulator, high dimensional nonsmooth manifold, machine learning
+	methods, manipulators, numerical methods, optimal grasps, robotic
+	grasping, robotic hand, search methods, stable grasping solutions},
+  owner = {dmitry},
+  timestamp = {2009.08.10}
+}
+
+@ELECTRONIC{Peyre2007,
+  author = {Gabriel PeyrÃ©},
+  year = {2007},
+  title = {Data Processing Using Manifold Methods},
+  url = {http://www.ceremade.dauphine.fr/%7epeyre/teaching/manifold/},
+  owner = {dmitry},
+  timestamp = {2009.04.13}
+}
+
+@PHDTHESIS{Platt2006,
+  author = {Platt, R.},
+  title = {Learning and Generalizing Control Based Grasping and Manipulation
+	Skills},
+  school = {University of Massachusetts at Amherst},
+  year = {2006},
+  address = {Department of Computer Science}
+}
+
+@ARTICLE{Pollard2004,
+  author = {Nancy S. Pollard},
+  title = {Closure and Quality Equivalence for Efficient Synthesis of Grasps
+	from Examples},
+  journal = IJRR,
+  year = {2004},
+  volume = {23},
+  pages = {595--613},
+  month = {June},
+  file = {Pollard2004.pdf:Pollard2004.pdf:PDF},
+  owner = {dmitry},
+  review = {This paper discusses how to generate independent contact regions on
+	polygon objects when given a starting set of contact points.},
+  timestamp = {2009.02.27}
+}
+
+@PHDTHESIS{Quinlan1994,
+  author = {Sean Quinlan},
+  title = {Real-time Modification of Collision-free Paths},
+  school = {Department of Computer Science, Stanford University},
+  year = {1994},
+  file = {Quinlan1994.pdf:Quinlan1994.pdf:PDF},
+  keywords = {elastic bands, collision-free bubbles},
+  owner = {dmitry},
+  timestamp = {2009.01.05}
+}
+
+@INPROCEEDINGS{Ratliff2007,
+  author = {Ratliff, N. and Bagnell, J. A. and Srinivasa, S. S. },
+  title = {Imitation learning for locomotion and manipulation},
+  booktitle = Humanoids,
+  year = {2007},
+  pages = {392--397},
+  abstract = {Decision making in robotics often involves computing an optimal action
+	for a given state, where the space of actions under consideration
+	can potentially be large and state dependent. Many of these decision
+	making problems can be naturally formalized in the multiclass classification
+	framework, where actions are regarded as labels for states. One powerful
+	approach to multiclass classification relies on learning a function
+	that scores each action; action selection is done by returning the
+	action with maximum score. In this work, we focus on two imitation
+	learning problems in particular that arise in robotics. The first
+	problem is footstep prediction for quadruped locomotion, in which
+	the system predicts next footstep locations greedily given the current
+	four-foot configuration of the robot over a terrain height map. The
+	second problem is grasp prediction, in which the system must predict
+	good grasps of complex free-form objects given an approach direction
+	for a robotic hand. We present experimental results of applying a
+	recently developed functional gradient technique for optimizing a
+	structured margin formulation of the corresponding large non-linear
+	multiclass classification problems.},
+  doi = {10.1109/ICHR.2007.4813899},
+  file = {Ratliff2007.pdf:Ratliff2007.pdf:PDF},
+  keywords = {intelligent robots, legged locomotion, manipulators, decision making
+	problems, footstep prediction, imitation learning, multiclass classification
+	framework, quadruped locomotion, robotic hand, terrain height map},
+  owner = {dmitry},
+  timestamp = {2009.08.10}
+}
+
+@INPROCEEDINGS{Ratliff2009,
+  author = {Nathan Ratliff and Matthew Zucker and J. Andrew Bagnell and Siddhartha
+	Srinivasa},
+  title = {{CHOMP}: Gradient Optimization Techniques for Efficient Motion Planning},
+  booktitle = ICRA,
+  year = {2009},
+  file = {Ratliff2009.pdf:Ratliff2009.pdf:PDF}
+}
+
+@INPROCEEDINGS{Roa2008,
+  author = {Roa, M. A. and Suarez, R. },
+  title = {Independent contact regions for frictional grasps on 3D objects},
+  booktitle = ICRA,
+  year = {2008},
+  pages = {1622--1627},
+  abstract = {This paper presents an efficient algorithm to compute independent
+	contact regions on the surface of complex 3D objects such that a
+	finger contact anywhere inside each of these regions assures a force-closure
+	grasp despite the exact contact position. Independent contact regions
+	provide robustness in front of finger positioning errors during an
+	object grasping, and give relevant information for finger repositioning
+	during the object manipulation. The object is described with a mesh
+	of surface points, so the procedure is applicable to objects of any
+	arbitrary shape. The proposed approach uses information from the
+	wrench space, and generates the independent regions by growing them
+	around the contact points of a given starting grasp. A two-phase
+	approach is also provided to find a locally optimum force-closure
+	grasp that serves as starting grasp, considering as grasp quality
+	measure the largest perturbation wrench that the grasp can resist
+	with independence of the perturbation direction. The approach has
+	been implemented and several examples are provided to illustrate
+	its performance.},
+  doi = {10.1109/ROBOT.2008.4543433},
+  file = {Roa2008.pdf:Roa2008.pdf:PDF},
+  issn = {1050-4729},
+  keywords = {manipulators, position control, finger contact, finger positioning
+	errors, finger repositioning, force-closure grasp, frictional grasps,
+	independent contact regions, object grasping, object manipulation,
+	perturbation direction, Frictional grasp, independent contact regions},
+  owner = {Dmitry},
+  timestamp = {2009.03.14}
+}
+
+@PHDTHESIS{Sallinen2003,
+  author = {Mikko Sallinen},
+  title = {Modelling and estimation of spatial relationships in sensor-based
+	robot workcells},
+  school = {VTT Electronics/University of Oulu, Oulu, Finland},
+  year = {2003},
+  file = {Sallinen2003.pdf:Sallinen2003.pdf:PDF},
+  owner = {dmitry},
+  review = {Discusses how to propagate uncertainty through a 3D network of poses.},
+  timestamp = {2009.01.05}
+}
+
+@ARTICLE{Santello1998,
+  author = {M. Santello and M. Flanders and J. F. Soechting},
+  title = {Postural hand synergies for tool use},
+  journal = {The Journal of Neuroscience},
+  year = {1998},
+  volume = {18},
+  pages = {10105--10115},
+  number = {23},
+  month = {Dec},
+  abstract = {Subjects were asked to shape the right hand as if to grasp and use
+	a large number of familiar objects. The chosen objects typically
+	are held with a variety of grips, including "precision" and "power"
+	grips. Static hand posture was measured by recording the angular
+	position of 15 joint angles of the fingers and of the thumb. Although
+	subjects adopted distinct hand shapes for the various objects, the
+	joint angles of the digits did not vary independently. Principal
+	components analysis showed that the first two components could account
+	for >80\% of the variance, implying a substantial reduction from
+	the 15 degrees of freedom that were recorded. However, even though
+	they were small, higher-order (more than three) principal components
+	did not represent random variability but instead provided additional
+	information about the object. These results suggest that the control
+	of hand posture involves a few postural synergies, regulating the
+	general shape of the hand, coupled with a finer control mechanism
+	providing for small, subtle adjustments. Because the postural synergies
+	did not coincide with grip taxonomies, the results suggest that hand
+	posture may be regulated independently from the control of the contact
+	forces that are used to grasp an object.},
+  file = {Santello1998.pdf:Santello1998.pdf:PDF},
+  institution = {Neuroscience Department, University of Minnesota, Minneapolis, Minnesota
+	55455, USA.},
+  keywords = {Adult; Biomechanics; Feedback, physiology; Female; Fingers, physiology;
+	Hand Strength, physiology; Humans; Male; Movement, physiology; Posture,
+	physiology},
+  owner = {dmitry},
+  pmid = {9822764},
+  timestamp = {2009.01.05}
+}
+
+@INPROCEEDINGS{Saxena2007,
+  author = {Saxena, A. and Driemeyer, J. and Kearns, J. and Ng, A.},
+  title = {Robotic Grasping of Novel Objects},
+  booktitle = NeurIPS,
+  year = {2007}
+}
+
+@INBOOK{Sciavicco2000,
+  pages = {96--100},
+  title = {Modeling and Control of Robot Manipulators},
+  publisher = {Springer},
+  year = {2000},
+  author = {Sciavicco, L. and Siciliano, B.},
+  edition = {2nd},
+  key = {London},
+  review = {Reference for Jacobian-based IK}
+}
+
+@ARTICLE{Seereeram1995,
+  author = {Seereeram, S. and Wen, J.T.},
+  title = {A global approach to path planning for redundant manipulators},
+  journal = IEEE_J_RA,
+  year = {1995},
+  volume = {11},
+  pages = {152--160},
+  number = {1},
+  month = {Feb},
+  file = {Seereeram1995.pdf:Seereeram1995.pdf:PDF}
+}
+
+@ARTICLE{Sentis2005,
+  author = {Sentis, S. and Khatib, O.},
+  title = {Synthesis of whole-body behaviors through hierarchical control of
+	behavioral primitives},
+  journal = {International Journal of Humanoid Robotics},
+  year = {2005},
+  volume = {2},
+  pages = {505--518},
+  month = {December},
+  file = {Sentis2005.pdf:Sentis2005.pdf:PDF},
+  review = {Reaching with balance constraints for humanoids (cite for cog control
+	humanoid IK). Also does some obstacle avoidance gradients.}
+}
+
+@ARTICLE{Smith1986,
+  author = {Smith, R.C. and Cheeseman, P.},
+  title = {On the Representation and Estimation of Spatial Uncertainty},
+  journal = IJRR,
+  year = {1986},
+  volume = {5},
+  pages = {56--68},
+  number = {4},
+  month = {May},
+  file = {Smith1986.pdf:Smith1986.pdf:PDF},
+  review = {This paper discusses how to propagate estimates of uncertainty through
+	a network of poses. They limit their discussion to a mainly 2D world.}
+}
+
+@INPROCEEDINGS{Srinivasa2008,
+  author = {Siddhartha S. Srinivasa and David Ferguson and Michael Vande Weghe
+	and Rosen Diankov and Dmitry Berenson and Casey Helfrich and Hauke
+	Strasdat},
+  title = {The Robotic Busboy: Steps Towards Developing a Mobile Robotic Home
+	Assistant},
+  booktitle = {International Conference on Intelligent Autonomous Systems (IAS)},
+  year = {2008},
+  month = {July},
+  file = {Srinivasa2008.pdf:Srinivasa2008.pdf:PDF}
+}
+
+@ARTICLE{Stansfield1991,
+  author = {Stansfield, S.A.},
+  title = {Robotic grasping of unknown objects: A knowledge-based approach},
+  journal = IJRR,
+  year = {1991},
+  volume = {10},
+  pages = {314--326}
+}
+
+@INPROCEEDINGS{Stilman2007a,
+  author = {Stilman, M.},
+  title = {Task constrained motion planning in robot joint space},
+  booktitle = IROS,
+  year = {2007},
+  pages = {3074--3081},
+  abstract = {We explore global randomized joint space path planning for articulated
+	robots that are subject to task space constraints. This paper describes
+	a representation of constrained motion for joint space planners and
+	develops two simple and efficient methods for constrained sampling
+	of joint configurations: Tangent Space Sampling (TS) and First-Order
+	Retraction (FR). Constrained joint space planning is important for
+	many real world problems involving redundant manipulators. On the
+	one hand, tasks are designated in work space coordinates: rotating
+	doors about fixed axes, sliding drawers along fixed trajectories
+	or holding objects level during transport. On the other, joint space
+	planning gives alternative paths that use redundant degrees of freedom
+	to avoid obstacles or satisfy additional goals while performing a
+	task. In simulation, we demonstrate that our methods are faster and
+	significantly more invariant to problem/algorithm parameters than
+	existing techniques.},
+  doi = {10.1109/IROS.2007.4399305},
+  file = {Stilman2007a.pdf:Stilman2007a.pdf:PDF},
+  keywords = {path planning, redundant manipulators, articulated robot, first-order
+	retraction, global randomized robot joint space path planning, redundant
+	manipulator, tangent space sampling, task constrained motion planning},
+  owner = {dmitry},
+  review = {This is the first paper I know about that combines projecting to constraint
+	manifolds with an RRT. The paper compares three methods of projection:
+	null-space, jacobian pseudo-inverse, and randomized gradient descent.
+	Jacobian pseudo-inverse was found to be the fastest for meeting very
+	tight constraints. Also, this method worked better when there were
+	more constraints. The constraints considered are only pose constraints
+	on the robot's end-effector and the constraints are specified by
+	deciding which dimension the end-effector is allowed to move in (overly-restrictive).},
+  timestamp = {2009.01.15}
+}
+
+@INPROCEEDINGS{Stilman2007b,
+  author = {Stilman, M. and Schamburek, J. -U. and Kuffner, J. and Asfour, T.},
+  title = {Manipulation Planning Among Movable Obstacles},
+  booktitle = ICRA,
+  year = {2007},
+  abstract = {This paper presents the resolve spatial constraints (RSC) algorithm
+	for manipulation planning in a domain with movable obstacles. Empirically
+	we show that our algorithm quickly generates plans for simulated
+	articulated robots in a highly nonlinear search space of exponential
+	dimension. RSC is a reverse-time search that samples future robot
+	actions and constrains the space of prior object displacements. To
+	optimize the efficiency of RSC, we identify methods for sampling
+	object surfaces and generating connecting paths between grasps and
+	placements. In addition to experimental analysis of RSC, this paper
+	looks into object placements and task-space motion constraints among
+	other unique features of the three dimensional manipulation planning
+	domain.},
+  doi = {10.1109/ROBOT.2007.363986},
+  file = {Stilman2007b.pdf:Stilman2007b.pdf:PDF},
+  issn = {1050-4729},
+  keywords = {manipulators, motion control, path planning, search problems, manipulation
+	planning, movable obstacles, nonlinear search space, object placements,
+	object surface sampling, resolve spatial constraints algorithm, reverse-time
+	search, task-space motion},
+  owner = {dmitry},
+  timestamp = {2009.06.10}
+}
+
+@INPROCEEDINGS{Sugihara2002,
+  author = {Sugihara, T. and Nakamura, Y.},
+  title = {Whole-body cooperative balancing of humanoid robot using COG Jacobian},
+  booktitle = IROS,
+  year = {2002},
+  abstract = {Since humanoid robots have a number of degrees-of-freedom in general,
+	a pattern-based approach of the motion control reduces its difficulty.
+	It is necessary, however, to absorb and compensate disturbances in
+	order to maintain the stability of robots in the real world. We developed
+	a balancing method for humanoid robots with a little modification
+	of predesigned motion trajectories. The method proposed has an advantage
+	that it is allowed to choose any combination of joints as modified
+	properties, so that it has enough flexibility, being applicable for
+	various types of robots and motions. It consists of two phases; in
+	the first phase, the referential COG displacement is decided in accordance
+	with both the short-term and the long-term absorption of disturbances.
+	And in the second phase, the COG is manipulated with the whole-body
+	cooperation, using the COG Jacobian. We verified the validity of
+	the method with some simulations.},
+  doi = {10.1109/IRDS.2002.1041658},
+  file = {Sugihara2002.pdf:Sugihara2002.pdf:PDF},
+  keywords = {biomechanics, legged locomotion, motion control, COG Jacobian, balancing,
+	balancing method, humanoid robots, motion control, motion trajectories,
+	referential COG displacement, stability},
+  owner = {dmitry},
+  timestamp = {2009.01.15}
+}
+
+@TECHREPORT{Taylor1994,
+  author = {C. J. Taylor and D. J. Kriegman},
+  title = {Minimization on the Lie Group SO(3) and Related Manifolds},
+  institution = {Center for Systems Science, Dept. of Electrical Engineering, Yale
+	University},
+  year = {1994},
+  number = {9405},
+  address = {New Haven, CT},
+  month = {April},
+  file = {Taylor1994.pdf:Taylor1994.pdf:PDF},
+  owner = {dmitry},
+  review = {This paper describes a method to "walk" along the space of rotations
+	while trying to minimize some function. This can also be applied
+	to SE(3). Maybe its possible to pair this method with Markov-Chain
+	Monte-Carlo to sample over some subspace of rotations.},
+  timestamp = {2009.04.28}
+}
+
+@INPROCEEDINGS{VandeWeghe2007,
+  author = {Vande Weghe, M. and Ferguson, D. and Srinivasa, S. S.},
+  title = {Randomized path planning for redundant manipulators without inverse kinematics},
+  booktitle = Humanoids,
+  year = {2007},
+  abstract = {We present a sampling-based path planning algorithm capable of efficiently
+	generating solutions for high-dimensional manipulation problems involving
+	challenging inverse kinematics and complex obstacles. Our algorithm
+	extends the rapidly-exploring random tree (RRT) algorithm to cope
+	with goals that are specified in a subspace of the manipulator configuration
+	space through which the search tree is being grown. Underspecified
+	goals occur naturally in arm planning, where the final end effector
+	position is crucial but the configuration of the rest of the arm
+	is not. To achieve this, the algorithm bootstraps an optimal local
+	controller based on the transpose of the Jacobian to a global RRT
+	search. The resulting approach, known as Jacobian transpose-directed
+	rapidly exploring random trees (JT-RRTs), is able to combine the
+	configuration space exploration of RRTs with a workspace goal bias
+	to produce direct paths through complex environments extremely efficiently,
+	without the need for any inverse kinematics. We compare our algorithm
+	to a recently-developed competing approach and provide results from
+	both simulation and a 7 degree-of-freedom robotic arm.},
+  doi = {10.1109/ICHR.2007.4813913},
+  keywords = {Jacobian matrices, end effectors, path planning, position control,
+	redundant manipulators, sampling methods, trees (mathematics), Jacobian
+	transpose-directed rapidly exploring random trees, arm planning,
+	end effector position, manipulator configuration space, redundant
+	manipulators, sampling-based path planning algorithm, search tree},
+  owner = {dmitry},
+  timestamp = {2009.06.10}
+}
+
+@INPROCEEDINGS{Vose2008,
+  author = {T. Vose and P. Umbanhowar and K. M. Lynch},
+  title = {Friction-induced velocity fields for parts sliding on a rigid oscillated
+	plate},
+  booktitle = RSS,
+  year = {2008},
+  file = {Vose2008.pdf:Vose2008.pdf:PDF},
+  owner = {dmitry},
+  timestamp = {2009.09.18}
+}
+
+@ARTICLE{Walker1982,
+  author = {Walker, M.W. and Orin, D.E.},
+  title = {Efficient dynamic computer simulation of robotic mechanisms},
+  journal = {ASME Journal of Dynamic Systems Measurement and Control},
+  year = {1982},
+  volume = {104},
+  pages = {205--211}
+}
+
+@INPROCEEDINGS{Wimbock2007,
+  author = {Wimbock, T. and Ott, C. and Hirzinger and Gerd},
+  title = {Impedance Behaviors for Two-handed Manipulation: Design and Experiments},
+  booktitle = ICRA,
+  year = {2007}
+}
+
+@INPROCEEDINGS{Witkin1994,
+  author = {Andy Witkin and Paul Heckbert},
+  title = {Using Particles to Sample and Control Implicit Surfaces},
+  booktitle = SIGGRAPH,
+  year = {1994},
+  file = {Witkin1994.ps:Witkin1994.ps:PostScript},
+  owner = {dmitry},
+  review = {Sampling methods for implicit surfaces. These surfaces are define
+	by some function (usually a combination of primitive functions) and
+	the paper presents methods for sampling on the surface defined by
+	these functions. The surface can morph, dragging the samples along
+	with it and the samples can be dragged so the surface morphs along
+	with them. The primary method is to sample some inital points on
+	the surface and then repel them away from eachother using potential
+	functions (like a guassian on distance between samples). The samples
+	then settle into a local minimum distribution. It is not clear that
+	the sampling will always be uniform. The paper also describes how
+	to introduce more samples and how to destroy samples when the surface
+	morphs and the number/density of samples must be re-adjusted.},
+  timestamp = {2009.01.05}
+}
+
+@ARTICLE{Yakey2001,
+  author = {Yakey, J. H. and LaValle, S. M. and Kavraki, L. E.},
+  title = {Randomized path planning for linkages with closed kinematic chains},
+  journal = IEEE_J_RA,
+  year = {2001},
+  volume = {17},
+  pages = {951--958},
+  number = {6},
+  abstract = {We extend randomized path planning algorithms to the case of articulated
+	robots that have closed kinematic chains. This is an important class
+	of problems, which includes applications such as manipulation planning
+	using multiple open-chain manipulators that cooperatively grasp an
+	object and planning for reconfigurable robots in which links might
+	be arranged in a loop to ease manipulation or locomotion. Applications
+	also exist in areas beyond robotics, including computer graphics,
+	computational chemistry, and virtual prototyping. Such applications
+	typically involve high degrees of freedom and a parameterization
+	of the configurations that satisfy closure constraints is usually
+	not available. We show how to implement key primitive operations
+	of randomized path planners for general closed kinematics chains.
+	These primitives include the generation of random free configurations
+	and the generation of local paths. To demonstrate the feasibility
+	of our primitives for general chains, we show their application to
+	recently developed randomized planners and present computed results
+	for high-dimensional problems},
+  doi = {10.1109/70.976030},
+  file = {Yakey2001.pdf:Yakey2001.pdf:PDF},
+  issn = {1042-296X},
+  keywords = {closed loop systems, computerised control, path planning, randomised
+	algorithms, robot kinematics, articulated robots, closed kinematic
+	chains, computational chemistry, computer graphics, general chains,
+	general closed kinematics chains, high-dimensional problems, key
+	primitive operations, local path generation, manipulation planning,
+	multiple open-chain manipulators, random free configurations, randomized
+	path planners, randomized path planning, randomized planners, reconfigurable
+	robots, virtual prototyping},
+  owner = {dmitry},
+  review = {Shows how to use radomized gradient descent (RGD) to meet closed-chain
+	constraints. Also describes how to first move in the null-space of
+	theconstraint to get a better direction for random sampling. They
+	also show how to incorporate RGD into an RRT and a PRM. Requires
+	tuning some parameters. Runtimes are really slow.},
+  timestamp = {2009.02.03}
+}
+
+@INPROCEEDINGS{Yamane2004,
+  author = {Yamane, K. and Kuffner, J.J. and Hodgins, J.K.},
+  title = {Synthesizing Animations of Human Manipulation Tasks},
+  booktitle = SIGGRAPH,
+  year = {2004}
+}
+
+@INPROCEEDINGS{Yao2005,
+  author = {Yao, Zhenwang and Gupta, K.},
+  title = {Path planning with general end-effector constraints: using task space
+	to guide configuration space search},
+  booktitle = IROS,
+  year = {2005},
+  pages = {1875--1880},
+  abstract = {In this paper, we address the path planning problem with general end-effector
+	constraints (PPGEC) for robot manipulators. Two approaches are proposed.
+	The first approach is adapted from an existing randomized gradient
+	descent (RGD) method for closed-chain robots. The second approach
+	is radically different. We call it ATACE alternate task-space and
+	configuration-space exploration. Unlike the first approach which
+	searches purely in C-space, ATACE works in both task space and C-space.
+	It explores the task space for end-effector paths satisfying given
+	constraints, and utilizes trajectory tracking technique(s) as a local
+	planner(s) to track these paths in the configuration space. We have
+	implemented both approaches and compare their relative performances
+	in different scenarios. ATACE outperforms RGD in majority (but not
+	all) of the scenarios. We outline intuitive explanations for the
+	relative performances of these two approaches.},
+  doi = {10.1109/IROS.2005.1545305},
+  file = {Yao2005.pdf:Yao2005.pdf:PDF},
+  keywords = {end effectors, gradient methods, path planning, position control,
+	search problems, closed-chain robot, configuration space search,
+	configuration-space exploration, end-effector constraint, path planning,
+	randomized gradient descent method, robot manipulator, trajectory
+	tracking, ATACE, Path planning, end-effector constraints},
+  owner = {dmitry},
+  review = {This paper describes a hybrid planning approach to planning with constraints.
+	The planner is called ATACE. A tree grows in the constrained space
+	and each node in the tree contains a corresponding configuration
+	of the robot. This doesn't really address the case where there are
+	multiple configurations that could correspond to the same lower-dimensional
+	node in constrained space.},
+  timestamp = {2009.01.15}
+}
+
+@INPROCEEDINGS{Yershova2005,
+  author = {Yershova, A. and Jaillet, L. and Simeon, T. and LaValle, S. M.},
+  title = {Dynamic-Domain RRTs: Efficient Exploration by Controlling the Sampling
+	Domain},
+  booktitle = ICRA,
+  year = {2005},
+  pages = {3856--3861},
+  abstract = {Sampling-based planners have solved difficult problems in many applications
+	of motion planning in recent years. In particular, techniques based
+	on the Rapidly-exploring Random Trees (RRTs) have generated highly
+	successful single-query planners. Even though RRTs work well on many
+	problems, they have weaknesses which cause them to explore slowly
+	when the sampling domain is not well adapted to the problem. In this
+	paper we characterize these issues and propose a general framework
+	for minimizing their effect. We develop and implement a simple new
+	planner which shows significant improvement over existing RRT-based
+	planners. In the worst cases, the performance appears to be only
+	slightly worse in comparison to the original RRT, and for many problems
+	it performs orders of magnitude better.},
+  file = {Yershova2005.pdf:Yershova2005.pdf:PDF},
+  keywords = {Motion Planning, RRTs, Voronoi Bias, Motion Planning, RRTs, Voronoi
+	Bias},
+  owner = {dmitry},
+  timestamp = {2009.01.05}
+}
+
+@INPROCEEDINGS{Yershova2009,
+  author = {Anna Yershova and Steven M. LaValle},
+  title = {Motion Planning in Highly Constrained Spaces},
+  booktitle = {Ninth International Workshop on Robot Motion and Control (RoMoCo)},
+  year = {2009},
+  file = {Yershova2009.pdf:Yershova2009.pdf:PDF},
+  review = {This paper shows how to use an adaptive sampling scheme to generate
+	samples for an RRT. It also vaguely addresses the closed-chain kinematic
+	problem. The sample-generation scheme is to sample around nodes on
+	the RRT that you know are valid. There is some parameter tuning that
+	goes along with this.}
+}
+
+@ARTICLE{Zheng2006,
+  author = {Zheng, Q. and Qian, W-H.},
+  title = {An enhanced ray-shooting approach to force-closure problems},
+  journal = {Journal of Manufacturing Science and Engineering},
+  year = {2006},
+  volume = {128},
+  pages = {960--968},
+  number = {4},
+  file = {Zheng2006.pdf:Zheng2006.pdf:PDF}
+}
+
+@ARTICLE{Zhu2003,
+  author = {Zhu, Xiangyang and Wang, Jun},
+  title = {Synthesis of force-closure grasps on 3-D objects based on the Q distance},
+  journal = IEEE_J_RA,
+  year = {2003},
+  volume = {19},
+  pages = {669--679},
+  number = {4},
+  abstract = {The synthesis of force-closure grasps on three-dimensional (3-D) objects
+	is a fundamental issue in robotic grasping and dextrous manipulation.
+	In this paper, a numerical force-closure test is developed based
+	on the concept of Q distance. With some mild and realistic assumptions,
+	the proposed test criterion is differentiable almost everywhere and
+	its derivative can be calculated exactly. On this basis, we present
+	an algorithm for planning force-closure grasps, which is implemented
+	by applying descent search to the proposed numerical test in the
+	grasp configuration space. The algorithm is generally applicable
+	to planning optimal force-closure grasps on 3-D objects with curved
+	surfaces and with arbitrary number of contact points. The effectiveness
+	and efficiency of the algorithm are demonstrated by using simulation
+	examples.},
+  doi = {10.1109/TRA.2003.814499},
+  file = {Zhu2003.pdf:Zhu2003.pdf:PDF},
+  issn = {1042-296X},
+  keywords = {dexterous manipulators, linear programming, 3D objects, Q distance,
+	dextrous manipulation, force-closure grasps synthesis, linear programming,
+	robotic grasping, simulation examples},
+  owner = {dmitry},
+  timestamp = {2009.01.16}
+}
+
+@inproceedings{Collet2009,
+author = {Collet, Alvaro and Berenson, Dmitry and Srinivasa, Siddhartha S. and Ferguson, Dave},
+booktitle = ICRA,
+title = {{Object recognition and full pose registration from a single image for robotic manipulation}},
+year = {2009}
+}
+
+
+@inproceedings{Hauser2008,
+author = {Hauser, K. and Latombe, J.C.},
+booktitle = WAFR,
+title = {{Multi-Modal Motion Planning in Non-Expansive Spaces}},
+year = {2008}
+}
+
+@inproceedings{Berenson2010,
+   author = {Dmitry Berenson and Siddhartha Srinivasa},
+   title = {Probabilistically Complete Planning with End-Effector Pose Constraints},
+   booktitle = ICRA,
+   month = {May},
+   year = {2010}
+} 
+
+@article{Jaillet2010,
+abstract = {This paper addresses path planning to consider a cost function defined over the configuration space. The proposed planner computes low-cost paths that follow valleys and saddle points of the configuration-space costmap. It combines the exploratory strength of the Rapidly exploring Random Tree (RRT) algorithm with transition tests used in stochastic optimization methods to accept or to reject new potential states. The planner is analyzed and shown to compute low-cost solutions with respect to a path-quality criterion based on the notion of mechanical work. A large set of experimental results is provided to demonstrate the effectiveness of the method. Current limitations and possible extensions are also discussed.},
+author = {Jaillet, L\'{e}onard and Cort\'{e}s, Juan and Sim\'{e}on, Thierry},
+file = {:home/dmitry/gamedev\_backup/library/papers/Jaillet2010.pdf:pdf},
+journal = TRO,
+month = aug,
+number = {4},
+pages = {635--646},
+title = {{Sampling-Based Path Planning on Configuration-Space Costmaps}},
+volume = {26},
+year = {2010}
+}
+
+@inproceedings{Pan2010,
+abstract = {We present a new retraction algorithm for high DOF articulated models and use our algorithm to improve the performance of RRT planners in narrow passages. The retraction step is formulated as a constrained optimization problem and performs iterative refinement on the boundary of C-Obstacle space. We also combine the retraction algorithm with decomposition planners to handle very high DOF articulated models. The performance of our approach is analyzed using Voronoi diagrams and we show that our retraction algorithm provides a good approximation to the ideal RRT-extension in constrained environments. We have implemented our algorithm and tested its performance on robots with more than 40 DOFs in complex environments. In practice, we observe significant performance (2-80X) improvement over prior RRT planners on challenging scenarios with narrow passages.},
+author = {Pan, Jia and Zhang, Liangjun and Manocha, Dinesh},
+booktitle = ICRA,
+doi = {10.1109/ROBOT.2010.5509774},
+file = {:home/dmitry/gamedev\_backup/library/papers/Pan2010.pdf:pdf},
+month = may,
+title = {{Retraction-based RRT planner for articulated models}},
+year = {2010}
+}
+
+@inproceedings{Dalibard2008,
+author = {Dalibard, S\'{e}bastien and Laumond, J.P.},
+booktitle = WAFR,
+title = {{Control of probabilistic diffusion in motion planning}},
+year = {2009}
+}
+
+
+@ELECTRONIC{Ratliffwebsite,
+  author = {John Ratcliff},
+  year = {2010},
+  title = {Convex Decomposition Library},
+  url = {http://code.google.com/p/convexdecomposition/},
+}
+
+@inproceedings{Urmson2003,
+abstract = {This paper presents several modifications to the basic rapidly-exploring random tree (RRT) search algorithm. The fundamental idea is to utilize a heuristic quality function to guide the search. Results from a relevant simulation experiment illustrate the benefit and drawbacks of the developed algorithms. The paper concludes with several promising directions for future research.},
+author = {Urmson, C. and Simmons, R.},
+booktitle = IROS,
+doi = {10.1109/IROS.2003.1248805},
+file = {:home/dmitry/gamedev\_backup/library/papers/Urmson2003.pdf:pdf},
+year = {2003},
+title = {{Approaches for heuristically biasing RRT growth}},
+}
+@inproceedings{Ferguson2006,
+abstract = {We present an anytime algorithm for planning paths through high-dimensional, non-uniform cost search spaces. Our approach works by generating a series of rapidly-exploring random trees (RRTs), where each tree reuses information from previous trees to improve its growth and the quality of its resulting path. We also present a number of modifications to the RRT algorithm that we use to bias the search in favor of less costly solutions. The resulting approach is able to produce an initial solution very quickly, then improve the quality of this solution while deliberation time allows. It is also able to guarantee that subsequent solutions will be better than all previous ones by a user-defined improvement bound. We demonstrate the effectiveness of the algorithm on both single robot and multirobot planning domains},
+author = {Ferguson, Dave and Stentz, Anthony},
+booktitle = IROS,
+doi = {10.1109/IROS.2006.282100},
+file = {:home/dmitry/gamedev\_backup/library/papers/Ferguson2006.pdf:pdf},
+title = {{Anytime RRTs}},
+year = {2006}
+}
+@inproceedings{Ettlin2006,
+abstract = {A fundamental property of rough-terrain motion planning is that each configuration of the robot on the terrain can be assigned a characteristic navigational difficulty based on the terrain topography and physical properties of the underground. This measure is computed in an application-dependent manner based on the properties of the robot and terrain model employed. In this work we propose a motion planner based on rapidly exploring random trees (RRTs) which takes into consideration the characteristics of the underground. In the suggested solution, the randomised expansion of the RRTs is biased towards regions of low navigational difficulty. The motion planner generates trajectories which follow areas of easy navigation and only deviates to harder regions where inevitable. In particular, the maximal difficulty on the path is approximately minimised. For single-query motion planning tasks, bidirectional RRTs have proven to be effective in rapidly computing a path between the initial and goal configurations. To deal with complex distributions of the terrain characteristics, this concept has been extended. Rooted at randomly chosen configurations, a number of additional RRTs is grown. While the algorithm discussed is intended for rough-terrain motion planning and demonstrated in this context, it can easily be adapted to other domains where a characteristic measure for the desirability of attaining individual configurations can be defined},
+author = {Ettlin, Alan and Bleuler, Hannes},
+booktitle = IROS,
+doi = {10.1109/IROS.2006.282390},
+file = {:home/dmitry/gamedev\_backup/library/papers/Ettlin2006.pdf:pdf},
+title = {{Randomised Rough-Terrain Robot Motion Planning}},
+year = {2006}
+}
+
+@article{Calinon2007,
+abstract = {We present a programming-by-demonstration framework for generically extracting the relevant features of a given task and for addressing the problem of generalizing the acquired knowledge to different contexts. We validate the architecture through a series of experiments, in which a human demonstrator teaches a humanoid robot simple manipulatory tasks. A probability-based estimation of the relevance is suggested by first projecting the motion data onto a generic latent space using principal component analysis. The resulting signals are encoded using a mixture of Gaussian/Bernoulli distributions (Gaussian mixture model/Bernoulli mixture model). This provides a measure of the spatio-temporal correlations across the different modalities collected from the robot, which can be used to determine a metric of the imitation performance. The trajectories are then generalized using Gaussian mixture regression. Finally, we analytically compute the trajectory which optimizes the imitation metric and use this to generalize the skill to different contexts.},
+author = {Calinon, Sylvain and Guenter, Florent and Billard, Aude},
+doi = {10.1109/TSMCB.2006.886952},
+file = {:home/dmitry/gamedev\_backup/library/papers/Calinon2007.pdf:pdf},
+issn = {1083-4419},
+journal = IEEE_J_SMCB,
+keywords = {Algorithms,Artificial Intelligence,Biomimetics,Biomimetics: methods,Cybernetics,Cybernetics: methods,Humans,Imitative Behavior,Imitative Behavior: physiology,Robotics,Robotics: methods,Task Performance and Analysis},
+month = apr,
+number = {2},
+pages = {286--298},
+pmid = {17416157},
+title = {{On Learning, Representing, and Generalizing a Task in a Humanoid Robot}},
+volume = {37},
+year = {2007}
+}
+
+@inproceedings{Hsu2003,
+abstract = {Probabilistic roadmap (PRM) planners have been successful in path planning of robots with many degrees of freedom, but narrow passages in a robot's configuration space create significant difficulty for PRM planners. This paper presents a hybrid sampling strategy in the PRM framework for finding paths through narrow passages. A key ingredient of the new strategy is the bridge test, which boosts the sampling density inside narrow passages. The bridge test relies on simple tests of local geometry and can be implemented efficiently in high-dimensional configuration spaces. The strengths of the bridge test and uniform sampling complement each other naturally and are combined to generate the final hybrid sampling strategy. Our planner was tested on point robots and articulated robots in planar workspaces. Preliminary experiments show that the hybrid sampling strategy enables relatively small roadmaps to reliably capture the connectivity of configuration spaces with difficult narrow passages.},
+author = {Hsu, D. and Reif, J.},
+booktitle = ICRA,
+file = {:home/dmitry/gamedev\_backup/library/papers/Hsu2003.pdf:pdf},
+year = {2003},
+title = {{The bridge test for sampling narrow passages with probabilistic roadmap planners}},
+}
+@inproceedings{Hsu2006,
+abstract = {Free-space dilation is an effective approach for narrow passage sampling, a well-recognized difficulty in probabilistic roadmap (PRM) planning. Key to this approach are methods for dilating the free space and for determining the amount of dilation needed. This paper presents a new method of dilation by shrinking the geometric models of robots and obstacles. Compared with existing work, the new method is more efficient in both running time and memory usage. It is also integrated with collision checking, a key operation in PRM planning. The efficiency of the dilation method enables a new PRM planner which quickly constructs a series of dilated free spaces and automatically determine the amount of dilation needed. Experiments show that both the dilation method and the planner work well in complex geometric environments. In particular, the planner reliably solved the most difficult version of the alpha puzzle, a benchmark test for PRM planners},
+author = {Hsu, D. and Sanchez-Ante, G. and Cheng, Ho-lun and Latombe, J.-C},
+booktitle = ICRA,
+doi = {10.1109/ROBOT.2006.1641881},
+file = {:home/dmitry/gamedev\_backup/library/papers/Hsu2006.pdf:pdf},
+isbn = {0-7803-9505-0},
+year = {2006},
+title = {{Multi-level free-space dilation for sampling narrow passages in PRM planning}},
+}
+
+@inproceedings{Rodriguez2006,
+abstract = {Tree-based path planners have been shown to be well suited to solve various high dimensional motion planning problems. Here we present a variant of the Rapidly-Exploring Random Tree (RRT) path planning algorithm that is able to explore narrow passages or difficult areas more effectively. We show that both workspace obstacle information and C-space information can be used when deciding which direction to grow. The method includes many ways to grow the tree, some taking into account the obstacles in the environment. This planner works best in difficult areas when planning for free flying rigid or articulated robots. Indeed, whereas the standard RRT can face difficulties planning in a narrow passage, the tree based planner presented here works best in these areas},
+author = {Rodriguez,, S. and Amato, N.M.},
+booktitle = ICRA,
+file = {:home/dmitry/gamedev\_backup/library/papers/Rodriguez2006.pdf:pdf},
+year = {2006},
+pages={895--900},
+title = {An obstacle-based rapidly-exploring random tree},
+}
+
+@inproceedings{Dalibard2009,
+author = {Dalibard, S\'{e}bastien and Laumond, J.P.},
+booktitle = WAFR,
+file = {:home/dmitry/gamedev\_backup/library/papers/Dalibard2008.pdf:pdf},
+pages = {467--481},
+publisher = {Springer},
+title = {{Control of probabilistic diffusion in motion planning}},
+year = {2009}
+}
+
+@article{Geraerts2007,
+author = {Geraerts, R. and Overmars, M. H.},
+doi = {10.1177/0278364907079280},
+file = {:home/dmitry/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Geraerts, Overmars - 2007 - Creating High-quality Paths for Motion Planning.pdf:pdf},
+issn = {0278-3649},
+journal = IJRR,
+number = {8},
+pages = {845--863},
+title = {{Creating High-quality Paths for Motion Planning}},
+volume = {26},
+year = {2007}
+}
+
+@article{Kavraki1998,
+author = {Kavraki, L and Latombe, J.C. and Motwani, Rajeev and Raghavan, Prabhakar},
+journal = {Journal of Computer and System Sciences},
+month = aug,
+number = {1},
+pages = {50--60},
+title = {{Randomized Query Processing in Robot Path Planning}},
+volume = {57},
+year = {1998}
+}
+
+@inproceedings{Apaydin2001,
+author = {Apaydin, M.S. and Singh, A.P. and Brutlag, D.L. and Latombe, J.-C.},
+booktitle = ICRA,
+title = {{Capturing molecular energy landscapes with probabilistic conformational roadmaps}},
+year = {2001}
+}
+
+@inproceedings{Berenson2011b,
+author = {Berenson, D. and Simeon, T. and Srinivasa, S.},
+booktitle = ICRA,
+title = {{Addressing Cost-Space Chasms in Manipulation Planning}},
+year = {2011}
+}
+
+@article{Zucker2008,
+author = {Zucker, Matt and Kuffner, James and Bagnell, J. Andrew},
+file = {:home/berenson/library/Zucker2008.pdf:pdf},
+isbn = {978-1-4244-1646-2},
+journal = ICRA,
+month = may,
+publisher = {Ieee},
+title = {{Adaptive workspace biasing for sampling-based planners}},
+year = {2008}
+}
+
+@inproceedings{Martin2007,
+author = {Martin, S.R. and Wright, S.E. and Sheppard, J.W.},
+booktitle = CASE,
+file = {:home/berenson/library/Martin2007.pdf:pdf},
+title = {{Offline and Online Evolutionary Bi-Directional RRT Algorithms for Efficient Re-Planning in Environments with Moving Obstacles}},
+year = {2007}
+}
+
+@inproceedings{Lien2005,
+author = {Lien, J.M. and Lu, Yanyan},
+booktitle = RSS,
+file = {:home/berenson/library/Lien2005.pdf:pdf},
+title = {{Planning motion in environments with similar obstacles}},
+year = {2005}
+}
+
+@inproceedings{Jetchev2010,
+author = {Jetchev, Nikolay and Toussaint, Marc},
+booktitle = ICRA,
+file = {:home/berenson/library/Jetchev2010.pdf:pdf},
+title = {{Trajectory prediction in cluttered voxel environments}},
+year = {2010}
+}
+
+@inproceedings{Branicky2008,
+author = {Branicky, Michael S. and Knepper, Ross and Kuffner, James J.},
+booktitle = ICRA,
+file = {:home/berenson/library/Branicky2008.pdf:pdf},
+isbn = {978-1-4244-1646-2},
+keywords = {Collision Avoidance,Motion and Path Planning,Nonholonomic Motion Planning},
+title = {{Path and trajectory diversity: Theory and algorithms}},
+year = {2008}
+}
+
+@inproceedings{Zucker2007,
+author = {Zucker, Matt and Kuffner, James and Branicky, Michael},
+booktitle = ICRA,
+file = {:home/berenson/library/Zucker2007.pdf:pdf},
+isbn = {1-4244-0602-1},
+issn = {1050-4729},
+title = {{Multipartite RRTs for Rapid Replanning in Dynamic Environments}},
+year = {2007}
+}
+
+@inproceedings{Knepper2008,
+author = {Knepper, R. and Mason, M.},
+booktitle = ISER,
+file = {:home/berenson/library/Knepper2008.pdf:pdf},
+publisher = {Springer},
+title = {{Empirical sampling of path sets for local area motion planning}},
+year = {2008}
+}
+@inproceedings{Green2007,
+author = {Green, C. and Kelly, Alonzo},
+booktitle = ISRR,
+title = {{Toward optimal sampling in the space of paths}},
+year = {2007}
+}
+
+@BOOK{Jacobson1970,
+  title = {Differential Dynamic Programming},
+  publisher = {Elsevier},
+  year = {1970},
+  author = {Jacobson, D. H. and Mayne, D. Q.},
+}
+
+@inproceedings{Lau2005,
+author = {Lau, Manfred and Kuffner, J.J.},
+booktitle = SIGGRAPH,
+title = {{Behavior planning for character animation}},
+year = {2005}
+}
+
+@inproceedings{Lee2002,
+author = {Lee, Jehee and Chai, J. and Reitsma, P.S.A. and Hodgins, J.K. and Pollard, N.S.},
+booktitle = SIGGRAPH,
+title = {{Interactive control of avatars animated with human motion data}},
+year = {2002}
+}
+
+@incollection{Tassa2008,
+title = {Receding Horizon Differential Dynamic Programming},
+author = {Yuval Tassa and Tom Erez and William Smart},
+booktitle = NeurIPS,
+year = {2008}
+}
+
+@inproceedings{Stolle2006,
+author = {Stolle, Martin and Atkeson, C.G.},
+booktitle = ICRA,
+title = {{Policies based on trajectory libraries}},
+year = {2006}
+}
+
+@inproceedings{Atkeson2003,
+author = {Atkeson, C.G. and Morimoto, J.},
+booktitle = NeurIPS,
+file = {:home/berenson/library/Atkeson2003.pdf:pdf},
+title = {{Nonparametric representation of policies and value functions: A trajectory-based approach}},
+year = {2003}
+}
+
+@inproceedings{Liu2009,
+author = {Liu, Chenggang and Atkeson, Christopher G.},
+booktitle = IROS,
+file = {:home/berenson/library/Liu2009.pdf:pdf},
+title = {{Standing balance control using a trajectory library}},
+year = {2009}
+}
+
+@inproceedings{Stolle2007,
+author = {Stolle, Martin and Tappeiner, Hanns and Chestnutt, Joel and Atkeson, C.G.},
+booktitle = IROS,
+title = {{Transfer of policies based on trajectory libraries}},
+year = {2007}
+}
+
+@inproceedings{Dragan2011,
+author = {Dragan, A.D. and Gordon, G.J. and Srinivasa, S.S.},
+booktitle = ISRR,
+title = {{Learning from Experience in Manipulation Planning: Setting the Right Goals}},
+year = {2011}
+}
+
+@article{Sakoe1978,
+author = {Sakoe, H and Chiba, S},
+journal = IEEE_J_ASSP,
+number = {1},
+title = {{Dynamic programming algorithm optimization for spoken word recognition}},
+volume = {ASSP-26},
+year = {1978}
+}
+
+@inproceedings{Hauser2006,
+author = {Hauser, Kris and Bretl, Tim and Harada, Kensuke and Latombe, Jean-claude},
+booktitle = WAFR,
+title = {{Using motion primitives in probabilistic sample-based planning for humanoid robots}},
+year = {2006}
+}
+
+@book{Choset2005,
+	Author = {H. Choset and K. M. Lynch and S. Hutchinson and G. Kantor and W. Burgard and L. E. Kavraki and S. Thrun},
+	Publisher = {MIT Press},
+	Title = {Principles of Robot Motion: Theory, Algorithms, and Implementations},
+	Year = {2005}}
+
+	
+@inproceedings{Mainprice2011,
+author = {Mainprice, Jim and Sisbot, E Akin and Cortes, Juan and Alami, Rachid and Simeon, Thierry},
+booktitle = ICRA,
+file = {:home/berenson/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Mainprice et al. - 2011 - Planning human-aware motions using a sampling-based costmap planner.pdf:pdf},
+title = {{Planning human-aware motions using a sampling-based costmap planner}},
+year = {2011}
+}
+
+@article{Sisbot2007,
+author = {Sisbot, Emrah Akin and Marin-Urias, Luis F. and Alami, Rachid and Simeon, Thierry},
+file = {:home/berenson/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Sisbot et al. - 2007 - Human Aware Mobile Robot Motion Planner.pdf:pdf},
+journal = TRO,
+pages = {874--883},
+title = {{Human Aware Mobile Robot Motion Planner}},
+volume = {23},
+year = {2007}
+}
+
+@inproceedings{Kaelbling2011,
+author = {Kaelbling, Leslie Pack and Lozano-Perez, Tomas},
+booktitle = ICRA,
+month = may,
+pages = {1470--1477},
+title = {{Hierarchical task and motion planning in the now}},
+year = {2011}
+}
+
+@article{Srinivasa2012,
+   author = "Siddhartha Srinivasa and Dmitry Berenson and Maya Cakmak and Alvaro {Collet Romea} and Mehmet Dogar and Anca Dragan and Ross Alan Knepper and Tim D Niemueller and Kyle Strabala and J Michael Vandeweghe and Julius Ziegler",
+   editor = "IEEE",
+   title = "HERB 2.0: Lessons Learned from Developing a Mobile Manipulator for the Home",
+   journal = "Proceedings of the IEEE",
+   pages = "1-19",
+   month = "July",
+   year = "2012",
+   volume = "100",
+   number = "8",
+ }
+
+@article{Goodrich2007,
+author = {Goodrich, Michael A. and Schultz, Alan C.},
+issn = {1551-3955},
+journal = {Foundations and Trends in Human-Computer Interaction},
+month = feb,
+number = {3},
+pages = {203--275},
+title = {{Human-Robot Interaction: A Survey}},
+volume = {1},
+year = {2007}
+}
+
+@article{Karaman2011,
+  Author = {Karaman and Frazzoli},
+  Date-Modified = {2011-10-05 19:04:22 +0000},
+  Journal = IJRR,
+  Month = {June},
+  Number = {7},
+  Pages = {846--894},
+  Title = {Sampling-based Algorithms for Optimal Motion Planning},
+  Volume = {30},
+  Year = {2011}}
+  
+@INPROCEEDINGS{Kalakrishnan2011, 
+author={Kalakrishnan, M. and Chitta, S. and Theodorou, E. and Pastor, P. and Schaal, S.}, 
+booktitle=ICRA,
+title={STOMP: Stochastic trajectory optimization for motion planning}, 
+year={2011}, 
+month={may}, 
+volume={}, 
+number={}, 
+pages={4569 -4574}, 
+keywords={STOMP;collision avoidance;cost function;end-effector;mobile manipulation system;stochastic trajectory optimization for motion planning;collision avoidance;end effectors;mobile robots;optimisation;stochastic processes;}, 
+doi={10.1109/ICRA.2011.5980280}, 
+ISSN={1050-4729},}
+
+
+@INPROCEEDINGS{Berenson2012, 
+author={Berenson, D. and Abbeel, P. and Goldberg, K.}, 
+booktitle=ICRA,
+title={A robot path planning framework that learns from experience}, 
+year={2012}, 
+month={may}, 
+volume={}, 
+number={}, 
+pages={3671 -3678}, 
+keywords={PR2 mobile manipulator;correlation;domestic assistance;learn from experience;library manager;minimally invasive surgery robot;path library;path retrieval;planning from scratch module;retrieve and repair module;robot assisted surgery;robot path planning;task manipulation;manipulators;medical robotics;mobile robots;path planning;surgery;}, 
+doi={10.1109/ICRA.2012.6224742}, 
+ISSN={1050-4729},}
+
+
+@article{Hauser2010,
+author = {Hauser, K. and Ng-Thow-Hing, V.},
+issn = {0278-3649},
+journal = IJRR,
+keywords = {humanoid robots,hybrid systems,manipulation,motion planning},
+month = dec,
+title = {{Randomized multi-modal motion planning for a humanoid robot manipulation task}},
+year = {2010}
+}
+
+@article{Cambon2009,
+author = {Cambon, S. and Alami, R. and Gravot, F.},
+issn = {0278-3649},
+journal = IJRR,
+keywords = {manipulation planning,motion,planning,planning formalism,task planning},
+number = {1},
+pages = {104--126},
+title = {{A Hybrid Approach to Intricate Motion, Manipulation and Task Planning}},
+url = {http://ijr.sagepub.com/cgi/doi/10.1177/0278364908097884},
+volume = {28},
+year = {2009}
+}
+
+@inproceedings{Plaku2010,
+author = {Plaku, Erion and Hager, Gregory},
+booktitle = ICRA,
+title = {{Sampling-based motion planning with symbolic, geometric, and differential constraints}},
+year = {2010}
+}
+
+@inproceedings{Koval2015,
+author = {Koval, Michael C. and King, Jennifer E. and Pollard, Nancy S. and Srinivasa, Siddhartha S.},
+booktitle = IROS,
+doi = {10.1109/IROS.2015.7353743},
+isbn = {978-1-4799-9994-1},
+title = {{Robust trajectory selection for rearrangement planning as a multi-armed bandit problem}},
+year = {2015}
+}
+
+@article{Gurobi2016,
+title={Gurobi optimization library},
+author={Gurobi},
+journal={Proprietary: gurobi.com},
+year={2016}
+}
+
+@inproceedings{Smolen2009,
+author = {Smolen, Jerzy and Patriciu, Alexandru},
+booktitle = {2009 Second International Conferences on Advances in Computer-Human Interactions},
+file = {:home/berenson/Desktop/deform papers/04782515.pdf:pdf},
+month = feb,
+pages = {199--204},
+title = {{Deformation Planning for Robotic Soft Tissue Manipulation}},
+year = {2009}
+}
+
+@article{Hirai2000,
+author = {Hirai, S. and Wada, T.},
+file = {:home/berenson/Desktop/deform papers/closest\_robotica2000.pdf:pdf},
+issn = {02635747},
+journal = {Robotica},
+month = jan,
+number = {1},
+pages = {3--11},
+title = {{Indirect simultaneous positioning of deformable objects with multi-pinching fingers based on an uncertain model}},
+volume = {18},
+year = {2000}
+}
+
+@inproceedings{Wada2001,
+author = {Wada, T and Hirai, S and Kawarnura, S and Karniji, N},
+booktitle = ICRA,
+file = {:home/berenson/Desktop/deform papers/DARPA Award.pdf:pdf},
+title = {{Robust manipulation of deformable objects by a simple PID feedback}},
+year = {2001},
+pages={85--90},
+}
+
+@ARTICLE{Gopalakrishnan2005,
+	author ={K. Gopalakrishnan and Ken Goldberg},
+	title = {D-Space and Deform Closure Grasps of Deformable Parts}, 
+	journal = IJRR,
+	volume = {24},
+	issue = {11}, 
+	month = {November},
+	year = {2005}
+}
+
+@incollection{Khalil2010,
+author = {Khalil, F and Payeur, P},
+booktitle = {Robot Manipulators, Trends and Development},
+chapter = {28},
+publisher = {InTech},
+file = {:home/berenson/Desktop/deform papers/survey.pdf:pdf},
+pages = {587--621},
+title = {{Dexterous robotic manipulation of deformable objects with multi-sensory feedback -- a review}},
+year = {2010}
+}
+
+@inproceedings{Desbrun1999,
+author = {Desbrun, M and Schr\"{o}der, P and Barr, Alan},
+booktitle = {Graphics Interface},
+file = {:home/berenson/Desktop/deform papers/GI99.pdf:pdf},
+title = {{Interactive animation of structured deformable objects}},
+year = {1999}
+}
+
+@inproceedings{Pezzementi2008,
+author = {Pezzementi, Zachary and Ursu, Daniel and Misra, Sarthak and Okamura, Allison M.},
+booktitle = {2008 Symposium on Haptic Interfaces for Virtual Environment and Teleoperator Systems},
+doi = {10.1109/HAPTICS.2008.4479944},
+file = {:home/berenson/Desktop/deform papers/Haptics08-Pezzementi.pdf:pdf},
+isbn = {978-1-4244-2005-6},
+month = mar,
+pages = {209--215},
+title = {{Modeling Realistic Tool-Tissue Interactions with Haptic Feedback: A Learning-based Method}},
+year = {2008}
+}
+
+@article{Chentanez2009,
+author = {Chentanez, Nuttapong and Alterovitz, Ron and Ritchie, Daniel and Cho, Lita and Hauser, Kris K. and Goldberg, Ken and Shewchuk, Jonathan R. and O'Brien, James F.},
+ title = {Interactive Simulation of Surgical Needle Insertion and Steering},
+ journal = SIGGRAPH,
+ issue_date = {August 2009},
+ volume = {28},
+ number = {3},
+ month = jul,
+ year = {2009},
+ issn = {0730-0301},
+ pages = {88:1--88:10},
+ articleno = {88},
+ numpages = {10},
+ acmid = {1531394},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {coupled simulation, needle insertion, real-time finite element methods, surgical simulation},
+}
+
+
+@article{Faure2011,
+address = {New York, New York, USA},
+author = {Faure, Fran\c{c}ois and Gilles, Benjamin and Bousquet, Guillaume and Pai, Dinesh K.},
+doi = {10.1145/1964921.1964968},
+file = {:home/berenson/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Faure et al. - 2011 - Sparse meshless models of complex deformable solids.pdf:pdf},
+isbn = {9781450309431},
+journal = SIGGRAPH,
+keywords = {deformable solid,mesh-,physically based animation},
+number = {212},
+pages = {1},
+publisher = {ACM Press},
+title = {{Sparse meshless models of complex deformable solids}},
+volume = {1},
+year = {2011}
+}
+
+@article{Lang2002,
+author = {Lang, Jochen and Pai, DK and Woodham, RJ},
+file = {:home/berenson/Desktop/deform papers/LaPaWo02.pdf:pdf},
+journal = IJRR,
+keywords = {computer graphics,de-,elastic solids,formable models,haptics,model acquisition,robotics,scanning},
+number = {8},
+pages = {713--733},
+title = {{Acquisition of elastic models for interactive simulation}},
+volume = {21},
+year = {2002}
+}
+
+@inproceedings{Saha2008,
+author="Saha, Mitul
+and Isto, Pekka
+and Latombe, Jean-Claude",
+title="Motion Planning for Robotic Manipulation of Deformable Linear Objects",
+bookTitle=ISER,
+year="2008",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="23--32",
+abstract="A new motion planner is described to manipulate deformable linear objects (DLOs) and tie knots (both self-knots and knots around static objects) using two cooperating robotic arms. This planner blends new ideas with pre-existing concepts and techniques from knot theory, motion planning, and computational modeling. Unlike in traditional motion planning, the planner's goal is a topological state of the DLO rather than some exact geometry. Using an input physical model of the DLO, it searches for a maniplation path by constructing a topologically-biased probabilistic roadmap in the configuration space of the DLO. Static needles are inserted to ensure the integrity of loops of the DLO during manipulation and to make plans robust to imperfections in the physical model. The planner was tested both in simulation and on a dual-PUMA-560 hardware platform to achieve various knots, like bowline, neck-tie, bow (shoe-lace), and stun-sail.",
+}
+
+
+@inproceedings{Frank2011,
+author = {Frank, Barbara and Stachniss, Cyrill and Abdo, Nichola and Burgard, Wolfram},
+booktitle = IROS,
+file = {:home/berenson/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Frank et al. - 2011 - Efficient motion planning for manipulation robots in environments with deformable objects.pdf:pdf},
+month = sep,
+pages = {2180--2185},
+title = {{Efficient motion planning for manipulation robots in environments with deformable objects}},
+year = {2011}
+}
+
+
+@inproceedings{Lakshmanan2012,
+author = {Karthik Lakshmanan and Apoorva Sachdev and Ziang Xie and Dmitry Berenson and Ken Goldberg and Pieter Abbeel},
+booktitle = ISER,
+title = {{A Constraint-Aware Motion Planning Algorithm for Robotic Folding of Clothes}},
+year = {2012}
+}
+
+@inproceedings{Kang2002,
+author = {Kang, H and Wen, J.T.},
+booktitle = IROS,
+title = {{Robotic knot tying in minimally invasive surgeries}},
+year = {2002}
+}
+
+@article{Moll2006,
+author = {Moll, Mark and Kavraki, Lydia E},
+file = {:home/berenson/Desktop/moll2006path-plan-deformable-linear.pdf:pdf},
+journal = TRO,
+number = {4},
+pages = {625--636},
+title = {{Path Planning for Deformable Linear Objects}},
+type = {article},
+volume = {22},
+year = {2006}
+}
+
+@article{Bretl2013,
+author = {Bretl, T. and McCarthy, Z.},
+journal = IJRR,
+month = jun,
+number = {1},
+pages = {48--68},
+title = {{Quasi-static manipulation of a Kirchhoff elastic rod based on a geometric analysis of equilibrium configurations}},
+volume = {33},
+year = {2013}
+}
+
+@article{Balkcom2008,
+author = {Balkcom, D. J. and Mason, M. T.},
+file = {:home/berenson/Desktop/The International Journal of Robotics Research-2008-Balkcom-613-27.pdf:pdf},
+issn = {0278-3649},
+journal = IJRR,
+month = may,
+number = {5},
+pages = {613--627},
+title = {{Robotic origami folding}},
+volume = {27},
+year = {2008}
+}
+
+@inproceedings{VandenBerg2010,
+author = {van den Berg, Jur and Miller, Stephen and Goldberg, Ken and Abbeel, Pieter},
+booktitle = {Workshop on the Algorithmic Foundations of Robotics},
+doi = {10.1007/978-3-642-17452-0},
+file = {:home/berenson/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/van den Berg et al. - 2010 - Gravity-Based Robotic Cloth Folding.pdf:pdf},
+isbn = {978-3-642-17451-3},
+series = {Springer Tracts in Advanced Robotics},
+title = {{Gravity-Based Robotic Cloth Folding}},
+url = {http://www.springerlink.com/content/k274575406t61618/},
+year = {2010}
+}
+
+@inproceedings{Patil2011,
+author = {Patil, Sachin and van den Berg, J and Alterovitz, Ron},
+booktitle = RSS,
+title = {{Motion planning under uncertainty in highly deformable environments}},
+year = {2011}
+}
+
+@inproceedings{Cortes2012,
+author = {Cortes, Juan and Al-bluwi, Ibrahim},
+booktitle = {ASME Mechanisms and Robotics Conference},
+title = {{A ROBOTICS APPROACH TO ENHANCE CONFORMATIONAL SAMPLING OF PROTEINS Some Basic Notions of Biochemistry}},
+year = {2012}
+}
+
+@article{Al-Bluwi2012,
+author = {Al-Bluwi, Ibrahim and Sim\'{e}on, Thierry and Cort\'{e}s, Juan},
+journal = {Computer Science Review},
+month = {July},
+number = {4},
+pages = {125--143},
+title = {{Motion planning algorithms for molecular simulations: A survey}},
+volume = {6},
+year = {2012}
+}
+
+@inproceedings{Nath2012,
+author = {Nath, Shuvra Kanti and Thomas, Shawna and Ekenna, Chinwe and Amato, Nancy M.},
+booktitle = {Proceedings of the ACM Conference on Bioinformatics, Computational Biology and Biomedicine},
+month = {October},
+pages = {44--51},
+publisher = {ACM Press},
+title = {{A multi-directional rapidly exploring random graph (mRRG) for protein folding}},
+year = {2012}
+}
+
+@article{Tapia2010,
+author = {Tapia, Lydia and Thomas, Shawna and Amato, Nancy M.},
+journal = {Communications in Information \& Systems},
+number = {1},
+pages = {53--68},
+publisher = {International Press of Boston},
+title = {{A Motion Planning Approach to Studying Molecular Motions}},
+volume = {10},
+year = {2010}
+}
+
+
+@article{Gipson2013,
+author = {Gipson, Bryant and Moll, Mark and Kavraki, Lydia E},
+file = {:home/berenson/Dropbox/CAREER/papers/DMs/2013 sims a hybrid method for rapid conformational.pdf:pdf},
+issn = {1932-6203},
+journal = {PloS one},
+month = jan,
+number = {7},
+pmid = {23935893},
+title = {{SIMS: a hybrid method for rapid conformational analysis.}},
+volume = {8},
+year = {2013}
+}
+
+@article{DeGroot1997,
+author = {de Groot, B L and van Aalten, D M and Scheek, R M and Amadei, A and Vriend, G and Berendsen, H J},
+file = {:home/berenson/Dropbox/CAREER/papers/DMs/concoord.pdf:pdf},
+issn = {0887-3585},
+journal = {Proteins},
+month = oct,
+number = {2},
+pages = {240--51},
+pmid = {9329088},
+title = {{Prediction of protein conformational freedom from distance constraints.}},
+volume = {29},
+year = {1997}
+}
+
+@article{Havel1998,
+author = {Havel, TF},
+file = {:home/berenson/Dropbox/CAREER/papers/DMs/havel-distgeom-review.pdf:pdf},
+journal = {Encyclopedia of Computational Chemistry},
+title = {{Distance geometry: Theory, algorithms, and chemical applications}},
+year = {1998}
+}
+
+@article{Muller2007,
+author = {M\"{u}ller, Matthias and Heidelberger, Bruno and Hennix, Marcus and Ratcliff, John},
+file = {:home/berenson/Dropbox/CAREER/papers/positionbasedphysics/PositionBasedPhysics.pdf:pdf},
+issn = {10473203},
+journal = {Journal of Visual Communication and Image Representation},
+month = apr,
+number = {2},
+pages = {109--118},
+title = {{Position based dynamics}},
+volume = {18},
+year = {2007}
+}
+
+@article{Bender2014,
+author = {Bender, Jan and M\"{u}ller, Matthias and Otaduy, Miguel a. and Teschner, Matthias and Macklin, Miles},
+journal = {Computer Graphics Forum},
+month = apr,
+title = {{A Survey on Position-Based Simulation Methods in Computer Graphics}},
+year = {2014}
+}
+
+@article{Macklin2014,
+author = {Macklin, Miles and M\"{u}ller, Matthias and Chentanez, Nuttapong and Kim, Tae-Yong},
+journal = SIGGRAPH,
+number = {4},
+pages = {104},
+publisher = {ACM},
+title = {{Unified Particle Physics for Real-Time Applications}},
+volume = {33},
+year = {2014}
+}
+
+@inproceedings{Gayle2005,
+author = {Gayle, R and Lin, M.C. and Manocha, D},
+booktitle = ICRA,
+pages = {1046--1053},
+title = {{Constraint-Based Motion Planning of Deformable Robots}},
+year = {2005}
+}
+
+@TECHREPORT{Gibson1997,
+author = {Sarah F. F. Gibson and Brian Mirtich},
+title = {A Survey of Deformable Modeling in Computer Graphics},
+institution = {Mitsubishi Electric Research Laboratories},
+year = {1997}
+}
+
+@article{Irving2004,
+author = {Irving, G and Teran, J and Fedkiw, R},
+journal = SIGGRAPH,
+isbn = {3905673142},
+issn = {17275288},
+pages = {131--140},
+publisher = {ACM Press},
+title = {{Invertible finite elements for robust simulation of large deformation}},
+year = {2004}
+}
+
+@article{Muller2002,
+ author = {M\"{u}ller, Matthias and Dorsey, Julie and McMillan, Leonard and Jagnow, Robert and Cutler, Barbara},
+ title = {Stable Real-time Deformations},
+ journal = SIGGRAPH,
+ year = {2002},
+ isbn = {1-58113-573-4},
+ location = {San Antonio, Texas},
+ pages = {49--54},
+ numpages = {6},
+ acmid = {545269},
+ publisher = {ACM Press},
+ address = {New York, NY, USA},
+ keywords = {elasticity, finite elements, large deformations, physically based Animation, stiffness warping},
+} 
+
+@inproceedings{Maris2010,
+author = {Maris, B and Botturi, D and Fiorini, P},
+booktitle = IROS,
+file = {::},
+title = {{Trajectory planning with task constraints in densely filled environments}},
+year  ={2010}, 
+volume={}, 
+number={}, 
+pages ={2333--2338}, 
+month = {Oct},
+}
+
+@article{Bergou2008,
+author = {Bergou, Mikl\'{o}s and Wardetzky, Max and Robinson, Stephen and Audoly, Basile and Grinspun, Eitan},
+journal = SIGGRAPH,
+month = aug,
+number = {3},
+pages = {1},
+publisher = {ACM},
+title = {{Discrete elastic rods}},
+volume = {27},
+year = {2008}
+}
+
+@article{Goldenthal2007,
+author = {Goldenthal, Rony and Harmon, David and Fattal, Raanan and Bercovier, Michel and Grinspun, Eitan},
+journal = SIGGRAPH,
+number = {3},
+title = {{Efficient Simulation of Inextensible Cloth}},
+volume = {26},
+year = {2007}
+}
+
+@inproceedings{Baraff1998,
+author = {Baraff, David and Witkin, Andrew},
+booktitle = {Proceedings of SIGGRAPH},
+month = jul,
+pages = {43--54},
+publisher = {ACM Press},
+title = {{Large steps in cloth simulation}},
+year = {1998}
+}
+
+
+@article{Hiller2012,
+archivePrefix = {arXiv},
+arxivId = {1212.2845},
+author = {Hiller, Jonathan and Lipson, Hod},
+eprint = {1212.2845},
+journal = {Arxiv},
+month = dec,
+title = {{Dynamic Simulation of Soft Heterogeneous Objects}},
+year = {2012}
+}
+
+@incollection{Rungjiratananon2011,
+address = {Berlin, Heidelberg},
+author = {Rungjiratananon, Witawat and Kanamori, Yoshihiro and Metaaphanon, Napaporn and Bando, Yosuke and Chen, Bing-Yu and Nishita, Tomoyuki},
+booktitle = {Motion in Games},
+editor = {Allbeck, Jan M. and Faloutsos, Petros},
+pages = {192--203},
+publisher = {Springer Berlin Heidelberg},
+series = {Lecture Notes in Computer Science},
+title = {{Twisting, Tearing and Flicking Effects in String Animations}},
+volume = {7060},
+year = {2011}
+}
+
+@article{Sutherland2006,
+journal = {Annals of surgery},
+author = {Sutherland L.M., Middleton P.F., Anthony A., Hamdorf J., Cregan P., Scott D., and Maddern G.J.},
+month = mar,
+number = {3},
+pages = {291--300},
+pmid = {16495690},
+title = {{Surgical simulation: a systematic review.}},
+volume = {243},
+year = {2006}
+}
+
+@article{Jia2014,
+author = {Jia, Y.-B. and Guo, F. and Lin, H.},
+file = {:home/berenson/Desktop/The International Journal of Robotics Research-2014-Jia-0278364913512170 (1).pdf:pdf},
+issn = {0278-3649},
+journal = IJRR,
+month = feb,
+number = {6},
+pages = {866--897},
+title = {{Grasping deformable planar objects: Squeeze, stick/slip analysis, and energy-based optimalities}},
+volume = {33},
+year = {2014}
+}
+
+@techreport{Buckley1987,
+author = {Buckley, Stephen J.},
+file = {:home/berenson/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Buckley - 1987 - Planning and Teaching Compliant Motion Strategies.pdf:pdf},
+institution = {MIT Artificial Intelligence Lab},
+keywords = {AITR-936},
+mendeley-tags = {AITR-936},
+month = jan,
+title = {{Planning and Teaching Compliant Motion Strategies}},
+year = {1987}
+}
+
+@article{Brunet2010,
+author = {Brunet, Florent and Gay-Bellile, Vincent and Bartoli, Adrien and Navab, Nassir and Malgouyres, R\'{e}my},
+file = {:home/berenson/Desktop/Brunet\_etal\_IJCV11.pdf:pdf},
+issn = {0920-5691},
+journal = {International Journal of Computer Vision},
+month = dec,
+number = {1},
+pages = {33--52},
+title = {{Feature-Driven Direct Non-Rigid Image Registration}},
+volume = {93},
+year = {2010}
+}
+
+@book{Birkfellner2011,
+author = {Birkfellner, Wolfgang},
+isbn = {1439824452},
+pages = {403},
+publisher = {CRC Press},
+title = {{Applied Medical Image Processing: A Basic Course}},
+url = {http://books.google.com/books/about/Applied\_Medical\_Image\_Processing.html?id=IXOXoUeW0J4C\&pgis=1},
+year = {2011}
+}
+
+@article{Kim2007,
+author = {Kim, Jung and Choi, Changmok and De, Suvranu and Srinivasan, Mandayam A},
+issn = {1478-596X},
+journal = {The international journal of medical robotics + computer assisted surgery : MRCAS},
+month = jun,
+number = {2},
+pages = {149--58},
+pmid = {17619246},
+title = {{Virtual surgery simulation for medical training using multi-resolution organ models.}},
+volume = {3},
+year = {2007}
+}
+
+@article{Jones2006,
+author = {Jones, Mark W and Baerentzen, J Andreas and Sramek, Milos},
+doi = {56},
+file = {:home/berenson/Desktop/01634323.pdf:pdf},
+issn = {1077-2626},
+journal = IEEE_J_VCG,
+number = {4},
+pages = {581--99},
+pmid = {16805266},
+title = {{3D distance fields: a survey of techniques and applications.}},
+volume = {12},
+year = {2006}
+}
+
+
+@inproceedings{Kubiak2007,
+author = {Kubiak, Blazej and Pietroni, Nico and Ganovelli, Fabio and Fratarcangeli, Marco},
+booktitle = {Proceedings of the ACM symposium on Virtual reality software and technology},
+file = {:home/berenson/Desktop/rope\_sim\_final.pdf:pdf},
+isbn = {9781595938633},
+month = nov,
+pages = {85},
+title = {{A robust method for real-time thread simulation}},
+year = {2007}
+}
+
+@article{Hsu1999,
+author = {Hsu, D and Latombe, JC and Motwani, R},
+journal = {International Journal of Computational Geometry \& Applications},
+month = {August},
+number = {04n05},
+pages = {495--512},
+title = {Path Planning in Expansive Configuration Spaces},
+volume = {09},
+year = {1999}
+}
+
+@article{Kavraki1998b,
+author = {Kavraki, L.E. and Kolountzakis, M.N. and Latombe, J.-C.},
+journal = IEEE_J_RA,
+number = {1},
+pages = {166--171},
+title = {{Analysis of probabilistic roadmaps for path planning}},
+volume = {14},
+year = {1998}
+}
+
+
+@inproceedings{Amato1998,
+author = {Amato, Nancy M. and Bayazit, O. Burchan and Dale, Lucia K. and Jones, Christopher and Vallejo, Daniel},
+booktitle = WAFR,
+month = {August},
+pages = {155--168},
+title = {{OBPRM: an obstacle-based PRM for 3D workspaces}},
+year = {1998}
+}
+
+@article{Bhattacharya2012,
+author = {Bhattacharya, S. and Likhachev, M. and Kumar, V.},
+journal = {Autonomous Robots},
+month = jun,
+number = {3},
+pages = {273--290},
+title = {{Topological constraints in search-based robot path planning}},
+volume = {33},
+year = {2012}
+}
+
+@inproceedings{Kazanzides1992,
+author = {Kazanzides, P. and Zuhars, J. and Mittelstadt, B. and Taylor, R.H.},
+booktitle = ICRA,
+pages = {612--617},
+title = {{Force sensing and control for a surgical robot}},
+year = {1992}
+}
+
+@inproceedings{Liu2011,
+author = {C. Liu and P. Moreira and N. Zemiti and P. Poignet},
+booktitle = {Proc. Annual International Conference of the IEEE Engineering in Medicine and Biology Society},
+month = jan,
+pages = {7054--8},
+pmid = {22255963},
+title = {{3D force control for robotic-assisted beating heart surgery based on viscoelastic tissue model.}},
+year = {2011}
+}
+
+@article{Nealen2006,
+author = {Nealen, Andrew and M\"{u}ller, Matthias and Keiser, Richard and Boxerman, Eddy and Carlson, Mark},
+journal = {Computer Graphics Forum},
+month = dec,
+number = {4},
+pages = {809--836},
+title = {{Physically Based Deformable Models in Computer Graphics}},
+volume = {25},
+year = {2006}
+}
+
+@techreport{RoboticsRoadmap2013,
+author = {Robotics Technology Consortium},
+title = {{A Roadmap for U.S. Robotics From Internet to Robotics}},
+year = {2013}
+}
+
+@phdthesis{Berenson2011thesis,
+   author = "Dmitry Berenson",
+   title = "Constrained Manipulation Planning",
+   booktitle = "",
+   school = "Robotics Institute, Carnegie Mellon University",
+   month = "May",
+   year = "2011",
+   number= "CMU-RI-TR-11-08",
+   address= "Pittsburgh, PA",
+}
+
+@article{PhysX,
+  title={PhysX SDK},
+  author={NVIDIA},
+  journal={https://developer.nvidia.com/physx-sdk},
+  year={2014}
+}
+
+@article{CHIMP,
+  title={CHIMP DARPA Robotics Challenge Team},
+  author={Tartan Rescue},
+  journal={http://www.nrec.ri.cmu.edu/projects/tartanrescue/},
+  year={2014}
+}
+
+@article{TCMM,
+  title={IEEE RAS Technical Committee on Mobile Manipulation},
+  author={Berenson, Dmitry and Brock, Oliver and Roa, Maximo},
+  journal={http://mobilemanipulation.org/},
+  year={2012-Present}
+}
+
+
+@inproceedings{Porta2010,
+author = {Porta, J and Jaillet, L\'{e}onard},
+booktitle = WAFR,
+file = {:home/berenson/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Porta, Jaillet - 2010 - Path Planning on Manifolds Using Randomized Higher-Dimensional Continuation.pdf:pdf},
+title = {{Path Planning on Manifolds Using Randomized Higher-Dimensional Continuation}},
+year = {2010}
+}
+
+@inproceedings{Sucan2012,
+author = {Sucan, Ioan A. and Chitta, Sachin},
+booktitle = IROS,
+file = {:home/berenson/Desktop/06386092.pdf:pdf},
+isbn = {978-1-4673-1736-8},
+issn = {2153-0858},
+month = oct,
+publisher = {IEEE},
+title = {{Motion planning with constraints using configuration space approximations}},
+year = {2012}
+}
+
+@inproceedings{Suh2011,
+author = {Suh, Chansu and Um, Terry Taewoong and Kim, Beobkyoon and Noh, Hakjong and Kim, Munsang and Park, Frank C.},
+booktitle = ICRA,
+file = {:home/berenson/Desktop/05980566.pdf:pdf},
+isbn = {978-1-61284-386-5},
+issn = {1050-4729},
+month = may,
+publisher = {IEEE},
+title = {{Tangent space RRT: A randomized planning algorithm on constraint manifolds}},
+year = {2011}
+}
+
+@article{Jaillet2013,
+author = {Jaillet, L\'{e}onard and Porta, Josep M.},
+file = {:home/berenson/Desktop/06352929.pdf:pdf},
+issn = {1552-3098},
+journal = TRO,
+month = feb,
+number = {1},
+pages = {105--117},
+title = {{Path Planning Under Kinematic Constraints by Rapidly Exploring Manifolds}},
+volume = {29},
+year = {2013}
+}
+
+@inproceedings{Vahrenkamp2009,
+author = {Vahrenkamp, Nikolaus and Berenson, Dmitry and Asfour, Tamim and Kuffner, James and Dillmann, Rudiger},
+booktitle = IROS,
+month = oct,
+title = {{Humanoid motion planning for dual-arm manipulation and re-grasping tasks}},
+}
+
+@inproceedings{Berenson2008,
+author = {Berenson, Dmitry and Kuffner, James and Choset, Howie},
+booktitle = ICRA,
+title = {{An optimization approach to planning for mobile manipulation}},
+year = {2008}
+}
+
+@inproceedings{Alunni2013,
+author = {Alunni, Nicholas and Phillips-Grafflin, Calder and Suay, Halit Bener and Lofaro, Daniel and Berenson, Dmitry and Chernova, Sonia and Lindeman, Robert W. and Oh, Paul},
+booktitle = {2013 IEEE Conference on Technologies for Practical Robot Applications (TePRA)},
+isbn = {978-1-4673-6225-2},
+month = apr,
+title = {{Toward a user-guided manipulation framework for high-DOF robots with limited communication}},
+year = {2013}
+}
+
+@article{Garg2013,
+author = {Garg, Animesh and Siauw, Timmy and Berenson, Dmitry and Cunha, J. Adam M. and Hsu, I-Chow and Pouliot, Jean and Stoianovici, Dan and Goldberg, Ken},
+doi = {10.1109/TASE.2013.2276940},
+issn = {1545-5955},
+journal = TASE,
+month = oct,
+number = {4},
+pages = {948--956},
+title = {{Robot-Guided Open-Loop Insertion of Skew-Line Needle Arrangements for High Dose Rate Brachytherapy}},
+volume = {10},
+year = {2013}
+}
+
+@article{Siauw2012,
+author = {Siauw, Timmy and Cunha, Adam and Berenson, Dmitry and Atamturk, Alper and Hsu, I-Chow and Goldberg, Ken and Pouliot, Jean},
+doi = {10.1118/1.4728226},
+issn = {0094-2405},
+journal = {Medical physics},
+month = jul,
+number = {7},
+pages = {4339--46},
+pmid = {22830767},
+title = {{NPIP: A skew line needle configuration optimization system for HDR brachytherapy.}},
+volume = {39},
+year = {2012}
+}
+
+@inproceedings{Mainprice2014,
+author = {Mainprice, Jim and Phillips-Grafflin, Calder and Suay, Halit Bener and Alunni, Nicholas and Lofaro, Daniel and Berenson, Dmitry and Chernova, Sonia and Lindeman, Robert and Oh, Paul},
+booktitle = IROS,
+title = {{From Autonomy to Cooperative Traded Control of Humanoid Manipulation Tasks with Unreliable Communication: System Design and Lessons Learned}},
+year = {2014}
+}
+
+@misc{Schiavone2012,
+author = {Schiavone, Kristyn},
+booktitle = {Chicago Tribune},
+month = aug,
+title = {{Technical difficulties: Lack of women in computer science starts from an early age}},
+year = {2012}
+}
+
+@techreport{Zweben2013,
+author = {Zweben, S},
+booktitle = {Computing Research Association},
+title = {{Computing degree and enrollment trends}},
+year = {2013}
+}
+
+
+@techreport{Zweben2015,
+author = {Zweben, S and Bizot, B},
+booktitle = {Computing Research Association},
+title = {{2015 Taulbee Survey}},
+year = {2015},
+institution = {Computing Research Association}
+}
+
+@techreport{Ashcraft2009,
+author = {Ashcraft, Catherine and Breitzman, A},
+booktitle = {An analysis of women's participation in \ldots},
+file = {:home/berenson/Desktop/PatentReport\_wAppendix.pdf:pdf},
+institution = {National Center for Women \& Information Technology (NCWIT)},
+title = {{Who Invents IT? An Analysis of Women’s Participation in Information Technology Patenting}},
+year = {2009}
+}
+
+@article{Hayden2011,
+author = {Hayden, Katherine and Ouyang, Youwen and Scinski, Lidia and Olszewski, Brandon and Bielefeldt, Talbot},
+journal = {Contemporary Issues in Technology and Teacher Education},
+pages = {47--69},
+title = {{Increasing student interest and attitudes in STEM: Professional development and activities to engage and inspire learners}},
+volume = {11},
+year = {2011}
+}
+
+@techreport{WGBH2009,
+author = {WGBH and ACM},
+file = {:home/berenson/Desktop/NIC.pdf:pdf},
+institution = {WGBH Educational Foundation and the Association for Computing Machinery (ACM)},
+title = {{New Image for Computing Report on Market Research}},
+year = {2009}
+}
+
+@article{ScienceStandards,
+  title={Next Generation Science Standards},
+  author={Achieve, Inc},
+  journal={http://nextgenscience.org/search-standards},
+  year={2014}
+}
+
+
+@article{FIRSTreport,
+  title={The Science of Celebrations: 2013 Annual Impact Report},
+  author={FIRST},
+  journal={http://www3.usfirst.org/annual-report/},
+  year={2014}
+}
+
+
+
+@techreport{FIRSTImpact,
+author = {{Center for Youth and Communities Heller School for Social Policy and Management Brandeis University}},
+number = {September},
+title = {{Cross-Program Evaluation of the FIRST Tech Challenge and the FIRST Robotics Competition Executive Summary}},
+year = {2011}
+}
+
+@article{Datalink,
+  title={Datalink Toolkit for Unreliable Networks using {ROS}},
+  author={Phillips-Grafflin, Calder and Berenson, Dmitry},
+  journal={\url{https://github.com/WPI-ARC/datalink_toolkit}},
+  year={2014}
+}
+
+@article{CoMPS,
+  title={Constrained Manipulation Planning Suite {(CoMPS)}},
+  author={Berenson, Dmitry and Srinivasa, Siddhartha},
+  journal={\url{http://sourceforge.net/projects/comps/}},
+  year={2011}
+}
+
+@article{Lightning,
+  title={Lightning Planning Framework for {ROS}},
+  author={Lee, Cameron and Berenson, Dmitry and Abbeel, Pieter and Goldberg, Ken},
+  journal={\url{http://sourceforge.net/projects/lightningros/}},
+  year={2012}
+}
+
+@article{Jimenez2012,
+author = {Jim\'{e}nez, P.},
+journal = {Robotics and Computer-Integrated Manufacturing},
+month = apr,
+number = {2},
+pages = {154--163},
+title = {{Survey on model-based manipulation planning of deformable objects}},
+volume = {28},
+year = {2012}
+}
+
+@article{Wakamatsu2006,
+author = {Wakamatsu, H. and Arai, E. and Hirai, S.},
+journal = IJRR,
+month = apr,
+number = {4},
+pages = {371--395},
+title = {{Knotting/Unknotting Manipulation of Deformable Linear Objects}},
+volume = {25},
+year = {2006}
+}
+
+
+@book{Henrich2000,
+author = {Henrich, Dominik and W\"{o}rn, Heinz},
+pages = {271},
+publisher = {Springer},
+title = {{Robot manipulation of deformable objects}},
+year = {2000}
+}
+
+@inproceedings{Remde1999,
+author = {Remde, A. and Henrich, D. and Wom, H.},
+booktitle = IROS,
+pages = {1450--1455},
+title = {{Manipulating deformable linear objects-contact state transitions and transition conditions}},
+year = {1999}
+}
+
+@inproceedings{Kraus1997,
+author = {Kraus, W. and McCarragher, B.J.},
+booktitle = ICRA,
+pages = {367--372},
+title = {{Case studies in the manipulation of flexible parts using a hybrid position/force approach}},
+year = {1997}
+}
+
+@article{Lamiraux2001,
+author = {Lamiraux, F. and Kavraki, Lydia E.},
+journal = IJRR,
+month = mar,
+number = {3},
+pages = {188--208},
+title = {{Planning Paths for Elastic Objects under Manipulation Constraints}},
+volume = {20},
+year = {2001}
+}
+
+@inproceedings{Anshelevich2000a,
+author = {Anshelevich, E. and Owens, S. and Lamiraux, F. and Kavraki, L.E.},
+booktitle = ICRA,
+pages = {2290--2295},
+title = {{Deformable volumes in path planning applications}},
+year = {2000}
+}
+
+@article{Veltkamp2000,
+author = {Veltkamp, Remco C. and Hagedoorn, Michiel},
+isbn = {1-85233-381-2},
+month = jan,
+pages = {87--119},
+publisher = {Springer-Verlag},
+title = {{State of the art in shape matching}},
+url = {http://dl.acm.org/citation.cfm?id=370792.370810},
+year = {2000}
+}
+
+@article{Tanner2006,
+author = {Tanner, H.G.},
+doi = {10.1109/TRO.2005.861452},
+file = {:home/berenson/Desktop/01589011.pdf:pdf},
+issn = {1552-3098},
+journal = TRO,
+month = feb,
+number = {1},
+pages = {179--184},
+title = {{Mobile manipulation of flexible objects under deformation constraints}},
+volume = {22},
+year = {2006}
+}
+
+@inproceedings{Schulman2013,
+author = {Schulman, John and Ho, Jonathan and Lee, Cameron and Abbeel, Pieter},
+booktitle = ISRR,
+title = {{Learning from Demonstrations Through the Use of Non-Rigid Registration}},
+year = {2013}
+}
+
+@inproceedings{Schulman2013a,
+author = {Schulman, John and Gupta, Ankush and Venkatesan, Sibi and Tayson-Frederick, Mallory and Abbeel, Pieter},
+booktitle = IROS,
+month = nov,
+title = {{A case study of trajectory transfer through non-rigid registration for a simplified suturing scenario}},
+year = {2013}
+}
+
+@inproceedings{Morita2003,
+author = {Morita, T. and Takamatsu, J. and Ogawara, K. and Kimura, H. and Ikeuchi, K.},
+booktitle = ICRA,
+title = {{Knot planning from observation}},
+year = {2003}
+}
+
+@inproceedings{Rambow2012,
+author = {Rambow, Matthias and Schau\ss, Thomas and Buss, Martin and Hirche, Sandra},
+booktitle = IROS,
+title = {{Autonomous Manipulation of Deformable Objects based on Teleoperated Demonstrations}},
+year = {2012}
+}
+
+@inproceedings{Essahbi2012,
+author = {Essahbi, Nabil and Bouzgarrou, Belhassen Chedli and Gogu, Grigore},
+booktitle = {Applied Mechanics and Materials},
+month = {April},
+title = {{Soft Material Modeling for Robotic Manipulation}},
+volume={162},
+pages={184--193},
+year={2012}
+}
+
+@inproceedings{Debunne2001,
+author = {Debunne, Gilles and Desbrun, Mathieu and Cani, Marie-Paule and Barr, Alan H.},
+booktitle = {Proceedings of SIGGRAPH},
+month = aug,
+pages = {31--36},
+publisher = {ACM Press},
+title = {{Dynamic real-time deformations using space \& time adaptive sampling}},
+year = {2001}
+}
+
+@book{Bronstein2008,
+author = {Bronstein, Alexander and Bronstein, Michael and Kimmel, Ron},
+month = oct,
+publisher = {Springer Publishing Company},
+title = {{Numerical Geometry of Non-Rigid Shapes}},
+year = {2008}
+}
+
+@article{Bongard2007,
+author = {Bongard, Josh and Lipson, Hod},
+number = {24},
+title = {{Automated reverse engineering of nonlinear dynamical systems}},
+journal={Proceedings of the National Academy of Sciences},
+volume = {104},
+year = {2007}
+}
+
+@book{Boyd2004,
+author = {Boyd, Stephen and Vandenberghe, Lieven},
+publisher = {Cambridge University Press},
+title = {{Convex Optimization}},
+year = {2004}
+}
+
+
+@inproceedings{Zucker2010,
+author = {Zucker, Matt and Bagnell, J Andrew and Atkeson, Christopher G and Kuffner, James},
+booktitle = ICRA,
+title = {{An optimization approach to rough terrain locomotion}},
+year = {2010}
+}
+
+@inproceedings{Yoshida2005,
+author = {Yoshida, E. and Belousov, I. and Esteves, C. and Laumond, J.-P.},
+booktitle = {5th IEEE-RAS International Conference on Humanoid Robots, 2005.},
+title = {{Humanoid motion planning for dynamic tasks}},
+year = {2005}
+}
+
+@inproceedings{Chestnutt2004,
+   author = "Joel Chestnutt and James Kuffner",
+   title = "A Tiered Planning Strategy for Biped Navigation",
+   booktitle = Humanoids,
+   month = "November",
+   year = "2004",
+}
+
+@inproceedings{Kuffner2003,
+   author = "James Kuffner and K. Nishiwaki and Satoshi Kagami and Y. Kuniyoshi and M. Inaba and H. Inoue",
+   title = "Online Footstep Planning for Humanoid Robots",
+   booktitle = ICRA,
+   publisher = "IEEE",
+   month = "September",
+   year = "2003",
+}
+
+@inproceedings{Kanoun2009,
+author = {Kanoun, Oussama and Yoshida, Eiichi and Laumond, Jean-paul},
+booktitle = Humanoids,
+file = {:C$\backslash$:/Users/berenson/AppData/Local/Mendeley Ltd./Mendeley Desktop/Downloaded/Kanoun, Yoshida, Laumond - 2009 - An optimization formulation for footsteps planning.pdf:pdf},
+title = {{An optimization formulation for footsteps planning}},
+year = {2009}
+}
+
+@phdthesis{Stephens2011,
+   author = "Benjamin Stephens",
+   title = "Push Recovery Control for Force-Controlled Humanoid Robots",
+   booktitle = "",
+   school = "Robotics Institute, Carnegie Mellon University",
+   month = "May",
+   year = "2011",
+   number= "CMU-RI-TR-11-15",
+   address= "Pittsburgh, PA",
+}
+
+@article {Yi2015,
+author = {Yi, Seung-Joon and McGill, Stephen G. and Vadakedathu, Larry and He, Qin and Ha, Inyong and Han, Jeakweon and Song, Hyunjong and Rouleau, Michael and Zhang, Byoung-Tak and Hong, Dennis and Yim, Mark and Lee, Daniel D.},
+title = {Team THOR's Entry in the DARPA Robotics Challenge Trials 2013},
+journal = JFR,
+year = {2015},
+}
+
+@inproceedings{Escande2009,
+author = {Escande, Adrien and Kheddar, Abderrahmane},
+booktitle = IROS,
+month = oct,
+pages = {435--440},
+title = {{Contact planning for acyclic motion with tasks constraints}},
+year = {2009}
+}
+
+@phdthesis{Hofmann2006,
+school = {Thesis (Ph. D.)--Massachusetts Institute of Technology, Dept. of Electrical Engineering and Computer Science, 2006.},
+author = {Hofmann, Andreas G.},
+publisher = {Massachusetts Institute of Technology},
+title = {{Robust execution of bipedal walking tasks from biomechanical principles}},
+year = {2006}
+}
+
+
+@INPROCEEDINGS{Wang2015,
+  author = {Wang, Weifu and Berenson, Dmitry and Balkcom, Devin},
+  title = {An Online Method for Tight-tolerance Insertion Tasks for String and Rope},
+  booktitle = ICRA,
+  year = {2015},
+}
+
+@article{Hogan1985,
+author = {Hogan, Neville},
+ournal = {Journal of Dynamic Systems, Measurement, and Control},
+month = mar,
+number = {1},
+pages = {8},
+publisher = {American Society of Mechanical Engineers},
+title = {{Impedance Control: An Approach to Manipulation: Part II—Implementation}},
+volume = {107},
+year = {1985}
+}
+
+@article{Chiaverini1994,
+author = {Chiaverini, S. and Siciliano, B. and Villani, L.},
+journal = IEEE_J_AC,
+month = mar,
+number = {3},
+pages = {647--652},
+title = {{Force/position regulation of compliant robot manipulators}},
+volume = {39},
+year = {1994}
+}
+
+@article{Raibert1981,
+author = {Raibert, M. H. and Craig, J. J.},
+journal = {Journal of Dynamic Systems, Measurement, and Control},
+month = jun,
+number = {2},
+pages = {126},
+publisher = {American Society of Mechanical Engineers},
+title = {{Hybrid Position/Force Control of Manipulators}},
+volume = {103},
+year = {1981}
+}
+
+@INPROCEEDINGS{Phillips-Grafflin2015,
+  author = {Phillips-Grafflin, Calder and Berenson, Dmitry},
+  title = {Reproducing Expert-Like Motion in Deformable Environments Using Active Learning and IOC},
+  booktitle = ISRR,
+  year = {2015},
+  month = sept
+}
+
+@inproceedings{Newcombe2015,
+author = {Richard A Newcombe and Dieter Fox and Steven M Seitz},
+title = {{DynamicFusion: Reconstruction and Tracking of Non-rigid Scenes in Real-Time}},
+year = {2015},
+ booktitle = CVPR,
+ }
+ 
+@book{Bathe2006,
+author = {Bathe, Klaus-J\"{u}rgen},
+publisher = {Klaus-Jurgen Bathe},
+title = {{Finite Element Procedures}},
+year = {2006}
+}
+
+@incollection{Silver2010,
+title = {Monte-Carlo Planning in Large POMDPs},
+author = {Silver, David and Joel Veness},
+booktitle = NeurIPS,
+pages = {2164--2172},
+year = {2010},
+}
+
+@book{Scholtes2012,
+address = {New York, NY},
+author = {Scholtes, Stefan},
+publisher = {Springer New York},
+series = {SpringerBriefs in Optimization},
+title = {{Introduction to Piecewise Differentiable Equations}},
+year = {2012}
+}
+
+@article{Futter2016,
+author = {Futter, Isobel},
+journal = {The Michigan Daily},
+title = {{Sickouts, debt and underfunding prevalent at Detroit Public Schools}},
+month = jun # {~24,}, 
+year = 2016, 
+}
+
+@article{Bai2016,
+author = {Bai, Yunfei and Yu, Wenhao and Liu, C Karen},
+issn = {1467-8659},
+journal = {Computer Graphics Forum},
+keywords = { I.3.7 [Computer Graphics]: Three-Dimensional Grap,Categories and Subject Descriptors (according to A},
+number = {2},
+pages = {523--532},
+title = {{Dexterous Manipulation of Cloth}},
+volume = {35},
+year = {2016}
+}
+
+@inproceedings{Berenson2013,
+author = {Berenson, Dmitry},
+booktitle = IROS,
+keywords = {Collision avoidance,Computational modeling,Deformable models,Equations,Grippers,Jacobian matrices,Jacobian matrix,Robots,approximation,approximation theory,collision avoidance,deformable objects manipulation,diminishing rigidity concept,gripper collision,manipulators,object geometry,robot},
+title = {{Manipulation of deformable objects without modeling and simulating deformation}},
+year = {2013},
+pages={4525--4532}
+}
+
+@inproceedings{McConachie2017,
+author = {D. M\textsuperscript{c}Conachie and M. Ruan and D. Berenson},
+booktitle = ISRR,
+title = {Interleaving Planning and Control For Deformable Object Manipulation},
+year = {2017},
+}
+
+@ARTICLE{McConachie2018,
+author={D. M\textsuperscript{c}Conachie and D. Berenson}, 
+journal=TASE, 
+title={Estimating Model Utility for Deformable Object Manipulation Using Multiarmed Bandit Methods}, 
+year={2018}, 
+volume={15}, 
+number={3}, 
+pages={967--979}, 
+keywords={Computational modeling;Data models;Deformable models;Jacobian matrices;Robots;Task analysis;Training;Deformable objects;manipulation;robot learning}, 
+month={July},}
+
+@article{Jaillet2008,
+  title={Path deformation roadmaps: Compact graphs with useful cycles for motion planning},
+  author={Jaillet, L{\'e}onard and Sim{\'e}on, Thierry},
+  journal=IJRR,
+  volume={27},
+  number={11-12},
+  pages={1175--1188},
+  year={2008},
+  publisher={SAGE Publications Sage UK: London, England}
+}
+
+@inproceedings{BurchanBayazit2002,
+author = {{Burchan Bayazit}, O. and {Jyh-Ming Lien} and Amato, N.M.},
+booktitle = ICRA,
+file = {:home/dmcconac/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Burchan Bayazit, Jyh-Ming Lien, Amato - Unknown - Probabilistic roadmap motion planning for deformable objects.pdf:pdf},
+title = {{Probabilistic roadmap motion planning for deformable objects}},
+year = {2002},
+volume={2},
+pages={2126--2133}
+}
+
+
+@INPROCEEDINGS {Roussel2015,
+    TITLE = { {Manipulation planning with contacts for an extensible elastic rod by sampling on the submanifold of static equilibrium configurations} },
+    AUTHOR = { Roussel, Olivier and Borum, Andy and Ta\"{i}x, Michel and Bretl, Timothy },
+    BOOKTITLE = ICRA,
+    HAL_LOCAL_REFERENCE = { Rapport LAAS n{\textdegree} 15034 },
+    YEAR = { 2015 },
+    MONTH = { May },
+    pages={3116--3121},
+    PDF = { https://hal.archives-ouvertes.fr/hal-01096543/file/ManipulationRod_ICRA15_final.pdf },
+    HAL_ID = { hal-01096543 },
+    HAL_VERSION = { v2 },
+}
+
+
+@article{Navarro-Alarcon2014,
+abstract = {In this paper, we address the active deformation control of compliant objects by robot manipulators. The control of deformations is needed to automate several important tasks, for example, the manipulation of soft tissues, shaping of food materials, or needle insertion. Note that in many of these applications, the object's deformation properties are not known. To cope with this issue, in this paper we present two new visual servoing approaches to explicitly servo-control elastic deformations. The novelty of our kinematic controllers lies in its uncalibrated behavior; our adaptive methods do not require the prior identification of the object's deformation model and the camera's intrinsic/extrinsic parameters. This feature provides a way to automatically control deformations in a model-free manner. The experimental results that we report validate the feasibility of our controllers.},
+author = {Navarro-Alarcon, D. and Liu, Y.-h. and Romero, J. G. and Li, P.},
+file = {:home/dmcconachie/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Navarro-Alarcon et al. - 2014 - On the visual deformation servoing of compliant objects Uncalibrated control methods and experiments.pdf:pdf},
+issn = {0278-3649},
+journal = IJRR,
+month = {jun},
+number = {11},
+pages = {1462--1480},
+title = {{On the visual deformation servoing of compliant objects: Uncalibrated control methods and experiments}},
+volume = {33},
+year = {2014}
+}
+
+@inproceedings{Huang2015,
+author = {Huang, Sandy H. and Pan, Jia and Mulcaire, George and Abbeel, Pieter},
+booktitle = IROS,
+file = {:home/dmcconachie/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Huang et al. - 2015 - Leveraging appearance priors in non-rigid registration, with application to manipulation of deformable objects.pdf:pdf},
+keywords = {Context,Machine learning,Neural networks,Robots,Shape,Three-dimensional displays,Trajectory},
+title = {{Leveraging appearance priors in non-rigid registration, with application to manipulation of deformable objects}},
+year = {2015},
+pages={878--885} 
+}
+
+@inproceedings{Schulman2016,
+abstract = {We consider the problem of teaching robots by demonstration how to perform manipulation tasks, in which the geometry (including size, shape, and pose) of the relevant objects varies from trial to trial. We present a method, which we call trajectory transfer, for adapting a demonstrated trajectory from the geometry at training time to the geometry at test time. Trajectory transfer is based on nonrigid registration, which computes a smooth transformation from the training scene onto the testing scene. We then show how to perform a multi-step task by repeatedly looking up the nearest demonstration and then applying trajectory transfer. As our main experimental validation, we enable a PR2 robot to autonomously tie five different types of knots in rope},
+author = {Schulman, John and Ho, Jonathan and Lee, Cameron and Abbeel, Pieter},
+booktitle = {Springer Tracts in Advanced Robotics},
+pages = {339--354},
+publisher = {Springer International Publishing},
+title = {{Learning from demonstrations through the use of non-rigid registration}},
+volume = {114},
+year = {2016}
+}
+
+@article{Brass2015,
+abstract = {We consider the problem of finding the shortest path for a tethered robot in a planar environment with polygonal obstacles of n total vertices. The robot is attached to an anchor point by a tether of finite length. The robot can cross the tether; i.e., the tether can be self-intersecting. Neither the robot nor the tether may enter the interior of any obstacle. The initial tether configuration is given as a polyline of k vertices. If the tether is automatically retracted and kept taut, we present an O(kn2log⁡n) time algorithm to find the shortest path between the source and the destination point. This improves the previous O(lkn3) time algorithm [24], where l is the number of loops in the initial tether configuration. If the tether can only be retracted while the robot backtracks along the tether, we present an algorithm to find the shortest path in O((n+log⁡k)log⁡n) time.},
+author = {Brass, Peter and Vigan, Ivo and Xu, Ning},
+issn = {09257721},
+journal = {Computational Geometry},
+number = {9},
+pages = {732--742},
+title = {{Shortest path planning for a tethered robot}},
+volume = {48},
+year = {2015}
+}
+
+@inproceedings{SoonkyumKim2015,
+author={Soonkyum Kim and M. Likhachev}, 
+booktitle = IROS,
+file = {:home/dmcconac/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Soonkyum Kim, Likhachev - 2015 - Path planning for a tethered robot using Multi-Heuristic A with topology-based heuristics.pdf:pdf},
+month = {sep},
+title = {{Path planning for a tethered robot using Multi-Heuristic A* with topology-based heuristics}},
+year = {2015},
+pages={4656--4663}, 
+}
+
+@book{Murray1994,
+abstract = {A Mathematical Introduction to Robotic Manipulation presents a mathematical formulation of the kinematics, dynamics, and control of robot manipulators. It uses an elegant set of mathematical tools that emphasizes the geometry of robot motion and allows a large class of robotic manipulation problems to be analyzed within a unified framework.The foundation of the book is a derivation of robot kinematics using the product of the exponentials formula. The authors explore the kinematics of open-chain manipulators and multifingered robot hands, present an analysis of the dynamics and control of robot systems, discuss the specification and control of internal forces and internal motions, and address the implications of the nonholonomic nature of rolling contact are addressed, as well.The wealth of information, numerous examples, and exercises make A Mathematical Introduction to Robotic Manipulation valuable as both a reference for robotics researchers and a text for students in advanced robotics courses.},
+archivePrefix = {arXiv},
+arxivId = {0712.0689},
+author = {Murray, Richard M and Li, Zexiang and Sastry, S Shankar},
+booktitle = {Book},
+eprint = {0712.0689},
+pages = {480},
+pmid = {2997678},
+publisher = {CRC Press},
+title = {{A Mathematical Introduction to Robotic Manipulation}},
+volume = {29},
+year = {1994}
+}
+
+@article{Coumans2010,
+title={Bullet physics library},
+author={Erwin Coumans},
+journal={Open source: bulletphysics.org},
+year={2010}
+}
+
+
+@article{Diankov2008bispace,
+  title={Bispace planning: Concurrent multi-space exploration},
+  author={Diankov, Rosen and Ratliff, Nathan and Ferguson, Dave and Srinivasa, Siddhartha and Kuffner, James},
+  journal=RSS,
+  volume={63},
+  year={2008}
+}
+
+
+@misc{iai_kinect2,
+  author = {Wiedemeyer, Thiemo},
+  title = {{IAI Kinect2}},
+  organization = {Institute for Artificial Intelligence},
+  address = {University Bremen},
+  year = {2014 -- 2015},
+  howpublished = {\url{https://github.com/code-iai/iai_kinect2}},
+  note = {Accessed July 1, 2018}
+}
+
+
+@inproceedings{olson2011tags,
+    TITLE      = {{AprilTag}: A robust and flexible visual fiducial system},
+    AUTHOR     = {Edwin Olson},
+    BOOKTITLE  = ICRA,
+    YEAR       = {2011},
+    MONTH      = {May},
+    PAGES      = {3400--3407},
+}
+
+@misc{ucberkley_bullet,
+  author = {{Robot Learning Lab}},
+  title = {{Simulation environment with Bullet physics}},
+  address = {University of California, Berkeley},
+  year = {2012},
+  howpublished = {\url{https://github.com/rll/bulletsim}},
+  note = {Accessed July 2, 2012},
+}
+
+@inproceedings{Wedge2008,
+  title={On heavy-tailed runtimes and restarts in rapidly-exploring random trees},
+  author={Wedge, Nathan A and Branicky, Michael S},
+  booktitle=AAAI,
+  pages={127--133},
+  year={2008}
+}
+
+@INPROCEEDINGS{Schulman2013tracking, 
+author={J. Schulman and A. Lee and J. Ho and P. Abbeel}, 
+booktitle=ICRA,
+title={Tracking deformable objects with point clouds}, 
+year={2013}, 
+volume={}, 
+number={}, 
+pages={1130-1137}, 
+keywords={expectation-maximisation algorithm;object tracking;deformable object tracking;manipulation tasks;maximum a posteriori estimation;modified expectation maximization algorithm;physical constraints;physics simulation engine;point clouds;probabilistic generative model;Computational modeling;Inference algorithms;Mathematical model;Noise;Physics;Probabilistic logic;Solid modeling}, 
+ISSN={1050-4729}
+}
+
+
+@article{Petit2017,
+ author = {Petit, Antoine and Lippiello, Vincenzo and Fontanelli, Giuseppe Andrea and Siciliano, Bruno},
+ title = {Tracking Elastic Deformable Objects with an RGB-D Sensor for a Pizza Chef Robot},
+ journal = ELSEVIER_RAS,
+ issue_date = {February 2017},
+ volume = {88},
+ number = {C},
+ month = feb,
+ year = {2017},
+ issn = {0921-8890},
+ pages = {187--201},
+ numpages = {15},
+ acmid = {3178933},
+ publisher = {North-Holland Publishing Co.},
+ address = {Amsterdam, The Netherlands, The Netherlands},
+ keywords = {Deformable object modeling, Perception, Registration, Robotic manipulation},
+} 
+
+@article{Sanchez2018deformablesurvey,
+author = {Jose Sanchez and Juan-Antonio Corrales and Belhassen-Chedli Bouzgarrou and Youcef Mezouar},
+title ={Robotic manipulation and sensing of deformable objects in domestic and industrial applications: a survey},
+journal = IJRR,
+volume = {37},
+number = {7},
+pages = {688-716},
+year = {2018},
+abstract = { We present a survey of recent work on robot manipulation and sensing of deformable objects, a field with relevant applications in diverse industries such as medicine (e.g. surgical assistance), food handling, manufacturing, and domestic chores (e.g. folding clothes). We classify the reviewed approaches into four categories based on the type of object they manipulate. Furthermore, within this object classification, we divide the approaches based on the particular task they perform on the deformable object. Finally, we conclude this survey with a discussion of the current state-of-the-art approaches and propose future directions within the proposed classification. }
+}
+
+@article{Park2014Interleaving,
+  title={Interleaving planning and control for efficient haptically-guided reaching in unknown environments},
+  author={Daehyung Park and Ariel Kapusta and Jeffrey Hawke and Charles C. Kemp},
+  journal=Humanoids,
+  year={2014},
+  pages={809--816}
+}
+
+@ARTICLE{Hu2018deformable_gpr, 
+author={Z. Hu and P. Sun and J. Pan}, 
+journal=RAL, 
+title={Three-Dimensional Deformable Object Manipulation Using Fast Online Gaussian Process Regression}, 
+year={2018}, 
+volume={3}, 
+number={2}, 
+pages={979-986}, 
+keywords={Gaussian processes;end effectors;learning (artificial intelligence);regression analysis;servomechanisms;GPR high computational cost;accurate servo control;automatically visual servo control;deformable object manipulation tasks;deformable object whose deformation parameters;fast online GPR;fast online Gaussian process regression;highly nonlinear property;long manipulation sequences;model mapping;regression process;required control;robotic end-effector;three-dimensional deformable object manipulation;Computational modeling;Deformable models;Gaussian processes;Ground penetrating radar;Robots;Strain;Gaussian process;Visual servoing;deformable objects;dual arm manipulation;model learning for control}, 
+ISSN={}, 
+month={April},}
+
+@article{NavarroAlarcon2014,
+abstract = {In this paper, we address the active deformation control of compliant objects by robot manipulators. The control of deformations is needed to automate several important tasks, for example, the manipulation of soft tissues, shaping of food materials, or needle insertion. Note that in many of these applications, the object's deformation properties are not known. To cope with this issue, in this paper we present two new visual servoing approaches to explicitly servo-control elastic deformations. The novelty of our kinematic controllers lies in its uncalibrated behavior; our adaptive methods do not require the prior identification of the object's deformation model and the camera's intrinsic/extrinsic parameters. This feature provides a way to automatically control deformations in a model-free manner. The experimental results that we report validate the feasibility of our controllers.},
+author = {Navarro-Alarcon, D. and Liu, Y.-h. and Romero, J. G. and Li, P.},
+file = {:home/dmcconachie/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Navarro-Alarcon et al. - 2014 - On the visual deformation servoing of compliant objects Uncalibrated control methods and experiments.pdf:pdf},
+issn = {0278-3649},
+journal = IJRR,
+month = {jun},
+number = {11},
+pages = {1462--1480},
+title = {{On the visual deformation servoing of compliant objects: Uncalibrated control methods and experiments}},
+volume = {33},
+year = {2014}
+}
+
+
+@ARTICLE{NavarroAlarcon2016, 
+author={D. Navarro-Alarcon and H. M. Yip and Z. Wang and Y. Liu and F. Zhong and T. Zhang and P. Li}, 
+journal=TRO, 
+title={Automatic 3-D Manipulation of Soft Objects by Robotic Arms With an Adaptive Deformation Model}, 
+year={2016}, 
+volume={32}, 
+number={2}, 
+pages={429-441}, 
+keywords={adaptive control;deformation;feedback;manipulators;servomechanisms;automatic 3D manipulation;soft objects;robotic arms;adaptive deformation model;feedback method;automatically servo-control;robotic manipulators;soft object manipulation problem;robotics researchers;object shape automatic control;deformation parameters;deformation controller;servo-control 3D deformations;2D image projections;adaptive controller;Deformable models;Robot kinematics;Adaptation models;Computational modeling;Mathematical model;Manipulators;Adaptive control;deformable models;robots manipulators;shape control;visual servoing;Adaptive control;deformable models;robots manipulators;shape control;visual servoing}, 
+month={April},}
+
+@ARTICLE{NavarroAlarcon2018, 
+author={D. Navarro-Alarcon and Y. Liu}, 
+journal=TRO, 
+title={Fourier-Based Shape Servoing: A New Feedback Method to Actively Deform Soft Objects into Desired 2-D Image Contours}, 
+year={2018}, 
+volume={34}, 
+number={1}, 
+pages={272-279}, 
+keywords={Fourier series;manipulators;robot vision;visual servoing;feedback method;2D image contours;motion sensory feedback;soft object manipulation task;truncated Fourier series;innovative feedback representation;robot manipulators;soft objects;shape servoing;Shape;Strain;Deformable models;Computational modeling;Robot sensing systems;Adaptive control;robots manipulators;shape control;soft objects;visual servoing}, 
+month={Feb},}
+
+@incollection{Kunz2015,
+author = {Kunz, Tobias and Stilman, Mike},
+booktitle={Algorithmic foundations of robotics XI},
+pages = {233--244},
+publisher = {Springer, Cham},
+title = {{Kinodynamic RRTs with Fixed Time Step and Best-Input Extension Are Not Probabilistically Complete}},
+year = {2015}
+}
+
+
+
+@article{Alt1995Frechet,
+abstract = {As a measure for the resemblance of curves in arbitrary dimensions we consider the so-called Fr{\'{e}}chet-distance, which is compatible with parametrizations of the curves. For polygonal chains P and Q consisting of p and q edges an algorithm of runtime O(pq log(pq)) measuring the Fr{\'{e}}chet-distance between P and Q is developed. Then some important variants are considered, namely the Fr{\'{e}}chet-distance for closed curves, the nonmonotone Fr{\'{e}}chet-distance and a distance function derived from the Fr{\'{e}}chet-distance measuring whether P resembles some part of the curve Q.},
+author = {Alt, Helmut and Godau, Michael},
+issn = {0218-1959},
+journal = {International Journal of Computational Geometry {\&} Applications},
+keywords = {Computational Morphology,Fr{\'{e}}chet-distance,resemblance of curves,shape analysis},
+month = {mar},
+number = {01-02},
+pages = {75--91},
+publisher = { World Scientific Publishing Company },
+title = {{Computing the Fr{\'e}chet distance between two polygonal curves}},
+volume = {05},
+year = {1995}
+}
+
+
+
+@INPROCEEDINGS{Karaman2013, 
+author={S. Karaman and E. Frazzoli}, 
+booktitle=ICRA, 
+title={Sampling-based optimal motion planning for non-holonomic dynamical systems}, 
+year={2013}, 
+volume={}, 
+number={}, 
+pages={5041--5047}, 
+keywords={Monte Carlo methods;path planning;sampling methods;trees (mathematics);sampling-based optimal motion planning;nonholonomic dynamical systems;probabilistic roadmap algorithm;PRM algorithm;rapidly-exploring random tree algorithm;RRT algorithm;asymptotically-optimal sampling-based algorithms;differential geometry;RRT* algorithm;PRM* algorithm;Dubins car dynamics;Planning}, 
+month={May},}
+
+
+@inproceedings{Kaufmann2008,
+author = {Kaufmann, Peter and Martin, Sebastian and Botsch, Mario and Gross, Markus},
+booktitle = SIGGRAPH,
+title = {{Flexible simulation of deformable models using discontinuous Galerkin FEM}},
+year = {2008}
+}
+
+
+@inproceedings{Wang2018,
+author = {Wang, Zerui and Li, Xiang and Navarro-Alarcon, David and Liu, Yun-hui},
+booktitle = IROS,
+doi = {10.1109/IROS.2018.8593543},
+isbn = {978-1-5386-8094-0},
+pages = {472--478},
+publisher = {IEEE},
+title = {{A Unified Controller for Region-reaching and Deforming of Soft Objects}},
+year = {2018}
+}
+
+
+@inproceedings{calderWAFR,
+author = {C. Phillips-Grafflin and D. Berenson},
+booktitle = WAFR,
+title = {Planning and Resilient Execution of Policies For Manipulation in Contact with Actuation Uncertainty},
+year = {2016},
+}
+
+@ARTICLE{Cretu2008, 
+author={A. M. Cretu and P. Payeur and E. M. Petriu}, 
+journal=IEEE_J_IM, 
+title={Neural Network Mapping and Clustering of Elastic Behavior From Tactile and Range Imaging for Virtualized Reality Applications}, 
+year={2008}, 
+volume={57}, 
+number={9}, 
+pages={1918--1928}, 
+keywords={deformation;elasticity;image processing;neural nets;tactile sensors;virtual reality;clustering measurements;complex force;deformable objects;elastic behavior;elasticity transitions;neural network mapping;range imaging;surface deformation;tactile measurement strategies;virtualized reality;vision-based networks;Deformable objects;elasticity modeling;neural networks;probing guidance;range imaging;tactile sensing}, 
+month={Sept},}
+
+@article{Broyden1965,
+author = {Broyden, C G},
+doi = {10.2307/2003941},
+isbn = {0025-5718},
+issn = {00255718},
+journal = {Mathematics of Computation},
+number = {92},
+pages = {577--593},
+pmid = {17746741},
+title = {{A class of methods for solving nonlinear simultaneous equations}},
+volume = {19},
+year = {1965}
+}
+
+
+@inproceedings{Maron1994,
+author = {Maron, Oded and Moore, Andrew W.},
+booktitle = NeurIPS,
+file = {:home/dmcconachie/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Maron, Moore - 1994 - Hoeffding Races Accelerating Model Selection Search for Classification and Function Approximation.pdf:pdf},
+title = {{Hoeffding Races: Accelerating Model Selection Search for Classification and Function Approximation}},
+year = {1994}
+}
+
+
+@inproceedings{Sparks2015,
+author = {Sparks, Evan R. and Talwalkar, Ameet and Haas, Daniel and Franklin, Michael J. and Jordan, Michael I. and Kraska, Tim},
+booktitle = SoCC,
+doi = {10.1145/2806777.2806945},
+file = {:home/dmcconachie/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Sparks et al. - 2015 - Automating model search for large scale machine learning.pdf:pdf},
+isbn = {9781450336512},
+title = {{Automating model search for large scale machine learning}},
+year = {2015}
+}
+
+
+@article{Auer2002,
+author = {Auer, Peter and Cesa-Bianchi, Nicol{\`{o}} and Fischer, Paul},
+doi = {10.1023/A:1013689704352},
+issn = {08856125},
+journal = {Machine Learning},
+number = {2/3},
+pages = {235--256},
+publisher = {Kluwer Academic Publishers},
+title = {{Finite-time Analysis of the Multiarmed Bandit Problem}},
+volume = {47},
+year = {2002}
+}
+
+@book{Gittins2011,
+author = {Gittins, John and Glazebrook, Kevin and Weber, Richard},
+isbn = {1119990211},
+pages = {312},
+publisher = {John Wiley {\&} Sons},
+title = {{Multi-armed Bandit Allocation Indices}},
+year = {2011}
+}
+
+
+@article{Whittle1988,
+author = {Whittle, P.},
+doi = {10.2307/3214163},
+issn = {00219002},
+journal = {Journal of Applied Probability},
+pages = {287},
+title = {{Restless Bandits: Activity Allocation in a Changing World}},
+volume = {25},
+year = {1988}
+}
+
+@article{Agrawal2012,
+archivePrefix = {arXiv},
+arxivId = {1111.1797},
+author = {Agrawal, Shipra and Goyal, Navin},
+doi = {arXiv:1111.1797},
+eprint = {1111.1797},
+file = {:home/dmcconachie/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Agrawal et al. - 2012 - Analysis of Thompson Sampling for the Multi-armed Bandit Problem.pdf:pdf},
+issn = {15337928},
+journal = {Conference on Learning Theory},
+keywords = {Bayesian algorithm,Thompson Sampling,multi-armed bandit,online learning},
+title = {{Analysis of Thompson Sampling for the multi-armed bandit problem}},
+year = {2012}
+}
+
+
+@inproceedings{Langford2008,
+author = {Langford, John and Zhang, Tong},
+booktitle = NeurIPS,
+file = {:home/dmcconachie/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Langford, Zhang - 2008 - The Epoch-Greedy Algorithm for Multi-armed Bandits with Side Information.pdf:pdf},
+title = {{The Epoch-Greedy Algorithm for Multi-armed Bandits with Side Information}},
+year = {2008}
+}
+
+@article{Slivkins2014,
+ author = {Slivkins, Aleksandrs},
+ title = {Contextual Bandits with Similarity Information},
+ journal = JMLR,
+ issue_date = {January 2014},
+ volume = {15},
+ number = {1},
+ month = jan,
+ year = {2014},
+ issn = {1532-4435},
+ pages = {2533--2568},
+ numpages = {36},
+ acmid = {2670330},
+ publisher = {JMLR.org},
+ keywords = {Lipschitz-continuity, contextual bandits, metric space, multi-armed bandits, regret},
+} 
+
+@inproceedings{Granmo2010,
+abstract = {The multi-armed bandit problem is a classical optimization problem where an agent sequentially pulls one of multiple arms attached to a gambling machine, with each pull resulting in a random reward. The reward distributions are unknown, and thus, one must balance between exploiting existing knowledge about the arms, and obtaining new information. Dynamically changing (non-stationary) bandit problems are particularly challenging because each change of the reward distributions may progressively degrade the performance of any fixed strategy.},
+address = {Berlin, Heidelberg},
+author = {Granmo, Ole-Christoffer and Berg, Stian},
+booktitle = {Trends in Applied Intelligent Systems},
+isbn = {978-3-642-13033-5},
+pages = {199--208},
+publisher = {Springer Berlin Heidelberg},
+title = {{Solving Non-Stationary Bandit Problems by Random Sampling from Sibling Kalman Filters}},
+year = {2010}
+}
+
+@inproceedings{Pandey2007,
+ author = {Pandey, Sandeep and Chakrabarti, Deepayan and Agarwal, Deepak},
+ title = {Multi-armed Bandit Problems with Dependent Arms},
+ booktitle = ICML,
+ year = {2007},
+ isbn = {978-1-59593-793-3},
+ location = {Corvalis, Oregon, USA},
+ pages = {721--728},
+ numpages = {8},
+ doi = {10.1145/1273496.1273587},
+ acmid = {1273587},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+} 
+
+@article{FerrariTrecate2003_clustering,
+title = "A clustering technique for the identification of piecewise affine systems",
+journal = "Automatica",
+volume = "39",
+number = "2",
+pages = "205 - 217",
+year = "2003",
+issn = "0005-1098",
+doi = "https://doi.org/10.1016/S0005-1098(02)00224-8",
+url = "http://www.sciencedirect.com/science/article/pii/S0005109802002248",
+author = "Giancarlo Ferrari-Trecate and Marco Muselli and Diego Liberati and Manfred Morari",
+keywords = "Nonlinear identification, Hybrid systems, Clustering, Linear regression, Classification",
+abstract = "We propose a new technique for the identification of discrete-time hybrid systems in the piecewise affine (PWA) form. This problem can be formulated as the reconstruction of a possibly discontinuous PWA map with a multi-dimensional domain. In order to achieve our goal, we provide an algorithm that exploits the combined use of clustering, linear identification, and pattern recognition techniques. This allows to identify both the affine submodels and the polyhedral partition of the domain on which each submodel is valid avoiding gridding procedures. Moreover, the clustering step (used for classifying the datapoints) is performed in a suitably defined feature space which allows also to reconstruct different submodels that share the same coefficients but are defined on different regions. Measures of confidence on the samples are introduced and exploited in order to improve the performance of both the clustering and the final linear regression procedure."
+}
+
+@article{Paolette2007_hybridsysid,
+title = "Identification of Hybrid Systems A Tutorial",
+journal = "European Journal of Control",
+volume = "13",
+number = "2",
+pages = "242 - 260",
+year = "2007",
+issn = "0947-3580",
+doi = "https://doi.org/10.3166/ejc.13.242-260",
+url = "http://www.sciencedirect.com/science/article/pii/S0947358007708221",
+author = "Simone Paoletti and Aleksandar Lj. Juloski and Giancarlo Ferrari-Trecate and René Vidal",
+keywords = "Hybrid system identification, switched affine and piecewise affine models, classification, parameter estimation, linear separation",
+abstract = "This tutorial paper is concerned with the identification of hybrid models, i.e. dynamical models whose behavior is determined by interacting continuous and discrete dynamics. Methods specifically aimed at the identification of models with a hybrid structure are of very recent date. After discussing the main issues and difficulties connected with hybrid system identification, and giving an overview of the related literature, this paper focuses on four different approaches for the identification of switched affine and piecewise affine models, namely an algebraic procedure, a Bayesian procedure, a clusteringbased procedure, and a bounded-error procedure. The main features of the selected procedures are presented, and possible interactions to still enhance their effectiveness are suggested."
+}
+
+@article{Bretl2014,
+author = {Timothy Bretl and Zoe McCarthy},
+title ={Quasi-static manipulation of a Kirchhoff elastic rod based on a geometric analysis of equilibrium configurations},
+journal = IJRR,
+volume = {33},
+number = {1},
+pages = {48-68},
+year = {2014},
+    abstract = { Consider a thin, flexible wire of fixed length that is held at each end by a robotic gripper. Any curve traced by this wire when in static equilibrium is a local solution to a geometric optimal control problem, with boundary conditions that vary with the position and orientation of each gripper. We prove that the set of all local solutions to this problem over all possible boundary conditions is a smooth manifold of finite dimension that can be parameterized by a single chart. We show that this chart makes it easy to implement a sampling-based algorithm for quasi-static manipulation planning. We characterize the performance of such an algorithm with experiments in simulation. }
+}
+
+@INPROCEEDINGS{Borum2014, 
+author={A. Borum and D. Matthews and T. Bretl}, 
+booktitle=ICRA, 
+title={State estimation and tracking of deforming planar elastic rods}, 
+year={2014}, 
+volume={}, 
+number={}, 
+pages={4127--4132}, 
+keywords={object tracking;optimal control;rods (structures);state estimation;deforming planar elastic rod tracking;finite-dimensional space;geometric optimal control problem;inference;necessary conditions;state estimation;sufficient conditions;Bifurcation;Cameras;Robot kinematics;Shape;State estimation}, 
+month={May},}
+
+@article {LiAOKP2016,
+	title = {Asymptotically Optimal Sampling-based Kinodynamic Planning},
+	journal = IJRR,
+	volume = {35},
+	year = {2016},
+	month = {04/2016},
+	pages = {528-564},
+	abstract = {Sampling-based algorithms are viewed as practical solutions for high-dimensional motion planning. Recent progress has taken advantage of random geometric graph theory to show how asymptotic optimality can also be achieved with these methods. Achieving this desirable property for systems with dynamics requires solving a two-point boundary value problem (BVP) in the state space of the underlying dynamical system. It is difficult, however, if not impractical, to generate a BVP solver for a variety of important dynamical models of robots or physically simulated ones. Thus, an open challenge was whether it was even possible to achieve optimality guarantees when planning for systems without access to a BVP solver. This work resolves the above question and describes how to achieve asymptotic optimality for kinodynamic planning using incremental sampling-based planners by introducing a new rigorous framework. Two new methods, Stable Sparse-RRT (SST) and SST*, result from this analysis, which are asymptotically near-optimal and optimal, respectively. The techniques are shown to converge fast to high-quality paths, while they maintain only a sparse set of samples, which makes them computationally efficient. The good performance of the planners is confirmed by experimental results using dynamical systems benchmarks, as well as physically simulated robots. },
+	author = {Li, Y. and Littlefield, Z. and Bekris, K. E.}
+}
+
+@article {Frey2007_clustering,
+	author = {Frey, Brendan J. and Dueck, Delbert},
+	title = {Clustering by Passing Messages Between Data Points},
+	volume = {315},
+	number = {5814},
+	pages = {972--976},
+	year = {2007},
+	doi = {10.1126/science.1136800},
+	publisher = {American Association for the Advancement of Science},
+	issn = {0036-8075},
+	URL = {http://science.sciencemag.org/content/315/5814/972},
+	eprint = {http://science.sciencemag.org/content/315/5814/972.full.pdf},
+	journal = {Science}
+}
+
+
+@article{McConachie2020,
+author = {D. M\textsuperscript{c}Conachie and A. Dobson and M. Ruan and D. Berenson},
+journal = IJRR,
+title = {{Manipulating Deformable Objects by Interleaving Prediction, Planning, and Control}},
+year = {Accepted},
+url = {{https://sites.google.com/umich.edu/dmcconachie}},
+}
+
+@INPROCEEDINGS{Jia2018,
+author={B. {Jia} and Z. {Hu} and J. {Pan} and D. {Manocha}},
+booktitle=ICRA,
+title={Manipulating Highly Deformable Materials Using a Visual Feedback Dictionary},
+year={2018},
+}
+
+@INPROCEEDINGS{Finn2017,
+author={C. {Finn} and S. {Levine}},
+booktitle=ICRA,
+title={Deep visual foresight for planning robot motion},
+year={2017},
+}
+
+@article{Banijamali2017,
+journal = AISTATS,
+author = {Banijamali, Ershad and Shu, Rui and Ghavamzadeh, Mohammad and Bui, Hung and Ghodsi, Ali},
+month = {Oct},
+title = {{Robust Locally-Linear Controllable Embedding}},
+year = {2017}
+}
+
+@article{Zhang2019,
+author = {Zhang, Marvin and Vikram, Sharad and Smith, Laura and Abbeel, Pieter and Johnson, Matthew J and Levine, Sergey},
+journal = ICML,
+pages = {7444--7453},
+title = {{SOLAR: Deep Structured Representations for Model-Based Reinforcement Learning}},
+year = {2019}
+}
+
+@article{Sutanto2019,
+author = {Sutanto, Giovanni and Ratliff, Nathan and Sundaralingam, Balakumar and Chebotar, Yevgen and Su, Zhe and Handa, Ankur and Fox, Dieter},
+journal = ICRA,
+title = {{Learning Latent Space Dynamics for Tactile Servoing}},
+year = {2019}
+}
+
+@article{ichter2019,
+  title={Robot motion planning in learned latent spaces},
+  author={Ichter, Brian and Pavone, Marco},
+  journal=RAL,
+  volume={4},
+  number={3},
+  pages={2407--2414},
+  year={2019},
+  publisher={IEEE}
+}
+
+@inproceedings{vpa2019rss,
+  title={Learning Robotic Manipulation through Visual Planning and Acting},
+  author={Wang, Angelina and Kurutach, Thanard and Liu, Kara and Abbeel, Pieter and Tamar, Aviv},
+  booktitle = RSS,
+  year={2019},
+}
+
+@inproceedings{mujoco,
+  title={Mujoco: A physics engine for model-based control},
+  author={Todorov, Emanuel and Erez, Tom and Tassa, Yuval},
+  booktitle=IROS,
+  pages={5026--5033},
+  year={2012},
+}
+
+@inproceedings{kuffner2000rrt,
+  title={RRT-connect: An efficient approach to single-query path planning},
+  author={Kuffner, James J and LaValle, Steven M},
+  booktitle=ICRA,
+  pages={995--1001},
+  year={2000},
+}
+
+@inproceedings{maas2013rectifier,
+  title={Rectifier nonlinearities improve neural network acoustic models},
+  author={Maas, Andrew L and Hannun, Awni Y and Ng, Andrew Y},
+  booktitle=ICML,
+  year={2013}
+}
+
+@article{ompl,
+    Author = {Ioan A. {\c{S}}ucan and Mark Moll and Lydia E. Kavraki},
+    Doi = {10.1109/MRA.2012.2205651},
+    Journal = IEEE_M_RA,
+    Month = {December},
+    Number = {4},
+    Pages = {72--82},
+    Title = {The {O}pen {M}otion {P}lanning {L}ibrary},
+    Note = {\url{http://ompl.kavrakilab.org}},
+    Volume = {19},
+    Year = {2012}
+}
+
+@inproceedings{Maturana2015Voxnet,
+author={D. Maturana and S. Scherer},
+booktitle=IROS,
+title={VoxNet: A 3D Convolutional Neural Network for real-time object recognition},
+year={2015},
+pages={922-928},
+}
+
+@misc{EngineAssemblyTumber,
+author={Jatinder Tumber},
+title={Engine Assembly},
+year={2016},
+howpublished={\url{https://grabcad.com/library/engine-assembly-11}},
+note = {Accessed August 28, 2019},
+}
+
+@inproceedings{Jaillet2008transition,
+  title={Transition-based RRT for path planning in continuous cost spaces},
+  author={Jaillet, L{\'e}onard and Cort{\'e}s, Juan and Sim{\'e}on, Thierry},
+  booktitle=IROS,
+  pages={2145--2150},
+  year={2008},
+}
+
+@inproceedings{adamOptimizer2015,
+  title={Adam: A Method for Stochastic Optimization},
+  author={Diederik P. Kingma and Jimmy Ba},
+  booktitle=ICLR,
+  year={2015},
+}

@@ -1,0 +1,27 @@
+\section{Problem Statement}
+
+\todoin{Update notation throughout}
+
+Using similar notation as previous chapters, let a \textit{deformation model} be defined as a function 
+\begin{equation}
+    \DeformForwardFn : \gripperVspace \rightarrow \deformCspace
+\end{equation}
+which maps a change in robot configuration $\grippervel$ to a change in object configuration $\deformvel$. Let $\modelset$ be a set of $\nmodels$ deformable models which satisfy this definition. Each model is associated with a robot command function
+\begin{equation}
+    \DeformBackwardFn : \deformCspace \times \reals^\ndeformpoints \rightarrow \gripperVspace
+\end{equation}
+which maps a desired deformable object velocity $\deformvel$ and weight $\Pinvweight$ (Sec.~\ref{sec:reducing_error}) to a robot velocity command $\grippervel$. $\DeformBackwardFn$ and $\DeformBackwardFn$ also take the object and robot configuration $(\deformconfig, \gripperconfig)$ and environment $\obstacle$ as additional input, however these are frequently omitted for brevity. When a model $\modelidx$ is selected for testing, the model generates a gripper command
+\begin{equation}
+    \grippervel_{\modelidx}(t) = \DeformBackwardFn_\modelidx(\deformvel(t), \Pinvweight(t))
+    \label{eqn:grippervel}
+\end{equation}
+which is then executed for one unit of time, moving the deformable object to configuration $\deformconfig(t+1)$.
+
+The problem we address in this chapter is which model $\modelidx \in \modelset$ to select in order to to move $\ngrippers$ grippers such that the points in $\deformconfig$ align as closely as possible with some task-defined set of $\ntargetpoints$ target points $\target \subset \reals^3$, while avoiding gripper collision and excessive stretching of the deformable object. Each task defines a function $\ErrorFn$ which measures the alignment error between $\deformconfig$ and $\target$. The method we present is a local method which picks a single model $\modelidx_{*}$ at each timestep to treat as the true model. This model is then used to reduce error as much as possible while avoiding collision and excessive stretching. 
+\begin{equation}
+    \modelidx^* = \argmin_{\modelidx \in \modelset} \ErrorFn(\target, \deformconfig(t+1))
+    \label{eqn:modelselection}
+\end{equation}
+We show that this problem can be treated as an instance of the multi-arm non-stationary dependent bandit problem.
+
+

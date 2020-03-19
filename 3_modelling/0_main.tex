@@ -1,0 +1,19 @@
+\chapter{Deformable Object Modelling}
+
+One of the key challenges in manipulating deformable objects is the difficulty inherent in modeling and simulating them. While there has been some progress towards online modeling of deformable objects~\cite{Lang2002,Cretu2008} these methods rely on a time consuming training phase for each object to be modeled. This training phase typically consists of probing the deformable object with test forces in various configurations, and then fitting model parameters to the generated data. While this process can generate useful models, the time it takes to generate a model for each task can be prohibitive for some applications. Of particular interest are Jacobian-based models such as~\cite{Berenson2013} and~\cite{NavarroAlarcon2014}. In these models we assume that there is some function $\DeformMapping : \gripperCspace \rightarrow \reals^N$ which maps a configuration of $\ngrippers$ robot grippers $\gripperconfig \in \gripperCspace$ to a parameterization of the deformable object $\deformconfig \in \reals^N$, where $N$ is the dimensionality of the parameterization of the deformable object.  These models are then linearized by calculating an approximation of the the Jacobian of $\DeformMapping$:
+\begin{align*}
+    \deformconfig                               &= \DeformMapping(\gripperconfig) \\
+    \frac{\partial \deformconfig}{\partial t}   &= \frac{\partial F(\gripperconfig)}{\partial \gripperconfig} \frac{\partial \gripperconfig}{\partial t} \\
+    \deformvel                                  &= J(\gripperconfig) \grippervel \enspace .\numberthis
+    \label{eqn:jacobian}
+\end{align*}
+
+Computation of an exact Jacobian $J(\gripperconfig)$ at a given configuration $\gripperconfig$ is often computationally intractable and requires high-fidelity models and simulators, so instead approximations are frequently used. A shared characteristic of these approximations is some reliance on tuned parameters. This tuning process can be tedious, and in some cases needs to be done on a per-task basis.
+
+In this chapter we consider two types of approximate Jacobian models. The first approximation we use is a \textit{diminishing-rigidity Jacobian}~\cite{Berenson2013} which assumes that points on the deformable object that are near a gripper move ``almost rigidly'' with respect to the gripper while points that are further away move ``less rigidly''. This approximation uses deformability parameters to control how quickly the rigidity decreases with distance (Sec.~\ref{sec:diminishing_rigidity}). The second approximation we use is an \textit{adaptive Jacobian}~\cite{NavarroAlarcon2014} which uses online estimation to approximate $J(\gripperconfig)$. Adaptive Jacobian models rely on a learning rate to control how quickly the estimation changes from one timestep to the next (Sec.~\ref{sec:adaptive_jacobian}). In addition to Jacobian-based models, we also introduce a non-linear modification of the diminishing-rigidity Jacobian which more accurately captures the effect of the direction of gripper motion and obstacles (Sec.~\ref{sec:constrained_model}).
+
+\input{1_definitions}
+\todoin{Usage of $\tilde \DeformForwardFn$ and $\tilde \Jacobian$ throughout.}
+\input{2_jacobian_models}
+\input{3_constraint_model}
+\input{4_results}

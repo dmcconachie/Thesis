@@ -1,0 +1,24 @@
+\chapter{Local Control}
+\label{chap:local_control}
+
+The previous chapter presented multiple models that approximate the effects of gripper motion on the deformable object. Next we introduce controllers that use these models to as part of our framework for performing a broad range of tasks.
+
+The role of the local controller is not to perform the whole task, but rather to refine the configuration of the deformable object locally. For our local controller we use a controller of the form introduced in \cite{Berenson2013} and \cite{McConachie2018}. These controllers locally minimize error while avoiding robot collision and excessive stretching of the deformable object. We present two different methods for addressing overstretch in sections \ref{sec:stretching_avoidance_controller} and \ref{sec:stretching_constraint_controller}. Both of these controllers rely on the same method for computing the direction to move the deformable object in order to reduce task error.
+
+\section{Problem Statement}
+\todoin{Added max stretch factor $\stretchmax$ to task definition/somewhere - used differently in different controllers. - need to redfined to not be an absolute value but rather a `this is when to get concerned'.}
+
+We define a task based on a set of $\ntargetpoints$ target points $\target \in \targetCspace$, a function $\ErrorFnFull \geq 0$, which measures the alignment error between $\deformconfig$ and $\target$, and a termination function $\TermCondFull$ which indicates if the task is finished. The methods we present in this chapter are local, i.e. at each time $t$ they choose an incremental movement $\grippervel_t$ which reduces the alignment error as much as possible at time $t+1$:
+\begin{equation}
+    \min_{\grippervel_t} \ErrorFn \left(\target, \deformconfig_{t+1} \right)
+    \label{eqn:ctrl_obj}
+\end{equation}
+where $\deformconfig_{t+1}$ is the result of executing $\grippervel_t$ for one unit of time. $\robotvel_t$ must also be feasible, i.e. it should not bring the grippers into collision with obstacles and should not cause the object to stretch excessively. We will show that several practical tasks can be represented as instances of this problem.
+
+% Let a robot controller be a function $\CtrlFull$\footnote{A specific controller may have additional parameters (such as gains in a PID controller), but we do not include such parameters here to keep $\Ctrl(\dots)$ in a more general form.} which maps the system state $\left( \gripperconfig, \deformconfig \right)$ and alignment targets $\target$ to a desired robot motion $\grippervelcmd$.
+
+\input{1_error_reduction} 
+\input{2_stretching_avoidance_controller}
+\input{3_stretching_constraint_controller}
+\input{4_results}
+

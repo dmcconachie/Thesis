@@ -1,0 +1,146 @@
+\documentclass[reqno,12pt,oneside]{report} % right-side equation numbering, 12 point font, print one-sided 
+
+\usepackage{rac}
+\usepackage{graphicx}
+\usepackage{rotating}
+\usepackage{color}
+\usepackage{epsfig}
+\usepackage{verbatim}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[caption=false]{subfig}
+\usepackage{url}
+\usepackage{multirow}
+\usepackage{makecell}
+\usepackage[numbers]{natbib}
+\usepackage[printonlyused]{acronym}
+\usepackage{setspace}
+% \usepackage[toc]{appendix}
+\onehalfspacing
+% \doublespacing
+
+% https://github.com/SublimeText/LaTeXTools/issues/1083
+\usepackage{import}
+
+\reversemarginpar
+% \usepackage[disable]{todonotes}
+\usepackage{todonotes}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% https://tex.stackexchange.com/questions/329255/break-line-in-if-condition-using-algpseudocode-while-having-nice-indentation
+\newcommand\CONDITION[2]%
+  {\begin{tabular}[t]{@{}l@{}l@{}}
+     #1&#2
+  \end{tabular}%
+  }
+\algdef{SE}[WHILE]{While}{EndWhile}[1]%
+  {\algorithmicwhile\ \CONDITION{#1}{\ \algorithmicdo}}%
+  {\algorithmicend\ \algorithmicwhile}
+\algdef{SE}[FOR]{For}{EndFor}[1]%
+  {\algorithmicfor\ \CONDITION{#1}{\ \algorithmicdo}}%
+  {\algorithmicend\ \algorithmicfor}
+\algdef{S}[FOR]{ForAll}[1]%
+  {\algorithmicforall\ \CONDITION{#1}{\ \algorithmicdo}}
+\algdef{SE}[REPEAT]{Repeat}{Until}{\algorithmicrepeat}[1]%
+  {\algorithmicuntil\ \CONDITION{#1}{}}
+\algdef{SE}[IF]{If}{EndIf}[1]%
+  {\algorithmicif\ \CONDITION{#1}{\ \algorithmicthen}}%
+  {\algorithmicend\ \algorithmicif}%
+\algdef{C}[IF]{IF}{ElsIf}[1]%
+  {\algorithmicelse\ \algorithmicif\ \CONDITION{#1}{\ \algorithmicthen}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{00_terms}
+\newcommand{\titlephrase}{Deformable Object Manipulation:\\Learning While Doing}
+
+
+% \paperwidth=\dimexpr \paperwidth + 6cm\relax
+% \oddsidemargin=\dimexpr \oddsidemargin + 3cm\relax
+% \evensidemargin=\dimexpr \evensidemargin + 3cm\relax
+% \marginparwidth=\dimexpr \marginparwidth + 3cm\relax
+
+\begin{document}
+
+% Title page as required by Rackham dissertation guidelines
+\titlepage{\titlephrase}{\dale}{Doctor of Philosophy}
+{Robotics Institute}{2019}
+{Associate Professor \dmitry, Chair\\
+ Associate Professor Chad Jenkins\\
+ Professor Jessie Grizzle\\
+ Professor Leslie Pack Kaelbling}
+
+% Begin the front matter as required by Rackham dissertation guidelines
+\initializefrontsections
+
+% Optional Frontispiece
+% \frontispiece{\includegraphics[width=6in]{intro/happy} Find a cool picture to go here.}
+
+% Optional, but recommended, Copyright page
+\copyrightpage{\dale}
+
+% Page numbering. If you don't include a frontispiece or copyright page, you'll need to change this for two-sided printing.
+\makeatletter
+\if@twoside \setcounter{page}{4} \else \setcounter{page}{1} \fi
+\makeatother
+ 
+% Optional Dedication page
+% \dedicationpage{For all the people}
+
+% Optional Acknowledgements page
+% \startacknowledgementspage
+% \input{intro/acknowledgements}
+
+% Optional Preface page
+%\startprefacepage
+%\input{Preface}
+%\label{sec:preface}
+
+% Table of contents, list of figures, etc.
+\tableofcontents     % Required
+\listoffigures       % Required if there is more than one figure
+\listoftables        % Required if there is more than one table
+% \listofmaps          % Required if there is more than one map
+\listofappendices    % Required if there is more than one appendix
+\listofabbreviations % Optional. Abbreviations should be stored in a file named abbr.tex
+
+% Optional in-dissertation Abstract Page
+\startabstractpage{\titlephrase}{\dale}{Chair: \dmitry}
+\input{0_abstract/abstract}
+
+\startthechapters
+
+\graphicspath{{3_modelling/images/}
+              {4_local_control/images/}
+              {5_mab/images/}
+              {6_interleaving_framework/images/}
+              {7_classifier_learning/images/}}
+
+\subimport{1_intro/}{intro}
+\subimport{2_related_work/}{0_main}
+\subimport{3_modelling/}{0_main}
+\subimport{4_local_control/}{0_main}
+\subimport{5_mab/}{0_main}
+% \subimport{6_interleaving_framework/}{0_main}
+% \subimport{7_classifier_learning/}{0_main}
+
+% \startappendices
+% \input{appendices/0_main}
+
+\bibliographystyle{IEEEtranSN}
+\startbibliography
+\begin{singlespace} % Bibliography must be single spaced
+\bibliography{references_strings_full,references_dale}
+% \bibliography{references_strings_abbrev,references_dale}
+\end{singlespace}
+
+% An external Abstract that can be printed at the end of the document, 
+% for separate submission to Rackham. Comment it out when not needed.
+% \startabstractpage
+% {\titlephrase}{\dale}{Chair: \dmitry}
+% \input{abstract/abstract}
+
+\end{document}

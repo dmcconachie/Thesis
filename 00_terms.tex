@@ -1,0 +1,460 @@
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{amsfonts}
+\RequirePackage{mathtools}
+\RequirePackage{xifthen}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\todoin}[1][]{\todo[inline,#1]}
+\newcommand{\rev}[1]{\textcolor{red}{#1}}
+% \newcommand{\revd}[1]{\textcolor{magenta}{#1}}
+% \newcommand{\revb}[1]{\textcolor{blue}{#1}}
+
+\newcommand{\dale}{Dale~M\textsuperscript{c}Conachie}
+\newcommand{\dmitry}{Dmitry~Berenson}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{amsthm}
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Various theorem environments. All of the following have the same numbering
+% system as theorem.
+
+% \theoremstyle{plain}
+% \newtheorem{theorem}{Theorem}
+% \newtheorem{prop}[theorem]{Proposition}
+% \newtheorem{corollary}[theorem]{Corollary}
+% \newtheorem{lemma}[theorem]{Lemma}
+% \newtheorem{question}[theorem]{Question}
+% \newtheorem{conjecture}[theorem]{Conjecture}
+% \newtheorem{assumption}[theorem]{Assumption}
+
+% \theoremstyle{definition}
+% \newtheorem{definition}[theorem]{Definition}
+% \newtheorem{notation}[theorem]{Notation}
+% \newtheorem{condition}[theorem]{Condition}
+% \newtheorem{example}[theorem]{Example}
+% \newtheorem{introduction}[theorem]{Introduction}
+
+% \theoremstyle{remark}
+% \newtheorem{remark}[theorem]{Remark}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\numberwithin{theorem}{chapter}     % Numbers theorems "x.y" where x
+                                    % is the section number, y is the
+                                    % theorem number
+
+%\renewcommand{\thetheorem}{\arabic{chapter}.\arabic{theorem}}
+
+%\makeatletter                      % This sequence of commands will
+%\let\c@equation\c@theorem          % incorporate equation numbering
+%\makeatother                       % into the theorem numbering scheme
+
+%\renewcommand{\theenumi}{(\roman{enumi})}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
+\DeclareMathOperator*{\diag}{diag}
+\DeclareMathOperator*{\proj}{Proj}
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\newcommand{\numberthis}{\addtocounter{equation}{1}\tag{\theequation}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Generic mathematical spaces
+\newcommand{\naturals}{\mathbb{N}}
+\newcommand{\integers}{\mathbb{I}}
+\newcommand{\rationals}{\mathbb{Q}}
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\so}[1]{SO(#1)}
+\newcommand{\se}[1]{SE(#1)}
+\newcommand{\tanse}[1]{\mathfrak{se}(#1)}
+\newcommand{\eye}{\mathbf{I}}
+\newcommand{\zero}{\mathbf{0}}
+
+% Probability definitions
+\newcommand{\pr}{\mathbb{P}}
+\newcommand{\normal}[2]{\mathcal{N}\left(#1,#2\right)}
+\DeclareMathOperator*{\cov}{cov}
+\DeclareMathOperator*{\var}{var}
+
+% Function helpers
+\newcommand{\innerprod}[2]{\left \langle #1, #2 \right \rangle}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Generic robotic configuration variables
+\newcommand{\robotconfig}{q}
+\newcommand{\robotCspace}{\mathcal{Q}}
+\newcommand{\robotCinvalid}{\robotCspace^{\textrm{invalid}}}
+\newcommand{\robotCvalid}{\robotCspace^{\textrm{valid}}}
+\newcommand{\robotconfighist}{Q^{\textrm{hist}}}
+\newcommand{\robotconfighistfull}{\left\{ \robotconfig_0, \dots \right\}}
+
+\newcommand{\robotvel}{\dot{\robotconfig}}
+\newcommand{\robotvelcmd}{\robotvel_{\textrm{cmd}}}
+\newcommand{\robotvelact}{\robotvel_{\textrm{act}}}
+
+%%%%%%%% Gripper specific notation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\ngrippers}{G}
+\newcommand{\gripperidx}{g}
+\newcommand{\gripperconfig}{\robotconfig}
+\newcommand{\gripperconfigexpanded}{\begin{bmatrix}\gripperconfig_1^T & \dots & \gripperconfig_\ngrippers^T \end{bmatrix}^T}
+\newcommand{\gripperconfigG}{\gripperconfig_\gripperidx}
+\newcommand{\gripperconfigK}{\gripperconfig_k}
+\newcommand{\gripperCspacesize}{{6\ngrippers}}
+\newcommand{\gripperCspace}{\se3^\ngrippers}
+\newcommand{\gripperCinvalid}{\robotCinvalid}
+\newcommand{\gripperCvalid}{\robotCvalid}
+
+\newcommand{\grippervel}{\dot{\gripperconfig}}
+\newcommand{\grippervelG}{\grippervel_\gripperidx}
+\newcommand{\grippervelK}{\grippervel_k}
+\newcommand{\grippervelGnorm}{\| \grippervelG \|_{\tanse3}}
+\newcommand{\grippervelGnormsq}{\| \grippervelG \|_{\tanse3}^2}
+\newcommand{\gripperVspace}{\tanse3^\ngrippers}
+\newcommand{\transvel}{v}
+\newcommand{\rotvel}{\omega}
+\newcommand{\transvelG}{\transvel_\gripperidx}
+\newcommand{\rotvelG}{\rotvel_\gripperidx}
+\newcommand{\transvelGRad}{\transvelG^{\textrm{rad}}}
+\newcommand{\transvelGPerp}{\transvelG^{\textrm{perp}}}
+\newcommand{\grippervelindiv}{\begin{bmatrix}\transvelG^T & \rotvelG^T\end{bmatrix}^T}
+\newcommand{\grippervelexpanded}{\begin{bmatrix}\grippervel_1^T & \dots & \grippervel_\ngrippers^T \end{bmatrix}^T}
+\newcommand{\grippervelcmd}{\grippervel_\textrm{cmd}}
+
+\newcommand{\rotvelweight}{c}
+\newcommand{\grippervelinnerprod}{\innerprod{\grippervel_1}{\grippervel_2}}
+\newcommand{\grippervelinnerprodfull}{\grippervelinnerprod_\rotvelweight}
+\newcommand{\grippervelinnerprodexpanded}{\transvel^T \transvel_2 + \rotvelweight \rotvel_1^T \rotvel_2}
+
+%%%%%%%% Physical robot specific notation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \newcommand{\ndof}{{N_\textrm{DOF}}}
+\newcommand{\ndof}{N}
+\newcommand{\physrobotCspace}{\reals^{\ndof}}
+\newcommand{\physrobotVspace}{\reals^{\ndof}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Deformable object configuration variables
+\newcommand{\ndeformpoints}{P}
+\newcommand{\deformidx}{i}
+\newcommand{\deformconfig}{\mathcal{P}}
+\newcommand{\deformconfigI}{\deformconfig_\deformidx}
+\newcommand{\deformconfigJ}{\deformconfig_j}
+\newcommand{\deformCspacesize}{{3\ndeformpoints}}
+\newcommand{\deformCspace}{\reals^\deformCspacesize}
+\newcommand{\deformconfigexpanded}{\begin{bmatrix} \deformconfig_1^T & \dots & \deformconfig_\ndeformpoints^T \end{bmatrix}^T}
+\newcommand{\deformvel}{\dot{\deformconfig}}
+\newcommand{\deformvelexpanded}{\begin{bmatrix} \deformvel_1^T & \dots & \deformvel_\ndeformpoints^T \end{bmatrix}^T}
+\newcommand{\deformvelI}{\dot{\deformconfigI}}
+\newcommand{\deformvelJ}{\dot{\deformconfigJ}}
+\newcommand{\deformvelIpre}[1]{\dot{\deformconfig}_{#1,\deformidx}}
+\newcommand{\deformvelJpre}[1]{\dot{\deformconfig}_{#1,j}}
+\newcommand{\approxPVI}{\tilde{\deformvel}_\deformidx}
+\newcommand{\deformVspace}{\reals^\deformCspacesize}
+\newcommand{\deformvelnormsq}{\| \deformvel \|^2_\Pinvweight}
+\newcommand{\deformvelnormsqexpanded}{\sum_{\deformidx = 1}^\ndeformpoints \pinvweight_\deformidx \deformvelI^T \deformvelI = \deformvel^T \diag{(\Pinvweight)} \deformvel}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\RelaxedDistMatrix}{D}
+\newcommand{\RelaxedDistMatrixSpace}{\reals^{\ndeformpoints \times \ndeformpoints}}
+\newcommand{\GraspedPointsFull}{\mathcal{G}_\gripperidx}
+\newcommand{\closestpoint}{c}
+\newcommand{\closestpointIG}{\closestpoint(\deformidx, \gripperidx)}
+\newcommand{\closestpointJG}{\closestpoint(j, \gripperidx)}
+\newcommand{\closestpointIK}{\closestpoint(\deformidx, k)}
+\newcommand{\geodist}{\RelaxedDistMatrix}
+\newcommand{\geodistI}[1]{\geodist_{i \closestpoint(i, #1)}}
+\newcommand{\geodistIJ}{\geodist_{\deformidx j}}
+\newcommand{\geodistIG}{\geodist_{\deformidx \closestpointIG}}
+\newcommand{\geodistJG}{\geodist_{j \closestpointIG}}
+\newcommand{\geodistIK}{\geodist_{\deformidx \closestpointIK}}
+\newcommand{\straightvec}{v}
+\newcommand{\straightvecIJ}{\straightvec_{\deformidx j}}
+\newcommand{\straightvecIG}{\straightvec_{\deformidx \closestpointIG}}
+\newcommand{\straightvecJG}{\straightvec_{j \closestpointJG}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Jacobian things
+\newcommand{\DeformMapping}{F}
+\newcommand{\DeformMappingExpanded}{\DeformMapping(\robotconfig, \robotconfighist, \deformconfig_0, \obstacle)}
+\newcommand{\Jacobian}{J}
+\newcommand{\JacobianFull}{\Jacobian(\robotconfig, \robotvel, \deformconfig, \obstacle)}
+\newcommand{\Jtrans}{\Jacobian^{\textrm{trans}}}
+\newcommand{\Jrot}{\Jacobian^{\textrm{rot}}}
+\newcommand{\Jrigid}{\Jacobian^{\textrm{rigid}}}
+\newcommand{\JrigidExpanded}{\begin{bmatrix} \Jtrans & \Jrot \end{bmatrix}}
+\newcommand{\JrigidIG}{\Jacobian^{\textrm{rigid}}_{\deformidx, \gripperidx}}
+\newcommand{\JtransIG}{\Jtrans_{\deformidx, \gripperidx}}
+\newcommand{\JrotIG}{\Jrot_{\deformidx, \gripperidx}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Model function variables
+\newcommand{\DeformForwardFn}{\phi}
+\newcommand{\DeformForwardFnFull}{\DeformForwardFn(\gripperconfig, \grippervel, \deformconfig, \obstacle)}
+\newcommand{\DeformBackwardFn}{\psi}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Misc
+\newcommand{\pinvweight}{w}
+\newcommand{\Pinvweight}{W}
+\newcommand{\Pinvweightexpanded}{\begin{bmatrix}\pinvweight_1 & \dots & \pinvweight_\ndeformpoints \end{bmatrix}^T}
+\newcommand{\PinvweightIpre}[1]{\Pinvweight_{#1,\deformidx}}
+\newcommand{\PinvweightJpre}[1]{\Pinvweight_{#1,j}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Diminishing rigidity variables
+\newcommand{\drktrans}{k^{\textrm{trans}}}
+\newcommand{\drkrot}{k^{\textrm{rot}}}
+\newcommand{\rigiditytrans}{w^{\textrm{trans}}}
+\newcommand{\rigidityrot}{w^{\textrm{rot}}}
+\newcommand{\rigiditytransIG}{\rigiditytrans_{\deformidx, \gripperidx}}
+\newcommand{\rigidityrotIG}{\rigidityrot_{\deformidx, \gripperidx}}
+\newcommand{\ajrate}{\Gamma}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Directional Rigidity variables
+% \newcommand{\JacobianDR}{\Jacobian^{\textrm{dr}}}
+\newcommand{\influenceIG}{\theta_{\deformidx, \gripperidx}}
+\newcommand{\influenceIK}{\theta_{\deformidx, k}}
+\newcommand{\influenceIM}{\theta_{\deformidx, m}}
+\newcommand{\tensionIG}{\alpha_{\deformidx, \gripperidx}}
+\newcommand{\tensionIGfull}{\alpha(\straightvecIG, \grippervelG)}
+\newcommand{\tensionJGfull}{\alpha(\straightvecJG, \grippervelG)}
+\newcommand{\distratioIG}{\mathfrak{r}_{\deformidx, \gripperidx}}
+\newcommand{\distratioJG}{\mathfrak{r}_{j, \gripperidx}}
+\newcommand{\slackIG}{\beta_{\deformidx, \gripperidx}}
+\newcommand{\slackIGfull}{\beta(\distratioIG)}
+\newcommand{\slackJGfull}{\beta(\distratioJG)}
+\newcommand{\drkdir}{k^\textrm{dir}}
+\newcommand{\drkdist}{k^\textrm{dist}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Task variables
+\newcommand{\obstacle}{\mathcal{O}}
+\newcommand{\stretchcurr}{\gamma}
+\newcommand{\stretchmax}{\gamma_{\textrm{max}}}
+\newcommand{\ntargetpoints}{T}
+\newcommand{\targetCspace}{\reals^{3 \ntargetpoints}}
+\newcommand{\target}{\mathcal{T}}
+\newcommand{\targetexpanded}{\begin{bmatrix} \target_1^T & \dots & \target_\ntargetpoints^T \end{bmatrix}^T}
+\newcommand{\targetidx}{k}
+\newcommand{\targetK}{\target_\targetidx}
+\newcommand{\ErrorFn}{\rho}
+\newcommand{\ErrorFnFull}{\ErrorFn(\target, \deformconfig)}
+\newcommand{\TermCond}{\Omega}
+\newcommand{\TermCondFull}{\TermCond(\target, \deformconfig)}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Controller definitions
+\newcommand{\Ctrl}{C}
+\newcommand{\CtrlFull}{\Ctrl(\robotconfig, \deformconfig, \target)}
+\newcommand{\correspondences}{\deformconfig_C}
+
+% T-ASE/IJRR
+\newcommand{\stretchweightfactor}{k_s}
+\newcommand{\obsavoidfactor}{\beta}
+\newcommand{\grippervelS}{\grippervel_{s}}
+\newcommand{\grippervelGS}{\grippervel_{g,s}}
+\newcommand{\grippervelGC}{\grippervel_{\gripperidx, c}}
+\newcommand{\grippervelmaxservo}{\grippervel_\textrm{max,s}^{\tanse3}}
+\newcommand{\grippervelmaxobs}{\grippervel_\textrm{max,c}^{\tanse3}}
+\newcommand{\robotvelmax}{\robotvel_\textrm{max}}
+\newcommand{\physrobotvelmax}{\robotvel_\textrm{max}^{\reals^\ndof}}
+\newcommand{\dbuffer}{d_\textrm{buffer}}
+
+% Mengyao IROS
+\newcommand{\closestpointGK}{\mathcal{I}_\gripperidx(\gripperconfigG, \gripperconfigK)}
+\newcommand{\closestpointKG}{\mathcal{I}_k(\gripperconfigG, \gripperconfigK)}
+\newcommand{\deformconfigGK}{\deformconfig_{\closestpointGK}}
+\newcommand{\deformconfigKG}{\deformconfig_{\closestpointKG}}
+\newcommand{\geodesicGK}{\mathcal{S}_{\gripperidx k}}
+\newcommand{\geodesicKG}{\mathcal{S}_{k \gripperidx}}
+\newcommand{\savoidGK}{u_\gripperidx^k}
+\newcommand{\savoidKG}{u_k^\gripperidx}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% MAB Definitions
+\newcommand{\modelset}{\mathcal{M}}
+\newcommand{\nmodels}{M}
+\newcommand{\modelidx}{m}
+\newcommand{\modelchosen}{\modelidx}
+
+% Regret and reward
+\newcommand{\reward}{r}
+\newcommand{\totalregret}{R}
+
+% KF-MANDB variables
+\newcommand{\utility}{u}
+\newcommand{\utilityprocessnoise}{v}
+\newcommand{\utilityprocessnoisecovar}{\Sigma}
+\newcommand{\utilityprocessscale}{\eta}
+\newcommand{\transitionnoisefactor}{\sigma_{tr}}
+\newcommand{\utilityobs}{\reward}
+\newcommand{\utilityobsnoise}{w}
+\newcommand{\observationnoisefactor}{\sigma_{obs}}
+\newcommand{\correlationfactor}{\xi}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\iffalse
+% Robot configuration variables
+\newcommand{\robotconfig}[1][]{\config_
+    {\ifthenelse{\isempty{#1}}{r}{r,#1}}
+}
+\newcommand{\robotvelocity}{\dot \config_r}
+\newcommand{\robotconfigspace}{\reals^\ndof}
+\newcommand{\robotcommandvel}[1][]{\dot \config^{cmd}_
+    {\ifthenelse{\isempty{#1}}{r}{r,#1}}
+}
+\newcommand{\robotactualvel}[1][]{\dot \config^{act}_
+    {\ifthenelse{\isempty{#1}}{r}{r,#1}}
+}
+\newcommand{\robotcommandsequence}{\dot \Config^{cmd}_r}
+
+\newcommand{\maxrobotvel}[1][]{\robotvelocity^%
+    {\ifthenelse{\isempty{#1}}{\textrm{max}}{\textrm{max},#1}}
+}
+
+\newcommand{\eeposition}[1][]{\config_%
+    {\ifthenelse{\isempty{#1}}{\textrm{xyz}}{\textrm{xyz},#1}}
+}
+\newcommand{\eepositiongoal}[1][]{
+    {\ifthenelse{\isempty{#1}}{\eeposition^\textrm{goal}}{\eeposition[#1]^\textrm{goal}}}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Model set variables
+\newcommand{\modelset}{\mathcal{M}}
+\newcommand{\nummodels}{M}
+\newcommand{\modelindex}{m}
+
+% Regret and reward
+\newcommand{\reward}{r}
+\newcommand{\totalregret}{R}
+
+% KF-MANDB variables
+\newcommand{\utility}{u}
+\newcommand{\utilityprocessnoise}{v}
+\newcommand{\utilityprocessnoisecovar}{\Sigma}
+\newcommand{\utilityprocessscale}{\eta}
+\newcommand{\transitionnoisefactor}{\sigma_{tr}}
+\newcommand{\utilityobs}{\reward}
+\newcommand{\utilityobsnoise}{w}
+\newcommand{\observationnoisefactor}{\sigma_{obs}}
+\newcommand{\modelchosen}{m}
+\newcommand{\correlationfactor}{\xi}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Virtual rubber band variables
+\newcommand{\band}{B}
+\newcommand{\bandlength}{L}
+\newcommand{\maxbandlength}{L_\textrm{max}}
+\newcommand{\bandspace}{\mathbb{B}}
+\newcommand{\bandspacevalid}{\bandspace^{valid}}
+\newcommand{\bandspaceinv}{\bandspace^{inv}}
+\newcommand{\bandgoal}{\bandspace^\textrm{goal}}
+\newcommand{\numbandpoints}{N_{b,t}}
+\newcommand{\maxbandpoints}{N_b^\textrm{max}}
+
+% External logic parameters
+\newcommand{\taskexecutiontime}{N_e}
+\newcommand{\truemotion}{E}
+\newcommand{\predictionhorizon}{N_p}
+\newcommand{\bandlengthannealing}{\alpha}
+\newcommand{\historywindow}{N_h}
+\newcommand{\errorprogressthreshold}{\beta_e}
+\newcommand{\motionprogressthreshold}{\beta_m}
+
+% RRT parameters
+\newcommand{\goalreachradius}{\delta_\textrm{goal}}
+\newcommand{\rrtnode}{\config}
+\newcommand{\rrtnodeset}{\mathcal{V}}
+\newcommand{\rrtedgeset}{\mathcal{E}}
+\newcommand{\rrtgraph}{G}
+\newcommand{\cost}{\textrm{Cost}}
+\newcommand{\nodesnew}{\rrtnodeset^\textrm{new}}
+\newcommand{\edgesnew}{\rrtedgeset^\textrm{new}}
+\newcommand{\goalbias}{\gamma_{gb}}
+
+% \newcommand{\rrtgoal}{\Config^\textrm{goal}}
+% \newcommand{\rrttree}{\Config^\textrm{tree}}
+\newcommand{\qnew}{\config^\textrm{new}}
+% \newcommand{\Qnew}{\Config^{\textrm{new}}}
+\newcommand{\qbias}{\config_r^\textrm{bias}}
+\newcommand{\Qapproxgoal}{\mathcal{\Config}_r^\textrm{goal}}
+\newcommand{\Qgoal}{\mathbb{\Config}^\textrm{goal}}
+
+% Nearest Neighbour/distance Terms
+\newcommand{\bestneardist}{\delta_{BN}}
+
+\newcommand{\Dnear}[1][]{D_%
+    {\ifthenelse{\isempty{#1}}{\textrm{near}}{\textrm{near},#1}}
+}
+\newcommand{\Dmax}[1][]{D_%
+    {\ifthenelse{\isempty{#1}}{\textrm{max}}{\textrm{max},#1}}
+}
+\newcommand{\qrand}{\config^\textrm{rand}}
+\newcommand{\qnear}{\config^\textrm{near}}
+\newcommand{\qnearapprox}{\tilde{\config}^\textrm{near}}
+\newcommand{\Qnear}{\Config^\textrm{near}}
+\newcommand{\qlast}{\config^\textrm{last}}
+\newcommand{\qtarget}{\config^\textrm{target}}
+\newcommand{\qinit}{\config^\textrm{init}}
+\newcommand{\banddistscale}{\lambda_b}
+
+\newcommand{\innerballsize}{\delta_\theta}
+\newcommand{\ballseparation}{\delta_c}
+\newcommand{\hyperball}{\mathcal{B}}
+
+% Motion Planning Terms
+\newcommand{\cspace}{\mathbb{C}}
+\newcommand{\cfree}{\cspace^{valid}}
+\newcommand{\cinv}{\cspace^{inv}}
+\newcommand{\cspacepath}{\pi}
+\newcommand{\rpath}{\cspacepath^{ref}}
+\newcommand{\setofpaths}{\mathbb{T}}
+
+% Proof terms
+\newcommand{\selectprobability}{\gamma_k^{(i)}}
+\newcommand{\selectbound}{\gamma_k^{(\infty)}}
+\newcommand{\propagationprobability}{\rho_k^{(i)}}
+\newcommand{\propagationbound}{\rho_k^{(\infty)}}
+
+
+% Learning section
+\newcommand{\truestate}{x}
+\newcommand{\truestatespace}{\mathcal{X}}
+\newcommand{\statecommand}{u^\truestate}
+\newcommand{\reducedstate}{b}
+\newcommand{\reducedstatespace}{\mathcal{B}}
+\newcommand{\reducedcommand}{u^\reducedstate}
+
+\fi

@@ -1,0 +1,22 @@
+\chapter{Old Controller Details}
+
+\section{WAFR}
+
+\begin{algorithm}[t]
+    \caption{DirectErrorCorrection$(\deformconfig, \target)$}
+    \begin{algorithmic}[1]
+        \State $\deformvel_e \gets \zero_{\deformcspacesize \times 1}$, $\Pinvweight_e \gets \zero_{\ndeformpoints \times 1}$
+        \For{$\targetidx \in \{1, 2, \dots, \ntargetpoints \}$}
+            \State $\deformidx \gets \argmin_{j \in \{ 1, 2, \dots, \ndeformpoints \}} \| \targetK - \deformconfigJ \|$
+            \State $\deformvel_{e,\deformidx} \gets \deformvel_{e,\deformidx} + \targetK - \deformconfigI$
+            \State $\Pinvweight_{e,\deformidx} \gets \max (\Pinvweight_{e,\deformidx}, \| \targetK - \deformconfigI \|)$
+        \EndFor
+        \State \Return $\{ \deformvel_e, \Pinvweight_e \}$
+    \end{algorithmic}
+    \label{alg:direct_error_correction_wafr}
+\end{algorithm}
+
+
+\section{IJRR}
+
+Text

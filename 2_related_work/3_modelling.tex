@@ -1,0 +1,22 @@
+\section{Modelling Deformable Objects}
+
+Deformable object manipulation has been studied in many contexts ranging across domestic, surgical, and industrial domains \cite{Jimenez2012}. Much of this work relies on accurate modeling and simulation of deformable objects. Some of the most common simulation methods use Mass-Spring Models \cite{Essahbi2012, Maris2010} and Finite-Element Models (FEM) \cite{Muller2002}, However, such approaches usually require significant tuning and are very sensitive to discretization parameters. Also, we seek a model that can be evaluated very quickly inside an optimal control framework, and Finite-element models, while accurate, can be computationally-expensive to simulate. While methods have been developed to track objects using FEM in real-time \cite{Petit2017}, a controller may need to evaluate the model many times to find an appropriate command, requiring speeds faster than real-time. Specialized models have also been developed, e.g., \cite{Borum2014} and \cite{Bretl2014} focus on elastic rods that are not in contact. We seek a model that works well with rope- and cloth-like materials that can deform as a result of contact. Finally, researchers have also investigated automatic modeling of deformable objects \cite{Lang2002, Cretu2008}. However, these methods rely on a time-consuming training phase for each object to be modeled, which we would like to avoid.%and it requires a lot of efforts in preparing test cases.
+
+Given a model such as those above, researchers have investigated various control methods to manipulate deformable objects. %Some controllers are designed with an explicit model to represent the deformable object. 
+Hirai and Wada proposes an iterative visual-servoing controller in \cite{Hirai2000}, which aligns interest points on the deformable object to targets. 
+Its control law is based on modeling the deformable object as a lattice of interconnected springs. 
+\cite{Wada2001} uses a similar spring model to formulate a PID controller that aligns interest points to targets. While effective, these methods rely on models like those above and thus suffer from the above issues.
+%All these controllers rely on an explicit model to represent the deformable object which can induce the high computation cost and heavy parameters tuning work.
+
+
+Our work is complementary to methods that adapt the model of the object during manipulation \cite{Navarro-Alarcon2014, NavarroAlarcon2018, Hu2018deformable_gpr}. Our model can serve as an initial guess and a reference for such methods so that the online adaptation process does not diverge too far from a reasonable model as a result of perception or modeling error. 
+%However these models require a good initial guess of the Jacobian to begin the adaptation process. The work proposed here could serve as such a guess. %Instead of an exact model of the deformable object, they explore the features of the dynamics from the task space. 
+%The philosophy of the deformable object modeling in this paper is very close to these works. 
+Our paper builds on the idea of diminishing rigidity Jacobians \cite{Berenson2013} by improving the model and formulating appropriate constraints for deformable object manipulation. \cite{McConachie2018} extended \cite{Berenson2013} to use multiple Jacobian-based models when it is uncertain which model is appropriate for the object. The new model proposed here could be incorporated into the framework of \cite{McConachie2018}. 
+%and study the methods to tune the Jacobian-based model, as well as the way to maximize the rewards of tasks by selecting the right controller for operation.
+
+
+% manipulation model in the B.M
+The model in Sec.~\ref{sec:constrained_model} is built on the method for deformable object manipulation in \cite{Berenson2013} (Sec.~\ref{sec:diminishing_rigidity}) and task space control of robot manipulators \cite{Khatib1987}.
+However, unlike \cite{Berenson2013}, we explore the directional diminishing rigidity of the deformable object. This maintains a low computational cost of prediction while improving accuracy.
+%Our approach to handling obstacle avoidance is similar to \cite{Berenson2013} and \cite{Sentis2005} in that it repels the gripper from obstacles using the surface normal. As a result, the prediction of object movements will not interfere with the obstacle avoidance constraint.

@@ -1,0 +1,29 @@
+\section{Definitions}
+
+Let the robot be represented by a set of $\ngrippers$ grippers with configuration $\gripperconfig \in \gripperCspace$.  We assume that the robot configuration can be measured exactly; in this work we assume the robot to be a set of free floating grippers; in practice we can track the motion of these with inverse kinematics on robot arms (see Sec~\ref{sec:stretching_avoidance_controller_physical_robot_implementation} for an implementation). We use the Lie algebra~\cite{Murray1994} of $\se3$ to represent robot gripper velocities. This is the tangent space of $\se3$, denoted as $\tanse3$. The velocity of a single gripper $\gripperidx$ is then $\grippervelG = \grippervelindiv \in \tanse{3}$ where $\transvelG$ and $\rotvelG$ are the translational and rotational components of the gripper velocity. We define the velocity of the entire robot to be $\grippervel = \grippervelexpanded \in \gripperVspace$. We define the inner product of two gripper velocities $\grippervel_1, \grippervel_2 \in \tanse3$ to be 
+\begin{equation}
+    \grippervelinnerprod = \grippervelinnerprodfull = \grippervelinnerprodexpanded \enspace,
+\end{equation}
+where $\rotvelweight$ is a non-negative scaling factor relating rotational and translational velocities. This defines the $\tanse3$ norm
+\begin{equation}
+    \grippervelGnormsq = \innerprod{\grippervelG}{\grippervelG}_\rotvelweight \enspace .
+\end{equation}
+
+Let the configuration of a deformable object be a set of $\ndeformpoints$ points with configuration $\deformconfig = \deformconfigexpanded \in \deformCspace$. We assume that we have a method of sensing $\deformconfig$. Let $\RelaxedDistMatrix$ be a symmetric $\ndeformpoints \times \ndeformpoints$ matrix where $\geodistIJ$ is the the geodesic distance (see Fig.~\ref{fig:geodesic}) between $\deformconfigI$ and $\deformconfigJ$ when the deformable object is in its ``natural'' or ``relaxed'' state. To measure the norm of a deformable object velocity $\deformvel = \deformvelexpanded \in \deformVspace $ we will use a weighted Euclidean norm
+\begin{equation}
+    \deformvelnormsq = \deformvelnormsqexpanded = 
+\end{equation}
+where $\Pinvweight = \Pinvweightexpanded \in \reals^\ndeformpoints$ is a set of non-negative weights. The rest of the environment is denoted $\obstacle$ and is assumed to be both static, and known exactly.
+
+Let a \textit{deformation model} $\DeformForwardFn$ be defined as a function which takes as input the system configuration, gripper velocities, and obstacle configuration to a deformable object and returns a deformable object velocity:
+\begin{equation}
+    \deformvel = \DeformForwardFnFull \enspace .
+\end{equation}
+% \todo{Discuss quasi-static somewhere in here}
+For brevity this will frequently be shortened to $\deformvel = \DeformForwardFn(\grippervel)$. For Jacobian based models, the basic formulation (Eq.~\eqref{eqn:jacobian}) directly defines the deformation model $\DeformForwardFn$
+\begin{equation}
+    \DeformForwardFn(\grippervel) = \JacobianFull \grippervel \enspace.
+    \label{eqn:jacobianforwardfunction}
+\end{equation}
+
+\todoin{Deal with Eq.~\eqref{eqn:jacobian} and Eq.~\eqref{eqn:jacobianforwardfunction} vs. later (more correct) definition, and usage in section 3.2}

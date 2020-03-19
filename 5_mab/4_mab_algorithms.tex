@@ -1,0 +1,133 @@
+\section{Algorithms for MAB}
+\label{sec:bandit_algorithms}
+
+Previous solutions~\cite{Auer2002,Granmo2010} to minimizing~\eqref{eqn:totalregret} assume that rewards for each arm are normally and independently distributed and then estimate the mean and variance of each Gaussian distribution.  We test three algorithms in our experiments: Upper Confidence Bound for normally distributed bandits UCB1-Normal, Kalman Filter Based Solution to Non-Stationary Multi-arm Normal Bandits (KF-MANB), and our extension of KF-MANB, Kalman Filter Based Solution to Non-Stationary Multi-arm Normal Dependent Bandit (KF-MANDB).
+
+
+
+\subsection{UCB1-Normal}
+The UCB1-Normal algorithm~\cite{Auer2002} (Alg.~\ref{alg:ucb1normal}) treats each arm (model) as independent, estimating an optimistic Upper Confidence Bound (UCB) for the utility of each model. The model with the highest UCB is used to command the robot at each timestep. This algorithm assumes that the utility of each model is stationary, gradually shifting from exploration to exploitation as more information is gained. While our problem is non-stationary and dependant, we use UCB1-Normal as a baseline algorithm to compare against due to its prevalence in previous work.
+
+\begin{algorithm}[t]
+    \caption{UCB1-Normal - reproduced from~\cite{Auer2002}}
+    \label{alg:ucb1normal}
+    \begin{algorithmic}
+        \For{$t = 1,2,\dots$}
+            \vspace{-11pt}
+            \State{
+                \begin{itemize}
+                    \item If there is an arm which has been pulled less than $\ceil*{8 \log t}$ times then pull this arm. If multiple arms qualify, we select the arm that has been pulled less, selecting the arm with the lower index in the case of a tie.
+                    \item Otherwise pull arm $j$ that maximizes
+                        \begin{equation*}
+                            \bar \utility_j + \sqrt{16 \cdot \frac{q_j - n_j \bar \utility_j^2}{n_j - 1} \cdot \frac{\ln(t-1)}{n_j}}
+                        \end{equation*}
+                        where $\bar \utility_j$ is the average reward obtained from arm~$j$, $q_j$ is the sum of squared rewards obtained from arm~$j$, and $n_j$ is the number of times arm~$j$ has been pulled so far.
+                    \item Update $\bar \utility_j$ and $q_j$ with the obtained reward $r_j$.
+                \end{itemize}
+            }
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
+
+\subsection{KF-MANB}
+The Kalman Filter Based Solution to Non-Stationary Multi-arm Bandit (KF-MANB) algorithm~\cite{Granmo2010} (Alg.~\ref{alg:kf-manb}) uses independent Kalman filters to estimate the utility distribution of each model, and then uses Thompson sampling~\cite{Agrawal2012} to chose which model to use at each timestep. Because this algorithm explicitly allows for non-stationary reward distributions, it is able to ``switch'' between models much faster than UCB1-Normal.
+
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Initialization:}}
+\begin{algorithm}[t]
+    \caption{KF-MANB - reproduced from~\cite{Granmo2010}}
+    \label{alg:kf-manb}
+    \begin{algorithmic}
+        \Require Number of bandit arms $\nmodels$; Observation noise $\observationnoisefactor^2$; Transition noise $\transitionnoisefactor^2 \utilityprocessscale^2$.
+        \Ensure $\bar \utility_1(1) = \bar \utility_2(1) = \dots = \bar \utility_\nmodels(1) = A$; $\sigma_1(1) = \sigma_2(1) = \dots = \sigma_\nmodels(1) = B$; \textit{\# Typically, $A$ can be set to $0$, with $B$ being sufficiently large}
+        \For{$t = 1,2,\dots$}
+            \vspace{-11pt}
+            \State{
+                \begin{enumerate}
+                    \item{For each arm $j \in \{1,\dots,\nmodels\}$}, draw a value $x_j$ randomly from the associated \textit{normal} distribution $f(x_j;\bar \utility_j(t),\sigma_j(t))$ with the parameters $(\bar \utility_j(t),\sigma_j(t))$.
+                    \item{Pull the arm $i$ whose drawn $x_i$ is the largest one:
+                        \begin{equation*}
+                            i = \argmax_{j \in \{1,\dots,\nmodels\}} x_j.
+                        \end{equation*}
+                    }
+                    \item{Receive reward $\tilde r_i$ from pulling arm $i$, and update parameters as follows:
+                        \begin{itemize}
+                            \item{Arm $i$:
+                                \begin{align*}
+                                    \bar \utility_i(t+1)      &= \frac{(\sigma_i^2(t) + \transitionnoisefactor^2 \utilityprocessscale^2) \cdot \tilde r_i + \observationnoisefactor^2 \cdot \bar \utility_i(t)}{\sigma_i^2(t) + \transitionnoisefactor^2 \utilityprocessscale^2 + \observationnoisefactor^2} \\
+                                    \sigma_i^2(t+1) &= \frac{(\sigma_i^2(t) + \transitionnoisefactor^2 \utilityprocessscale^2) \observationnoisefactor^2}{\sigma_i^2(t) + \transitionnoisefactor^2 \utilityprocessscale^2 + \observationnoisefactor^2}
+                                \end{align*}
+                            }
+                            \item{Arm $j \neq i$:
+                                \begin{align*}
+                                    \bar \utility_j(t+1)      &= \bar \utility_j(t) \\
+                                    \sigma_j^2(t+1) &= \sigma^2_j(t) + \sigma_{tr}^2
+                                \end{align*}
+                            }
+                        \end{itemize}
+                    }
+                \end{enumerate}}
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
+
+\subsection{KF-MANDB}
+We also propose a variant of KF-MANB, replacing the independent Kalman filters with a single joint Kalman filter (Alg.~\ref{alg:kf-mandb}). This enables us to capture the correlations between models, allowing us to learn more from each pull. We start by defining utility as a linear system with Gaussian noise with process model $\utility(t+1) = \utility(t) + \utilityprocessnoise$ and observation model $\utilityobs(t) = C(t)\utility(t) + \utilityobsnoise$ where $\utility(t)$ is our current estimate of the relative utility of each model, while $\utilityprocessnoise$ and $\utilityobsnoise$ are zero-mean Gaussian noise terms. $C(t)$ is a row vector with a 1 in the column of the model we used and zeros elsewhere. The variance on $\utilityobsnoise$ is defined as $\observationnoisefactor^2 \utilityprocessscale^2$. $\utilityprocessscale$ is a tuning parameter to scale the covariance to match the reward scale of the specific task, while $\observationnoisefactor$ controls how much we believe each new observation.
+
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Initialization:}}
+\begin{algorithm}[t]
+    \caption{KF-MANDB}
+    \label{alg:kf-mandb}
+    \begin{algorithmic}
+        \Require Number of bandit arms $\nmodels$; Observation noise $\observationnoisefactor^2$; Transition noise $\transitionnoisefactor^2 \utilityprocessscale^2$.
+        \Ensure $\bar \utility(1) = A \in \reals^\nmodels$; $\utilityprocessnoisecovar(1) = B \in \reals^{\nmodels \times \nmodels}$; \textit{\# Typically, $A$ can be set to $0$, with $B \succ 0$} and sufficiently large
+        \For{$t = 1,2,\dots$}
+            \vspace{-11pt}
+            \State{
+                \begin{enumerate}
+                    \item{For each arm $j \in \{1,\dots,\nmodels\}$, generate a gripper velocity command $\grippervel_j$.}
+                    \item{Draw a value $x = \begin{bmatrix}x_1 & \dots & x_\nmodels \end{bmatrix}^T$ randomly from the joint \textit{normal} distribution $f(x;\bar \utility(t),\utilityprocessnoisecovar(t))$ with the parameters $(\bar \utility(t),\utilityprocessnoisecovar(t))$.}
+                    \item{Pull the arm $i$ whose drawn $x_i$ is the largest one:
+                        \begin{equation*}
+                            i = \argmax_{j \in \{1,\dots,\nmodels\}} x_j.
+                        \end{equation*}
+                    }
+                    \item{Receive reward $\tilde \utilityobs_i$ from pulling arm $i$, and perform a standard Kalman filter prediction and update step:
+                        \begin{itemize}
+                            \item{Compute \textit{a priori} covariance estimate and Kalman gain:
+                                \begin{align*}
+                                    \utilityprocessnoisecovar_{tr}   &\mbox{ is calculated using Eq.~\ref{eqn:processnoise}} \\
+                                    \hat \utilityprocessnoisecovar   &= \utilityprocessnoisecovar(t) + \utilityprocessnoisecovar_{tr} \\
+                                    S                                &= C(t) \hat \utilityprocessnoisecovar C(t)^T + \observationnoisefactor^2 \\
+                                    K                                &= \hat \utilityprocessnoisecovar C(t)^T S^{-1}
+                                \end{align*}
+                            }
+                            \item{Compute \textit{a posteriori} utility and covariance estimates:
+                                \begin{align*}
+                                    \bar \utility(t + 1)             &= \bar \utility(t) - K \left( C(t) \bar \utility(t) - \tilde \utilityobs_i \right) \\
+                                    \utilityprocessnoisecovar(t + 1) &= \hat \utilityprocessnoisecovar - K C(t) \hat \utilityprocessnoisecovar
+                                \end{align*}
+                            }
+                        \end{itemize}
+                    }
+                \end{enumerate}
+            }
+        \EndFor
+    \end{algorithmic}
+\end{algorithm}
+
+To define the process noise $\utilityprocessnoise$ we want to leverage correlations between models; if two model commands are similar at the current time, the utility of these models is likely correlated. To measure the similarity between two models $i$ and $j$ we use the angle between their gripper velocity commands $\grippervel_{i}$ and $\grippervel_{j}$. This similarity is then used to directly construct a covariance matrix for each arm pull:
+{\begin{equation}
+\begin{split}
+    \utilityprocessnoise            &\sim \normal{0}{\utilityprocessnoisecovar_{tr}}\\
+    \utilityprocessnoisecovar_{tr}  & = \transitionnoisefactor^2 \utilityprocessscale^2 (\correlationfactor \utilityprocessnoisecovar_{sim} + \left(1 - \correlationfactor\right) \eye)\\
+    \utilityprocessnoisecovar_{sim,i,j} & = \frac{\langle \grippervel_{i}, \grippervel_{j} \rangle}{\| \grippervel_{i} \| \| \grippervel_{j} \|} = \cos \theta_{i,j} \enspace.
+\label{eqn:processnoise}
+\end{split}
+\end{equation}}
+$\transitionnoisefactor$ is the standard Kalman Filter transition noise factor tuning parameter. $\correlationfactor \in [0,1]$ is the correlation strength factor; larger $\correlationfactor$ gives more weight to the arm correlation, while smaller $\correlationfactor$ gives lower weight. When $\correlationfactor$ is zero then KF-MANDB will have the same update rule as KF-MANB, thus we can view KF-MANDB as a generalizion of KF-MANB, allowing for correlation between arms.
+
+After estimating the utility of each model and the noise parameters at the current timestep, these values are then passed into a Kalman filter which estimates a new joint distribution. The next step is the same as KF-MANB; we draw a sample from the resulting distribution, then use the model that yields the largest sample to generate the next robot command. In this way we automatically switch between exploration and exploitation as the system evolves; if we are uncertain of the utility of our models then we are more likely to choose different models from one timestep to the next. If we believe that we have accurate estimates of utility, then we are more likely to choose the model with the highest utility.
