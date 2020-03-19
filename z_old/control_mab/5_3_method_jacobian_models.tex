@@ -1,0 +1,72 @@
+\subsection{Jacobian Models}
+\label{sec:jacobian_models}
+
+Every model must define a prediction function $\deformablemodelforwardfunction(\robotvelocity)$ and has an associated robot command function $\deformablemodelbackwardfunction(\deformvelocity, \pseudoinverseweight)$. This paper focuses on Jacobian-based models whose basic formulation Eq.~\eqref{eqn:jacobian} directly defines the deformation model $\deformablemodelforwardfunction$
+\begin{equation}
+    \deformablemodelforwardfunction(\robotvelocity) = J \robotvelocity \enspace.
+    \label{eqn:jacobianforwardfunction}
+\end{equation}
+When defining the robot command function $\deformablemodelbackwardfunction$, we use the weights $\pseudoinverseweight$ to focus the robot motion on the important part of $\deformvelocity$. This is done by using a weighted norm in a standard minimization problem
+% \begin{equation}
+% \begin{aligned}
+%     \deformablemodelbackwardfunction(\deformvelocity, \pseudoinverseweight) = 
+%         &\argmin_{\robotvelocity }   & & \| J \robotvelocity - \deformvelocity \|^2_{\pseudoinverseweight} \\
+%         & \text{subject to}          & & \| \robotvelocity \|^2 < \maxgrippervelservo^2
+% \end{aligned}
+% \end{equation}
+\begin{equation}
+    \begin{aligned}
+        \deformablemodelbackwardfunction(\deformvelocity, \pseudoinverseweight) =
+                    & \argmin_{\robotvelocity } 
+                    & & \| J \robotvelocity - \deformvelocity \|^2_{\pseudoinverseweight} \\
+                    &\text{subject to}           
+                    & & \| \robotvelocity \|^2 < \maxgrippervelservo^2 \enspace.
+        \label{eqn:jacobianbackwardfunction}
+    \end{aligned}
+\end{equation}
+We also need to ensure that the grippers do not move too quickly, so we add the constraint that the robot moves no more than $\maxgrippervelservo > 0$. To solve \eqref{eqn:jacobianbackwardfunction} we use the Gurobi~\cite{Gurobi2016} optimizer. We use two different Jacobian approximation methods in our model set; a diminishing rigidity Jacobian, and an adaptive Jacobian, which are described below.
+
+
+\subsubsection{Diminishing Rigidity Jacobian}
+
+The key assumption used by this method~\cite{Berenson2013} is \textit{diminishing rigidity}: the closer a gripper is to a particular part of the deformable object, the more that part of the object moves in the same way that the gripper does (i.e. more ``rigidly''). The further away a given point on the object is, the less rigidly it behaves; the less it moves when the gripper moves. This approximation depends on two parameters $k_{trans} \geq 0$ and $k_{rot} \geq 0$ which control how the translational and rotational rigidity scales with distance. Small values entail very rigid objects; high values entail very deformable objects.
+
+For every point $p_i \in \deformconfig$ and every gripper $\gripperindex$ we construct a Jacobian $J_{rigid}(q,i,g)$ such that if $p_i$ was rigidly attached to the gripper $g$ then
+\begin{equation}
+    \dot p_i = J_{\mathit{rigid}}(q,i,g) \dot \robotconfig_{\gripperindex} = 
+    \begin{bmatrix}J_{trans}(q,i,g) & J_{rot}(q,i,g)\end{bmatrix}
+    \dot \robotconfig_{\gripperindex} \enspace .
+\end{equation}
+Let $D_{i,g}$ be a measure of the distance between gripper $g$ and point $p_i$. Then the translational rigidity of point $p_i$ with respect to gripper $g$ is defined as
+\begin{equation}
+    w_{trans}(i,g) = e^{-k_{trans}D_{i,g}}
+\end{equation}
+and the rotational rigidity is defined as
+\begin{equation}
+    w_{rot}(i,g) = e^{-k_{rot}D_{i,g}}.
+\end{equation}
+To construct an approximate Jacobian $\tilde J(q)$ for a single point we combine the rigid Jacobians with their respective rigidity values
+\begin{multline}
+    \tilde J(q,i,g) = \\
+    \begin{bmatrix}w_{trans}(i,g) J_{trans}(q,i,g) & w_{rot}(i,g) J_{rot}(q,i,g)\end{bmatrix} \enspace,
+\end{multline}
+and then combine the results into a single matrix
+\begin{equation}
+    \tilde J(q) = 
+    \begin{bmatrix}
+        \tilde J(q,1,1) & \tilde J(q,1,2) & \dots & \tilde J(q, 1, G) \\
+        \tilde J(q,2,1) & \ddots \\
+        \vdots \\
+        \tilde J(q,P,1)
+    \end{bmatrix} \enspace .
+\end{equation}
+
+
+\subsubsection{Adaptive Jacobian}
+
+A different approach is taken in~\cite{Navarro-Alarcon2013}, instead using online estimation to approximate $J(q)$.
+In this formulation we start with some estimate of the Jacobian $\tilde J(0)$ at time $t = 0$ and then use the Broyden update rule~\cite{Broyden1965} to update $\tilde J(t)$ at each timestep $t$
+\begin{equation}
+    \tilde J(t) = \tilde J(t-1) + \Gamma \frac{\left( \deformvelocity(t) - \tilde J(t-1) \robotvelocity(t) \right)}{\robotvelocity(t)^T \robotvelocity(t)} \robotvelocity(t)^T \enspace.
+\end{equation}
+This update rule depends on a update rate $\Gamma \in (0, 1]$ which controls how quickly the estimate shifts between timesteps.

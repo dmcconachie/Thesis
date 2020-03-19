@@ -1,0 +1,58 @@
+\section{MAB Formulation for Deformable Object Manipulation}
+
+% \begin{wrapfigure}[20]{r}{0.6\textwidth}
+    % \vspace{-0.62in}
+    % \begin{minipage}{0.6\textwidth}
+        \begin{algorithm}[t]
+            \caption{MainLoop$(\obstacle, \beta, \lambda)$}
+            \begin{algorithmic}[1]
+                \State $t \gets 0$
+                \State $\relaxeddistancematrix \gets$ GeodesicDistanceMatrix$(\deformconfig_{relaxed})$
+                \State $\modelset \gets$ InitializeModels$(\relaxeddistancematrix)$
+                \State InitialzeBanditAlgorithm()
+                \State $\deformconfig(0) \gets$ SensePoints()
+                \State $\robotconfig(0) \gets$ SenseRobotConfig()
+                \While{true}
+                    \State $\modelchosen \gets $ SelectArmUsingBanditAlgorithm()
+                    
+                    \State $\deformtarget \gets$ GetTargets()
+                    \State $\deformvelocity_e, \pseudoinverseweight_e \gets$ ErrorCorrection$(\deformconfig(t), \deformtarget)$
+                    \State $\deformvelocity_s, \pseudoinverseweight_s \gets$ StretchingCorrection$(\relaxeddistancematrix, \lambda, \deformconfig(t))$
+                    \State $\deformvelocity_d, \pseudoinverseweight_d \gets$ CombineTerms$(\deformvelocity_e, \pseudoinverseweight_e, \deformvelocity_s, \pseudoinverseweight_s)$
+        
+                    \State $\robotvelocity_d \gets \deformablemodelbackwardfunction_m(\deformvelocity_d, \pseudoinverseweight_d)$
+                    \State $\robotvelocity \gets$ ObstacleRepulsion$(\robotvelocity_d, \obstacle, \beta)$
+                    \State CommandConfiguration$(\robotconfig(t) + \robotvelocity)$
+        
+                    \State $\deformconfig(t + 1) \gets$ SensePoints$()$
+                    \State $\robotconfig(t + 1) \gets$ SenseRobotConfig$()$
+                    \State UpdateBanditAlgorithm$()$
+                    
+                    \State $t \gets t + 1$
+                \EndWhile
+            \end{algorithmic}
+            \label{alg:mainloop}
+        \end{algorithm}
+    % \end{minipage}
+% \end{wrapfigure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[height=1.5in]{EuclideanVsGeodesic}
+    \caption{Euclidean distance measures length of the shortest path between $p_i$ and $p_j$ in $\reals^3$ (gold). Geodesic distance measures the length of the shortest path, constrained to stay within the deformable object (red).}
+    \label{fig:distance}
+\end{figure}
+
+Our algorithm~(Alg.~\ref{alg:mainloop}) can be broken down into four major sections and an initialization block. In the initialization block we pre-compute the geodesic distance (see Fig.~\ref{fig:distance}) between every pair of points in $\deformconfig$ when the deformable object is in its ``natural'' or ``relaxed'' state and store the result in $\relaxeddistancematrix$. These distances are used to construct the deformation models~(Sec.~\ref{sec:jacobian_models}), as well as to avoid overstretching the object~(Sec.~\ref{sec:desired_direction}).
+At each iteration we: 
+1) pick a model to use to achieve the desired direction~(Sec.~\ref{sec:bandit_algorithms}); 
+2) compute the task-defined desired direction to move the deformable object~(Sec.~\ref{sec:desired_direction}); 
+3) generate a velocity command using the chosen model~(Sec.~\ref{sec:jacobian_models}); 
+4) modify the command to avoid obstacles~(Sec.~\ref{sec:desired_direction});
+and 5) update bandit algorithm parameters~(Sec.~\ref{sec:bandit_algorithms}).
+
+
+\input{control_mab/5_1_method_bandit_algorithms}
+\input{control_mab/5_2_method_desired_direction}
+\input{control_mab/5_3_method_jacobian_models}
+

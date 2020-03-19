@@ -1,0 +1,21 @@
+\begin{algorithm}[t]
+    \caption{StretchingCorrection$(\relaxeddistancematrix, \lambda, \deformconfig)$}
+    \begin{algorithmic}[1]
+        \State $E \gets$ EuclidianDistanceMatrix$(\deformconfig)$
+        \State $\deformvelocity_s \gets \boldsymbol 0_{3\numdeformpoints \times 1}$, $\pseudoinverseweight_s \gets \boldsymbol 0_{\numdeformpoints \times 1}$
+        \State $\Delta \gets E - \relaxeddistancematrix$
+        \For{$i \in \{1,2,\dots,\numdeformpoints \}$}
+            \For{$j \in \{i+1,\dots,\numdeformpoints \}$}
+                \If{$\Delta_{i,j} > \lambda$}
+                    \State $v \gets \Delta_{i,j}(\deformconfig_j - \deformconfig_i)$
+                    \State $\deformvelocity_{s,i} \gets \deformvelocity_{s,i} + \frac{1}{2}v$
+                    \State $\deformvelocity_{s,j} \gets \deformvelocity_{s,j} - \frac{1}{2}v$
+                    \State $\pseudoinverseweight_{s,i} \gets \max (\pseudoinverseweight_{s,i}, \Delta_{i,j})$
+                    \State $\pseudoinverseweight_{s,j} \gets \max (\pseudoinverseweight_{s,j}, \Delta_{i,j})$
+                \EndIf
+            \EndFor
+        \EndFor
+        \State \Return $\{ \deformvelocity_s, \pseudoinverseweight_s \}$
+    \end{algorithmic}
+    \label{alg:stretching_correction}
+\end{algorithm}

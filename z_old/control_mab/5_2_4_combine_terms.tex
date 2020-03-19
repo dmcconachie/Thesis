@@ -1,0 +1,11 @@
+\begin{algorithm}[t]
+    \caption{CombineTerms$(\deformvelocity_e, \pseudoinverseweight_e, \deformvelocity_s, \pseudoinverseweight_s)$}
+    \begin{algorithmic}[1]
+        \For{$i \in \{ 1,2,\dots,\numdeformpoints \}$}
+            \State $\deformvelocity_{d,i} \gets \deformvelocity_{s,i} + \left( \deformvelocity_{e,i} - \proj_{\deformvelocity_{s,i}} \deformvelocity_{e,i} \right)$
+            \State $\pseudoinverseweight_{d,i} \gets \pseudoinverseweight_{s,i} + \pseudoinverseweight_{e,i}$
+        \EndFor
+        \State \Return $\{ \deformvelocity_d, \pseudoinverseweight_d \}$
+    \end{algorithmic}
+    \label{alg:combine_terms}
+\end{algorithm}

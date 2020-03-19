@@ -1,0 +1,40 @@
+\section{Problem Statement}
+
+Let the robot be represented by a set of $\numgrippers$ grippers with configuration $\robotconfig \in \robotconfigspace$.  We assume that the robot configuration can be measured exactly; in this work we assume the robot to be a set of free floating grippers; in practice we can track the motion of these with inverse kinematics on robot arms (see Sec~\ref{sec:real_robot} for discussion). We use the Lie algebra~\cite{Murray1994} of $\se3$ to represent robot gripper velocities. This is the tangent space of $\se3$, denoted as $\tanse3$. The velocity of a single gripper $\gripperindex$ is then $\grippervelocity_\gripperindex = \begin{bmatrix}v_g^T & \omega_g^T\end{bmatrix}^T \in \tanse{3}$ where $v_g$ and $\omega_g$ are the translational and rotational components of the gripper velocity. We define the velocity of the entire robot to be $\robotvelocity = \begin{bmatrix}\robotvelocity_1^T & \dots & \robotvelocity_\numgrippers^T \end{bmatrix}^T \in \robotvelocityspace$. We define the inner product of two gripper velocities $\grippervelocity_1, \robotvelocity_2 \in \tanse3$ to be 
+\begin{equation}
+    \langle \grippervelocity_1, \grippervelocity_2 \rangle = \langle \grippervelocity_1, \grippervelocity_1 \rangle_{c} = v_1^T v_2 + c \omega_1^T \omega_2 \enspace,
+\end{equation}
+where $c$ is a non-negative scaling factor relating rotational and translational velocities.
+
+
+The configuration of a deformable object is a set $\deformconfig \subset \reals^3$ of $\numdeformpoints$ points. We assume that we have a method of sensing $\deformconfig$. To measure the norm of a deformable object velocity $\deformvelocity = \begin{bmatrix} \deformvelocity_1^T & \dots & \deformvelocity_\numdeformpoints^T \end{bmatrix}^T \in \deformconfigspace $ we will use a weighted Euclidean norm
+\begin{equation}
+    \| \deformvelocity \|^2_\pseudoinverseweight = \sum_{i = 1}^\numdeformpoints w_i \deformvelocity_i^T \deformvelocity_i = \deformvelocity^T \diag{(\pseudoinverseweight)} \deformvelocity
+\end{equation}
+where $W = \begin{bmatrix}w_1 & \dots & w_\numdeformpoints \end{bmatrix}^T \in \reals^\numdeformpoints$ is a set of non-negative weights. The rest of the environment is denoted $\obstacle$ and is assumed to be both static, and known exactly.
+
+
+
+Let a \textit{deformation model} be defined as a function 
+\begin{equation}
+    \deformablemodelforwardfunction : \robotvelocityspace \rightarrow \deformconfigspace
+\end{equation}
+which maps a change in robot configuration $\robotvelocity$ to a change in object configuration $\deformvelocity$. Let $\modelset$ be a set of $\nummodels$ deformable models which satisfy this definition. Each model is associated with a robot command function
+\begin{equation}
+    \deformablemodelbackwardfunction : \deformconfigspace \times \reals^\numdeformpoints \rightarrow \robotvelocityspace
+\end{equation}
+which maps a desired deformable object velocity $\deformvelocity$ and weight $\pseudoinverseweight$ (Sec.~\ref{sec:desired_direction}) to a robot velocity command $\robotvelocity$. $\deformablemodelforwardfunction$ and $\deformablemodelbackwardfunction$ also take the object and robot configuration $(\deformconfig,\robotconfig)$ as additional input, however this is omitted for clarity. When a model $\modelindex$ is selected for testing, the model generates a gripper command
+\begin{equation}
+    \robotvelocity_{\modelindex}(t) = \deformablemodelbackwardfunction_\modelindex(\deformvelocity(t), \pseudoinverseweight(t))
+    \label{eqn:robotvelocity}
+\end{equation}
+which is then executed for one unit of time, moving the deformable object to configuration $\deformconfig(t+1)$.
+
+
+The problem we address in this paper is which model $\modelindex \in \modelset$ to select in order to to move $\numgrippers$ grippers such that the points in $\deformconfig$ align as closely as possible with some task-defined set of $\numtargetpoints$ target points $\deformtarget \subset \reals^3$, while avoiding gripper collision and excessive stretching of the deformable object. Each task defines a function $\errorfunction$ which measures the alignment error between $\deformconfig$ and $\deformtarget$. The method we present is a local method which picks a single model $\modelindex_{*}$ at each timestep to treat as the true model. This model is then used to reduce error as much as possible while avoiding collision and excessive stretching. 
+\begin{equation}
+    \modelindex_* = \argmin_{\modelindex \in \modelset} \errorfunction(\deformtarget, \deformconfig(t+1))
+    \label{eqn:modelselection}
+\end{equation}
+We show that this problem can be treated as an instance of the multi-arm non-stationary dependent bandit problem.
+

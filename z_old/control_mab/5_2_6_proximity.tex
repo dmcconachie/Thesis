@@ -1,0 +1,17 @@
+\begin{algorithm}[t]
+    \caption{Proximity$(\gripperindex, \obstacle)$ - reproduced from~\cite{Berenson2013}}
+    \label{alg:proximity}
+    \begin{algorithmic}[1]
+        \State $d_\gripperindex \gets \infty$
+        \For{$o \in \{1,2,\dots,|\obstacle|\}$}
+            \State $p^\gripperindex, p^o \gets$ ClosestPoints$(\gripperindex, o)$
+            \State $v \gets p^\gripperindex - p^o$
+            \If{$\| v \| < d_\gripperindex$}
+                \State $d_\gripperindex \gets \| v \|$
+                \State $\dot x_{p^\gripperindex} \gets \frac{v}{\| v \|}$
+                \State $J_{p^\gripperindex} \gets$ GripperPointJacobian$(\gripperindex, p^\gripperindex)$
+            \EndIf
+        \EndFor
+        \State \Return $\{J_{p^\gripperindex}, x_{p^\gripperindex}, d_\gripperindex \}$
+    \end{algorithmic}
+\end{algorithm}

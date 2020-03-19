@@ -1,0 +1,14 @@
+\begin{algorithm}[t]
+    \caption{ObstacleRepulsion$(\obstacle, \beta)$}
+    \begin{algorithmic}[1]
+        \For{$\gripperindex \in \{1,2,\dots, \numgrippers\}$}
+            \State $J_{p^g}, \dot x _{p^g}, d_g \gets$ Proximity$(\obstacle, \gripperindex)$
+            \State $\gamma \gets e^{-\beta d_g}$
+            \State $\robotvelocity_{c,g} \gets J_{p^g}^+ \dot x_{p^g}$
+            \State $\robotvelocity_{c,g} \gets \frac{\maxgrippervelobstacle}{\| \robotvelocity_{c,g} \|} \robotvelocity_{c,g}$
+            \State  $\robotvelocity_{\gripperindex} \gets \gamma \left( \robotvelocity_{c,g} + \left( \eye - J_{p^g}^+ J_{p^g} \right) \robotvelocity_\gripperindex \right) + (1-\gamma)\robotvelocity_\gripperindex$
+        \EndFor        
+        \State \Return $\robotvelocity$
+    \end{algorithmic}
+    \label{alg:obstaclerepulsion}
+\end{algorithm}

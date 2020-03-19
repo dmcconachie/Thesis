@@ -1,0 +1,47 @@
+\subsection{Determining $\robotvelocity$}
+\label{sec:desired_direction}
+
+\input{control_mab/5_2_0_error_graphs}
+\input{control_mab/5_2_2_error_correction}
+\input{control_mab/5_2_3_stretching_correction}
+\input{control_mab/5_2_4_combine_terms}
+\input{control_mab/5_2_5_obstacle_repulsion}
+\input{control_mab/5_2_6_proximity}
+
+\subsubsection{Error Correction}
+
+We build on previous work~\cite{Berenson2013}, splitting the desired deformable object movement into two parts: an error correction part and a stretching correction part. When defining the direction we want to move the deformable object to minimize error we calculate two values; which direction to move the deformable object points $\deformvelocity_e$ and the importance of moving each deformable object point $\pseudoinverseweight_e$. This is analogous to computing the gradient of error, as well as an ``importance factor'' for each part of the gradient. We need these weights to be able to differentiate between points of the object where the error function is a plateau versus points where the error function is at a local minimum~(Fig.~\ref{fig:error_examples}). Typically this is achieved using a Hessian, however our error function does not have a second derivative at many points. We use the \texttt{ErrorCorrection} (Alg.~\ref{alg:error_correction}) function to calculate these values. Each target point $\deformtarget_i \in \deformtarget$ defines a potential field, pulling the nearest point on the deformable object $\deformconfig_k$ towards $\deformtarget_i$. $\pseudoinverseweight_e$ is set to the maximum distance $\deformconfig_k$ is being pulled by any target point. This allows $\pseudoinverseweight_e$ to be insensitive to changes in discretization.
+
+% \begin{wrapfigure}[21]{r}{0.5\textwidth}
+% \begin{wrapfigure}[38]{r}{0.5\textwidth}
+    % \input{5_2_0_error_graphs}
+    % \vspace{-0.55in}
+    % \begin{minipage}{0.5\textwidth}
+        % \input{5_2_2_error_correction}
+        % \vspace{-0.57in}
+        % \input{5_2_3_stretching_correction}
+    % \end{minipage}
+    % \vspace{-0.62in}
+% \end{wrapfigure}
+
+\subsubsection{Stretching Correction}
+
+Our algorithm for stretching correction is similar to that found in~\cite{Berenson2013}, with the addition of a weighting term $\pseudoinverseweight_s$, and a change in how we combine the two terms. We use the \texttt{StretchingCorrection} function (Alg.~\ref{alg:stretching_correction}) to compute $\deformvelocity_s$ and $\pseudoinverseweight_s$ based on a task-defined stretching threshold $\lambda \geq 0$. First we compute the distance between every two points on the object and store the result in $E$. We then compare $E$ to $D$ which contains the relaxed lengths between every pair of points. If any two points are stretched by more than $\lambda$, we attempt to move the points closer to each other. We use the same strategy for setting the importance of this stretching correction $\pseudoinverseweight_s$ as we use for error correction. When combining stretching correction and error correction terms (Alg.~\ref{alg:combine_terms}) we prioritize stretching correction, accepting only the portion of the error correction that is orthogonal to the stretching correction term for each point.
+
+\subsubsection{Obstacle Avoidance}
+
+% \begin{wrapfigure}{r}{0.5\textwidth}
+    % \vspace{-0.55in}
+    % \begin{minipage}{\columnwidth}
+        % \vspace{-0.05in}
+        % \input{5_2_4_combine_terms}
+        % \vspace{-0.57in}
+        % \input{5_2_5_obstacle_repulsion}
+        % \vspace{-0.57in}
+        % \input{5_2_6_proximity}
+        % \vspace{-0.8in}
+    % \end{minipage}
+% \end{wrapfigure}
+In order to guarantee that the grippers do not collide with any obstacles, we use the same strategy from~\cite{Berenson2013}, smoothly switching between collision avoidance and other objectives (see Alg.~\ref{alg:obstaclerepulsion}). For every gripper $\gripperindex$ and an obstacle set $\obstacle$ we find the distance $d_\gripperindex$ to the nearest obstacle, a unit vector $\dot x_{p_\gripperindex}$ pointing from the obstacle to the nearest point on the gripper, and a Jacobian $J_{p^\gripperindex}$ between the gripper's DOF and the point on the gripper as shown in Alg.~\ref{alg:proximity}. We then project the servoing motion from Eq.~\eqref{eqn:jacobianbackwardfunction} into the null space of the avoidance motion using the null space projector $\left(\eye - J_{p^g}^+ J_{p^g} \right)$. $\beta > 0$ sets the rate at which we change between servoing and collision avoidance objectives. $\maxgrippervelobstacle > 0$ is an internal parameter that sets how quickly we move the robot away from obstacles.
+
+In principle the same null space avoidance can be used to prevent gripper-gripper collisions, but the tasks that we consider do not bring the the grippers close to each other in practice. Extensions to consider self collision and working with robot arms are discussed in Sec.~\ref{sec:real_robot}.

@@ -1,0 +1,56 @@
+\section{Problem Statement}
+\label{sec:main_problem_statement}
+
+% Let the robot be represented by a set of $\numgrippers$ grippers with configuration $\gripperconfig \in \gripperconfigspace$. We assume that the robot configuration can be measured exactly. In this work we assume the robot to be a set of free floating grippers; in practice we can track the motion of these with inverse kinematics. We use the Lie algebra~\cite{Murray1994} of $\se3$ to represent robot gripper velocities. This is the tangent space of $\se3$, denoted as $\tanse3$. The velocity of a single gripper $\gripperindex$ is then $\grippervelocity_\gripperindex = \begin{bmatrix}v_g^T & \omega_g^T\end{bmatrix}^T \in \tanse{3}$ where $v_g$ and $\omega_g$ are the translational and rotational components of the gripper velocity. We define the velocity of the entire robot to be $\robotvelocity = \begin{bmatrix}\robotvelocity_1^T & \dots & \robotvelocity_\numgrippers^T \end{bmatrix}^T \in \robotvelocityspace$.
+
+Define the robot configuration space to be $\cspace_r$. We assume that the robot configuration can be measured exactly. Denote an individual robot configuration as $\robotconfig \in \cspace_r$. This set can be partitioned into a valid and invalid set. The valid set is referred to as $\cfree_r$, and is the set of configurations where the robot is not in collision with the static geometry of the world. The invalid set is referred to as $\cinv_r = \cspace_r \setminus \cfree_r$.
+
+We assume that our model of the robot is purely kinematic, with no higher order dynamics. We assume that the robot has two end-effectors that are rigidly attached to the object. The configuration of a deformable object is a set $\deformconfig \subset \reals^3$ of $\numdeformpoints = | \deformconfig |$ points. We assume that we have a method of sensing $\deformconfig$. The rest of the environment is denoted $\obstacle$ and is assumed to be both static, and known exactly. We assume that the robot moves slowly enough that we can treat the combined robot and deformable object as quasi-static. Let the function $f(\robotconfig, \deformconfig, \robotvelocity)$ map the system configuration $(\robotconfig, \deformconfig)$ and robot movement $\robotvelocity$ to the corresponding deformable object movement $\deformvelocity$.
+
+We define a task based on a set of $\numtargetpoints$ target points $\deformtarget \subset \reals^3$, a function $\errorfunction: \deformconfig \times \deformtarget \rightarrow \reals^{\geq 0}$, which measures the alignment error between $\deformconfig$ and $\deformtarget$, and a termination function $\terminationcondition (\deformconfig)$ which indicates if the task is finished. Let a robot controller be a function $\controller \left(\robotconfig, \deformconfig, \deformtarget \right)$\footnote{A specific controller may have additional parameters (such as gains in a PID controller), but we do not include such parameters here to keep $\controller(\dots)$ in a more general form.} which maps the system state $\left( \robotconfig, \deformconfig \right)$ and alignment targets $\deformtarget$ to a desired robot motion $\robotcommandvel$. In this work we restrict our discussion to tasks and controllers of the form introduced in our previous work (\cite{Berenson2013,McConachie2018}); these controllers are local, i.e. at each time $t$ they choose an incremental movement $\robotcommandvel$ which reduces the alignment error as much as possible at time $t + 1$. 
+
+%Let \rev{$\truemotion(\robotcommandvel, \robotconfig, \deformconfig) = \robotactualvel$} be the true motion of the robot when $\robotcommandvel$ is executed for unit time; in this work we will be predicting the future state of the system, thus it is not sufficient to consider only $\robotcommandvel$, we must also consider $\robotactualvel$.  Modelling inaccuracies as well as manipulation in contact can lead to meaningful differences between $\robotcommandvel$ and $\robotactualvel$.
+
+
+
+
+
+
+
+The problem we address in this work is how to find a sequence of $\taskexecutiontime$ robot commands $\{ \robotcommandvel[1], \dots, \robotcommandvel[\taskexecutiontime] \} = \robotcommandsequence$ such that each motion is feasible, i.e. it should not bring the grippers into collision with obstacles, should not cause the object to stretch excessively, and should not exceed the robot's maximum velocity $\maxrobotvel$. Let these feasibility constraints be represented by $A(\robotvelocity) = 0$. Then the problem we seek to solve is:
+\begin{equation}
+    \begin{aligned}
+        & \text{find}   & & \robotcommandsequence \\
+        & \text{s.t.}   & & \terminationcondition(\deformconfig_{\taskexecutiontime}) = \texttt{true} \\
+        &               & & A(\robotcommandvel[t])                                    = 0, \; t = 1, \dots, \taskexecutiontime
+    \end{aligned}
+    \label{eqn:main_problem_statement}
+\end{equation}
+where $\deformconfig_{\taskexecutiontime}$ is the configuration of the deformable object after executing $\robotcommandsequence$.
+
+Solving this problem directly is impractical in the general case for two major reasons. First, modeling a deformable object accurately is very difficult in the general case, especially if it contacts other objects or itself. Second, even given a perfect model, computing precise motion of the deformable object requires physical simulation, which can be very time consuming inside a planner/controller where many potential movements need to be evaluated. We seek a method which does not rely on high-fidelity modelling and simulation; instead we present a framework combining both global planning and local control to leverage the strengths of each in order to efficiently perform the task.
+
+
+
+
+
+% Let a \textit{deformation model} be defined as a function 
+% \begin{equation}
+%     \deformablemodelforwardfunction : \robotvelocityspace \rightarrow \deformconfigspace
+% \end{equation}
+% which maps a change in robot configuration $\robotvelocity$ to a change in object configuration $\deformvelocity$. A deformation model can also use additional static information such as the geometry of obstacles in the environment however this is omitted for brevity.
+
+
+% Let $\{ \robotvelocity_{cmd}(t_0), \dots, \robotvelocity_{cmd}(t_0 + \predictionhorizon - 1) \} = \dot Q_{cmd}$ be a sequence of robot commands starting at time $t_0$ for $\predictionhorizon$ time steps into the future generated by controller $\controller$.
+
+% In this formulation, we want to determine if the controller will enter a \textit{deadlocked} state; the task is not finished however the controller cannot make progress towards achieving the task. A controller is considered to be deadlocked if the commanded motion produces no actual motion, and the termination condition is not met:
+% \begin{equation}
+%     \begin{split}
+%         \robotvelocity_{act}(t) &= 0 \\
+%         \terminationcondition(\deformconfig(t)) &= \texttt{false} \enspace .
+%         \label{eqn:stuck}
+%     \end{split}
+% \end{equation}
+% The problem we address in this formulation is correctly predicting if a given controller $\controller$ will be deadlocked within $\predictionhorizon$ timesteps. Then to determine if a given controller will be deadlocked is equivalent to determining if there exists $\robotvelocity_{cmd} \in \dot Q_{cmd}$ such that Eq.~\eqref{eqn:stuck} holds.
+
+% If we had accurate models of the entire system, then solving this problem is straightforward. However, both the deformation model $\deformablemodelforwardfunction$ and our estimation of the $Execute$ function are inaccurate; it is hard to predict the state of the system in one timestep, even harder to predict over $\predictionhorizon$ steps. Additionally while we restrict the type of controllers to those described in~\cite{dale_wafr}, these controllers rely on the current state of the system and task to determine the next input to the robot. We seek an approximate solution to these challenges that does not rely on high-fidelity modeling and simulation.

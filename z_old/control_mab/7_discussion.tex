@@ -1,0 +1,39 @@
+\section{Discussion}
+
+\subsection{Discussion of Results}
+
+One notable result we observe is that finding and exploiting the best model is less important than avoiding poor models for extended periods of time; in all of the experiments UCB1-Normal never leaves its initial exploration phase, however it is able to successfully perform each task and remains competitive with the other bandit-based methods. We believe this is due to many models being able to provide commands that have a positive dot-product with the correct direction of motion. Intuitively, this means that even inaccurate models can be used to generate useful motion. Indeed, in our experience, models do not need to be particularly accurate to be able to succeed at straightforward tasks; for example using a set of Jacobian models with randomly generated elements, we were still able to successfully cover the table with the cloth, albeit requiring much longer to complete the task.
+
+While avoiding bad models is important for being able to succeed at the task, we can see the effect of choosing good models in the two-part coverage task (Fig.~\ref{fig:clothwafr_results}). In this task, the grippers can become stuck for a significant period of time. By taking advantage of model coupling, KF-MANDB is able to explore the model space much more efficiently, quickly finding a model that is able to complete the task. In contrast, the table coverage task (Fig.~\ref{fig:clothtable_results}) does not benefit from significant model switching, and thus all bandit algorithms show very similar performance.
+
+Another benefit of our approach is the ability to escape local minima of individual models, without any explicit detection of local minima. If a given model is unable to improve task error then our estimate of its utility will decrease, leading to other models being more likely to be selected for testing, which will in turn generate different gripper commands which may be able to escape the local minima.
+
+\subsection{Using Robot Arms}
+\label{sec:real_robot}
+
+Conversion to a full torque-controlled robot requires careful treatment; Nakanishi \textit{et. al.}~\cite{Nakanishi2008} and Dietrich \textit{et. al.}~\cite{Dietrich2015} give useful overviews and analysis of operational space control and null space methods for such a conversion. In this work however, we are focused on kinematic models rather than dynamical models. Maintaining the velocity-based modeling from the problem statement, we can extend the methods presented here to a robot arm with the addition of extra Jacobians mapping between gripper velocities and joint velocities. Denote the robot joint velocities as $\robotvelocity_r$, and $J_r$ as the mapping between gripper velocities and joint velocities:
+\begin{equation}
+    \grippervelocity = J_r \robotvelocity_r \enspace.
+\end{equation}
+Then Eq.~\eqref{eqn:jacobianforwardfunction} becomes
+\begin{equation}
+    \deformablemodelforwardfunction(\robotvelocity_r) = J J_r \robotvelocity_r
+\end{equation}
+and Eq.~\eqref{eqn:jacobianbackwardfunction} becomes
+\begin{equation}
+    \begin{aligned}
+    \deformablemodelbackwardfunction(\deformvelocity, \pseudoinverseweight) =
+                & \argmin_{\robotvelocity_r} 
+                & & \| J J_r \robotvelocity_r - \deformvelocity \|^2_{\pseudoinverseweight} \\
+                &\text{subject to}           
+                & & \| \robotvelocity_r \|^2 < \maxrobotvelocityservo^2 \enspace.
+\end{aligned}
+\label{eqn:fullrobotcommandfunction}
+\end{equation}
+To adapt the collision avoidance method to the full robot two options are possible: first, we could modify the \texttt{Proximity} function to find the closest point on an entire manipulator to the obstacles in the environment (and the robot itself). Alternatively, local collision constraints can be added to Eq.~\eqref{eqn:fullrobotcommandfunction} as either soft or hard constraints.
+
+\subsection{Limitations}
+
+The problem of sensing the state of a deformable object is not addressed in this work, but it could have a significant impact on our ability to determine the utility of a given model. While our formulation allows for observation and actuation noise, we have not deliberately injected noise in our experiments; the only stochastic aspect is the Thompson Sampling used by KF-MANB and KF-MANDB. However, a thorough investigation of sensitivity to noise would require integrating our method with sensing systems, which is not within the scope of this work.
+
+One limitation of KF-MANDB is handling bifurcations; when very small differences in command sent to the robot cause significant differences in the result the assumption of coupling between models in KF-MANDB does not hold. In particular, when these small differences lead to qualitatively distinct states, such as splitting the grippers to opposite sides of an obstacle, we can arrive at undesired local minima from which no model can escape. We are exploring approaches to detect these bifurcations, and  adapt the motion of the grippers accordingly.

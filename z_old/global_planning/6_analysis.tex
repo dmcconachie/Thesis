@@ -1,0 +1,436 @@
+\section{Probabilistic Completeness of Global Planning}
+\label{sec:analysis}
+
+
+
+Proving probablistic completeness in $\cspace_f$ is challenging due to the multi-modal nature of the problem. Specifically, as the virtual elastic band moves in and out of contact the dimensionality of the manifold that the system is operating in can change. In addition, the virtual elastic band forward propagation function (Alg.~\ref{alg:band_propogation}) can allow the band to ``snap tight'' as the grippers move past the edge of an obstacle, changing the number of points in the band representation as it does so. By leveraging the assumptions from Sec.~\ref{sec:rpath_assumptions}, we are able to bypass most of these challenges by focusing on the portion of $\cspace_f$ that can be analyzed; i.e. $\cspace_r$.
+
+
+
+This section proves the probabilistic completeness of the planning approach in two major steps.  First, it will show that the approach for selecting the nearest node in the tree for expansion is equivalent to performing a nearest-neighbor query in the full space.  Second, it proves that our algorithm will eventually return a path that is $\delta_r$-similar to an optimal $\delta$-robust solution to the planning problem with probability 1 (if it exists), or it will terminate early having found an alternate path to the goal region. Recall that we do not require an optimal path, only a feasible one.
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\columnwidth]{nearest_neighbour}
+    \caption{Left: $\config_r^{(2)}$ is the nearest node to the $\qrand$ in robot space, but it my be as far as $D_{\textrm{max}, f}$ away in the full configuration space. By considering all nodes within $D_{\textrm{max}, f}$ in robot space, we ensure that any node (such as $\config_f^{(1)}$) that is closer to $\qrand_f$ than $\config_f^{(2)}$ is selected as part of $\Qnear_f$, while nodes such as $\config_f^{(4)}$ are excluded in order to avoid the expense of calculating the full configuration space distance. Right: we then measure the distance in the full configuration space to all nodes that could possibly be the nearest to $\qrand_f$, returning $\config_f^{(1)}$ as the nearest node in the tree.}
+    \label{fig:nearest}
+\end{figure}
+
+
+
+
+
+
+\subsubsection{Assumptions and Definitions:}
+\label{sec:rpath_assumptions}
+Our problem allows for the virtual elastic band to be in contact with the surface of an obstacle, both during execution and as part of the goal set; this means that common assumptions regarding the expansiveness (\cite{Hsu1999}) of the planning problem may not hold. Instead of relying on expansiveness, we will define a series of alternate definitions and assumptions which are sufficient to ensure the completeness of our method.
+
+
+
+%To ensure probabilistic completeness of the global planner, this work makes the following assumptions about each problem instance and query supplied. 
+First, in line with prior work, we will be assuming properties of the problem instance in regards to robustness.  In particular, we will be assuming the existence of a solution to a given query $\rpath_f : [0, 1] \rightarrow \cfree_f$ which has several robustness properties.  This solution is called a reference path.
+
+
+
+
+
+
+To begin describing the properties of the reference path, we assume $\rpath_f$ has robustness properties in the robot configuration space.  That is, the corresponding path in robot configuration space $\rpath_r$ has strong $\delta_r$-clearance under distance metric $d_r(\cdot,\cdot)$ for some $\delta_r > 0$.
+
+\begin{definition}[Strong $\delta$-clearance]
+    A path $\cspacepath : [0, 1] \rightarrow \cfree$ has strong $\delta$-clearance under distance metric $d(\cdot,\cdot)$ if $\forall s \in [0, 1],\; d(\cspacepath(s),\cinv) \geq \delta$, for $\delta > 0$.
+\end{definition}
+
+% For a given planning problem, we are given a query $( \qinit_f, \Qgoal_f )$ which describes the initial configuration of the robot and band, as well as a goal region for the system to reach.  Note that $\Qgoal_f$ is defined implicitly via the GoalCheck function and the parameters $(\eepositiongoal, \goalreachradius,\textrm{ Blacklist})$ rather than any explicit enumeration. 
+% We assume the reference trajectory $\rpath_f$ admits a region $\Config^{ref}_f = \{ \config_f\ |\ \config_f \in \cfree_f, d_f( \config_f, \rpath_f( t_{ref} ) ) \leq \delta_f \}$ such that $\Config^{ref}_f \cap \Qgoal_f \neq \emptyset$.
+
+Given our assumption about the $\delta_r$-clearance of the reference path in robot space, there exists a set $\setofpaths_r$ of $\delta_r$-similar paths to the reference path which are also collision-free.
+
+
+\begin{definition}[$\delta$-similar path]
+    Two paths $\cspacepath_a$ and $\cspacepath_b$ are $\delta$-similar if the Fr\'echet distance between the paths is less than or equal to $\delta$.
+\end{definition}
+
+Informally the Fr\'echet distance is described as follows (\cite{Alt1995Frechet}): Suppose a man is walking a dog. The man is walking on one curve while the dog on another curve. Both walk at any speed but are not allowed to move backwards. The Fr\'echet distance of the two curves is then the minimum length of leash necessary to connect the man and the dog.
+
+
+Given the relationship between robot-space and full-space paths, we can define a full-space equivalent to $\setofpaths_r$ as
+\begin{equation}
+\begin{split}
+    \setofpaths_f = \{ \cspacepath_f \mid \enspace &\cspacepath_r \in \setofpaths_r \textrm{ and} \\
+                                                   &\cspacepath_f = \textrm{FullSpace}(\cspacepath_r, \qinit_f) \} \enspace .
+\end{split}
+\end{equation}
+
+% This work will assume that for a given reference trajectory which \rev{has a maximum band length less than $\maxbandlength$ (i.e. one which does not bring the virtual elastic band near overstretch), the following assumption holds}.
+
+% \begin{assumption}[Full-space Similarity]
+% \label{ass:similarity}
+%     Given the set of robot $\delta_r$-similar trajectories $T_r$ over the solution robot reference trajectory $\rpath_r$, the induced full-space trajectories $T_f$ are $\delta_f$-similar to the solution full-space reference trajectory $\rpath_f$.
+% \end{assumption}
+
+% \todo[inline]{This assumption is only true because we can bound distances in band space. We need to reword/reorder this whole section. As written, this is literally begging the question. Can be reworked so that we only assume this property about the reference trajectory that solves the planning problem, not all $\delta_r$-robust trajectories.}
+
+% Proving Assumption~\ref{ass:similarity} is out of the scope of this work; however, the practical effectiveness of this planner suggests this assumption holds.  
+
+Given these assumptions and definitions, we are ready to define an \textit{acceptable $\delta$-robust path}:
+
+\begin{definition}[Acceptable $\delta$-Robust Path]
+\label{def:robust}
+A path $\rpath_f$ is acceptable $\delta$-robust if the following hold:
+\begin{enumerate}
+    \item The robot-space reference path $\rpath_r$ has strong $\delta_r$-clearance for some $\delta_r > 0$;
+    \item The final state for every path $\cspacepath_f \in \setofpaths_f$ is in $\Qgoal_f$. 
+\end{enumerate}
+\end{definition}
+
+\noindent We assume there exists a reference path which satisfies this property and answers our given planning query:
+
+\begin{assumption}[Solvable Problem]
+    There exists some $\delta_r > 0$ such that the planning problem admits an acceptable $\delta$-robust path.
+    \label{ass:solvable_problem}
+\end{assumption}
+
+If a planning problem does not yield a reference path with this property, then it would be practically impossible for a sampling-based approach to solve it, as this would require sampling on a lower-dimensional manifold in robot space. Given that our planner is able to find paths, we believe this assumption is true except in special cases where the band must achieve a singular configuration to reach the goal.
+
+
+While the focus of this paper is not on asymptotic optimality, we will make use of a cost function $\cost(\cspacepath)$ of a path in Sec.~\ref{sec:select}. Our cost function is path length in robot configuration space. With a cost function of this form we then assume from here onward that the reference path in question is optimal under the following definition.
+
+\begin{definition}[Optimal $\delta$-Robust Path]
+    Let $\setofpaths_{f,\delta}$ be the set of all acceptable $\delta$-robust paths. A path $\rpath_f$ is optimal $\delta$-robust if
+    \begin{equation}
+        \cost(\rpath_f) = \inf_{\cspacepath_f \in \setofpaths_{f,\delta}} \cost(\cspacepath_f) \enspace .
+    \end{equation}
+\end{definition}
+
+Finally, we also assume that workspace is bounded. This will be true for any practical task and is rarely mentioned in the literature, but we will use this assumption in our analysis in Sec.~\ref{sec:nn_equiv}.
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% NN Equivalence
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Proof of Nearest-Neighbors Equivalence}
+\label{sec:nn_equiv}
+
+
+\begin{lemma}
+    \label{lem:banddist}
+     If the maximum distance between any two points in workspace is bounded by $\Dmax[w] > 0$, then under distance metric $d_b(\cdot, \cdot)$, the maximum distance between any two points in virtual elastic band space is bounded. I.e. $\exists \Dmax[b] > 0$ such that $d_b(\band_1, \band_2) \leq \Dmax[b] \; \forall \band_1, \band_2 \in \bandspace$.
+\end{lemma}
+
+
+\noindent
+{\bf Proof.}
+From the definition of $\bandspace$ in Sec.~\ref{sec:overstretch}, the number of points used to represent a virtual elastic band is bounded by $\maxbandpoints$. Let $\band_1, \band_2 \in \bandspace$ be two virtual elastic band configurations, and let $\tilde \band_1 = (\tilde b_{1,1}, \dots, b_{1,\maxbandpoints})$ and $\tilde \band_2 = (\tilde b_{2,1}, \dots, b_{2,\maxbandpoints})$ be their upsampled versions as described in Alg.~\ref{alg:band_dist}. Then
+\begin{equation}
+\begin{split}
+    d_b(\band_1, \band_2)^2 &= \sum_{i=1}^{\maxbandpoints} \| \tilde b_{1,i} - \tilde b_{2,i} \|^2 \\
+                            &\leq \sum_{i=1}^{\maxbandpoints} \Dmax[w]^2 = \maxbandpoints \Dmax[w]^2 = \Dmax[b]^2
+\end{split}
+\end{equation}
+\qed
+
+
+
+
+\begin{lemma}
+    If workspace is bounded, then lines \ref{alg:nearst:robotspace}-\ref{alg:nearest:fullspace} in Alg.~\ref{alg:nearest} are equivalent to a nearest neighbor search in the full configuration space directly.
+\end{lemma}
+
+\noindent
+{\bf Proof.}
+The upper bound of $\Dmax[b]$ and our additive distance metric (Eq.~\eqref{eqn:dist_metric}) ensures that the distance between any two configurations in full space $\cspace_f$ can be bounded using only the distance in robot configuration space:
+\begin{equation}
+    d_f(\cdot,\cdot)^2 \leq d_r(\cdot,\cdot)^2 + \banddistscale \cdot \Dmax[b]^2 \enspace .
+    \label{eqn:bounded_full_distance}
+\end{equation}
+Next, consider that in Line~\ref{alg:nearst:robotspace} of the algorithm, the nearest neighbor to $\qrand_r$ under distance metric $d_r$ is found.  Let this nearest neighbor be denoted $\qnearapprox_r$, keeping in mind that it belongs to a vertex in the tree $\qnearapprox_f = (\qnearapprox_r, \qnearapprox_b)$.  Let the (squared) distance between these points under $d_r$ be $\Dnear[r]^2$.  From Eq.~\eqref{eqn:bounded_full_distance}, we can bound the distance between the random sample and $\qnearapprox_f$ under $d_f$ as $\Dmax[f]^2 \leq \Dnear[r]^2 + \banddistscale \Dmax[b]^2 = \Dmax[f]^2$.
+
+In Line~\ref{alg:nearest:radius} of the algorithm, a radius nearest-neighbors query of radius $\Dmax[f]$ is performed, returning a set $\Qnear_f$.  By construction if there is a node $\config_f \in \rrtnodeset$ that is closer to $\qrand_f$ than $\qnearapprox_f$, then $\config_f \in \Qnear_f$ (Fig.~\ref{fig:nearest}). Then, the method selects as the true nearest neighbor in full space $\config^\textrm{select}_f = \argmin_{\config_f \in \Qnear_f}{d_f(\config_f, \qrand_f)}$.
+\qed
+
+% \noindent
+% {\bf Proof.} We will show this with a simple contradiction.  Assume there is a tree vertex $q^{nearest}_f$ not in $N$ which is the closest to $q^{rand}_f$, having minimal distance under metric $d_f$ of ${D^{nearest}_f}^2$.  This implies ${D^{nearest}_f}^2 < {D^{near}_f}^2 (1)$.  Given the above bound, it must be that the distance satisfies ${D^{nearest}_f}^2 \leq {D^{nearest}_r}^2 + \banddistscale \cdot {D^{max}}^2 (2)$; however, since $q^{nearest}_f \notin N$, it must be the case that ${D^{nearest}_r}^2 > {D^{near}_r}^2 + \banddistscale \cdot {D^{max}}^2 (3)$.  By substituting $(1)$ into $(3)$, we get that $ {D_r^{nearest}}^2 > {D_f^{nearest}}^2 + \banddistscale \cdot {D^{max}}^2$; however, by substituting $(2)$ into this equation, we get ${D_r^{nearest}}^2 > {D_r^{nearest}}^2 + 2\banddistscale \cdot {D^{max}}^2$ implying $0 > 2\banddistscale \cdot {D^{max}}^2$, which is clearly false.  Since $(2)$ and $(3)$ are true by definition, $(1)$ must be false; therefore, any node not in $N$ cannot be the closest node to $q^{rand}_f$.  Since the method returns the node $q^{select}_f$ with minimal distance to $q^{rand}_f$ in $N$, $q^{select}_f$ must be the nearest neighbor of $q^{rand}_f$. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  High-Level Proof
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\columnwidth]{CoveringBallSequence}
+    \caption{Example covering ball sequence for an example reference path with a distance along the path of $\ballseparation$ between each ball. Given that the path is $\delta_r$-robust, each ball is a subset of $\cfree_r$.}
+    \label{fig:covering_ball_sequence}
+\end{figure}
+
+
+\subsection{Construction of a $\delta_r$-similar Path}
+\label{sec:delta_sim_traj_construction}
+
+The objective here is to show with probability approaching $1$, the planner generates a $\delta_r$-similar path to some robustly-feasible solution given enough time.  If an alternate path is found and the algorithm terminates before generating a $\delta_r$-similar path then this is still sufficient for probabilistic completeness.  This analysis is similar to \cite{LiAOKP2016}, and is based on a covering ball sequence of the optimal  $\delta$-robust path $\rpath_r$.
+
+\begin{definition}[Covering Ball Sequence]
+    \label{def:coveringballseq}
+    Given a path $\cspacepath_r : [0, 1] \rightarrow \cfree_r$, robust clearance $\delta_r > 0$, a BestNearest distance $\bestneardist > 0$, and a distance value $0 < \ballseparation < \bestneardist < \delta_r$; the covering ball sequence is defined as a set of $K + 1$ hyper-balls $\{ \hyperball_{\delta_r}(\config_{0,r}), \dots, \hyperball_{\delta_r}(\config_{K,r}) \}$ of radius $\delta_r$, where $\config_{k,r}$ are defined such that:
+    \begin{itemize}
+        \item $\config_{0,r} = \cspacepath_r(0)$;
+        \item $\config_{K,r} = \cspacepath_r(1)$;
+        \item $\textup{PathLength}(\config_{k-1,r}, \config_{k,r}) = \ballseparation$ for $k = 1, \dots, K$.
+    \end{itemize}
+\end{definition}
+\noindent
+Denote $\config^*_{k,r}$ to be the center of the $k^{th}$ covering hyper-ball for the reference path $\rpath_r$. Fig.~\ref{fig:covering_ball_sequence} shows an example of a covering ball sequence.
+
+
+
+
+The objective is to show that the vertex set of the planning tree after $n$ iterations $\rrtnodeset_n$ probabilistically contains a node within the goal set, i.e.
+\begin{equation}
+    \liminf_{n \rightarrow \infty} \pr( \rrtnodeset_n \cap \Qgoal_f \neq \emptyset ) = 1 \enspace .
+\end{equation}
+To do this, the analysis examines $K$ subsegments of the reference path $\rpath_r$, based on the covering ball sequence for the reference path. If we can generate a robot path that is $\delta_r$ similar to $\rpath_r$, then given Assumption~\ref{ass:solvable_problem} and the properties of the reference path, the corresponding full space path will be a solution to the given planning problem.
+
+Let $A_k^{(n)}$ be the event that on the $n^{th}$ iteration of the algorithm, it generates a $\delta_r$-similar path to the $k^{th}$ subsegment of $\rpath_r$.  This of course requires two events to occur: the node generated from the prior propagation covering segment $k-1$ must be selected for expansion, and the expansion must then produce a $\delta_r$-similar path to the current segment.  Then, let $E_k^{(n)}$ be the event that for segment $k$, $A_k^{(n)}$ has occurred for some $i \in [1,n]$, i.e. $E_k^{(n)}$ indicates whether the algorithm has constructed the $\delta_r$-similar edge for subsegment $k$. From these definitions, the goal then is to show that
+\begin{equation}
+    \lim_{n \rightarrow \infty} \pr(\textrm{Success}) = \lim_{n \rightarrow \infty} \pr\left( E^{(n)}_K \right) = 1 \enspace.
+    \label{eqn:initial_pr_limit}
+\end{equation}
+
+We start by considering the probability of failing to generate an arbitrary segment $1 \leq k \leq K$. Then 
+\begin{equation}
+\begin{split}
+    \pr&\left( \neg E^{(n)}_k \right) \\
+       &= \pr\left( \neg A^{(1)}_k \cap \dots \cap \neg A^{(n)}_k \right) \\
+       &= \pr\left( \neg A^{(1)}_k \right) \pr\left( \neg A^{(2)}_k \mid \neg A^{(1)}_k \right) \cdot \dots \\
+       &\hspace{1.5cm} \cdot \pr\left( \neg A^{(n)}_k \mid \neg A^{(1)}_k \cap \dots \cap \neg A^{(n-1)}_k \right) \\
+       &= \prod_{i=1}^n \pr\left( \neg A^{(i)}_k \mid \neg E^{(i-1)}_k \right) \enspace .
+\end{split}
+\label{eqn:fail_enk}
+\end{equation}
+Note the definition of $\neg E^{(i-1)}_k$ is what allows us to collapse the product into a concise form.
+
+
+The probability that $\neg A^{(i)}_k$ happens given $\neg E^{(i-1)}_k$ is equivalent to the probability that we have not yet generated a $\delta_r$-similar path for segment $k-1$ (i.e. $\pr( \neg E^{(i-1)}_{k-1} )$) plus the probability that the previous segment has been generated, but we fail to generate the current segment:
+\begin{equation}
+\begin{split}
+    \pr&\left( \neg A^{(i)}_k \mid \neg E^{(i-1)}_k \right) \\
+    &= \pr\left( \neg E^{(i-1)}_{k-1} \right) + \pr\left( E^{(i-1)}_{k-1} \right) \\
+    &  \hspace{1.7cm} \cdot \pr\left( \neg A_k^{(i)} \mid E_{k-1}^{(i-1)} \cap \neg E_k^{(i-1)} \right), \\
+\end{split}
+\end{equation}
+which we can rewrite in terms of $A_k^{(i)}$ instead of $\neg A_k^{(i)}$:
+\begin{equation}
+\begin{split}
+    \pr&\left( \neg A^{(i)}_k \mid \neg E^{(i-1)}_k \right) \\
+       &= \pr\left( \neg E^{(i-1)}_{k-1} \right) + \pr\left( E^{(i-1)}_{k-1} \right) \\
+       &  \hspace{1.7cm} \cdot \left(1 - \pr\left( A_k^{(i)} \mid E_{k-1}^{(i-1)} \cap \neg E_k^{(i-1)} \right) \right) \enspace . \\
+\end{split}
+\end{equation}
+Then multiplying out the last term we get
+\begin{equation}
+\begin{split}
+    \pr&\left( \neg A^{(i)}_k \mid \neg E^{(i-1)}_k \right) \\
+       &= \pr\left( \neg E^{(i-1)}_{k-1} \right) + \pr\left( E^{(i-1)}_{k-1} \right) \\
+       &  \hspace{0.65cm} - \pr\left( E^{(i-1)}_{k-1} \right) \pr\left( A_k^{(i)} \mid E_{k-1}^{(i-1)} \cap \neg E_k^{(i-1)} \right) \enspace . \\
+\end{split}
+\end{equation}
+Finally, summing the first two terms, we arrive at
+\begin{equation}
+\begin{split}
+    \pr&\left( \neg A^{(i)}_k \mid \neg E^{(i-1)}_k \right) \\
+       &= 1 - \pr\left( E^{(i-1)}_{k-1} \right) \pr\left( A_k^{(i)} \mid E_{k-1}^{(i-1)} \cap \neg E_k^{(i-1)} \right) \enspace .
+\end{split}
+\end{equation}
+Two events need to happen in order to generate a path to the next hyperball; an appropriate node must be selected for expansion, and Connect$(\dots)$ must generate a $\delta_r$-similar path segment, assuming that the appropriate node has already been selected. Denote the probability of these events at iteration $i$ as $\selectprobability$ and $\propagationprobability$ respectively. Then
+\begin{equation}
+    \pr\left( \neg A^{(i)}_k \mid \neg E^{(i-1)}_k \right) = 1 - \pr\left( E^{(i-1)}_{k-1} \right) \selectprobability \propagationprobability \enspace .
+    \label{eqn:fail_aik}
+\end{equation}
+
+\noindent
+As we are examining this probability in the limit, we will instead draw a bound on this probability to put it in a form we can easily examine the limit for. To do so, we must carefully consider the values of $\selectprobability$ and $\propagationprobability$.  In Section~\ref{sec:select}, it will be shown that $\selectprobability$ is a generally decreasing function, but converges to a finite value $\selectbound > 0$ in the limit.  Therefore we let $\selectbound$ be a lower bound of $\selectprobability$.  Then in Section~\ref{sec:prop}, $\propagationprobability$ will similarly be shown to be positive and lower-bounded; in particular $\selectprobability \propagationprobability \leq \selectbound$.  Taking $\selectbound$ as constant, we can bound Eq.~\eqref{eqn:fail_aik} as
+\begin{equation}
+    \pr\left( \neg A^{(i)}_k \mid \neg E^{(i-1)}_k \right) \leq 1 - \pr\left( E^{(i-1)}_{k-1} \right) \selectbound \enspace .
+    \label{eqn:fail_aik_bound}
+\end{equation}
+Combining equations \eqref{eqn:fail_aik_bound} and \eqref{eqn:fail_enk} we have
+\begin{equation}
+    \pr\left( \neg E^{(n)}_k \right) \leq \prod_{i=1}^n \left(1 - \pr\left( E^{(i-1)}_{k-1} \right) \selectbound \right) \enspace .
+\end{equation}
+Denote $y^{(n)}_k = \prod_{i=1}^n \left(1 - \pr\left( E^{(i-1)}_{k-1} \right) \selectbound \right)$. Then
+\begin{equation}
+    \pr\left( \neg E^{(n)}_k \right) \leq y^{(n)}_k \enspace .
+    \label{eqn:fail_enk_bound}
+\end{equation}
+We will show using induction over $k$, that Eq.~\eqref{eqn:fail_enk_bound} tends to 0 as $n \rightarrow \infty$, and thus $\lim_{n \rightarrow \infty} \pr(\textrm{Success}) = 1$\\
+
+\noindent
+\textbf{Base case $(k = 1)$:}\\
+Note that $\pr(E^{(i)}_{0}) = 1$ because the start node always exists. Then 
+\begin{equation}
+\begin{split}
+    \lim_{n \rightarrow \infty} \pr\left( \neg E^{(n)}_1 \right) 
+        &\leq \lim_{n \rightarrow \infty} \prod_{i=1}^n \left(1 - \pr\left( E^{(i-1)}_{0} \right) \selectbound \right) \\
+        &=    \lim_{n \rightarrow \infty} \prod_{i=1}^n \left(1 - \selectbound \right) \\
+        &=\lim_{n \rightarrow \infty} \left(1 - \selectbound \right)^n = 0 \enspace .
+\end{split}
+\end{equation}
+
+\noindent
+\textbf{Induction hypothesis: }
+\begin{equation}
+    \lim_{n \rightarrow \infty} \pr\left( \neg E^{(n)}_m \right) = 0 \textrm{ for } m = 1, 2, \dots, k - 1 \enspace .
+    \label{eqn:induction_hypothesis}
+\end{equation}
+Note that this implies $\lim_{n \rightarrow \infty} \pr( E^{(n)}_m ) = 1$ for $m = 1, 2, \dots, k - 1$.\\
+
+\noindent
+\textbf{Induction step ($2 \leq k \leq K$): }\\
+Consider the log of the bound on $\pr\left( \neg E^{(n)}_k \right)$:
+\begin{equation}
+    \log y^{(n)}_k = \sum_{i=1}^n \log\left( 1 - \pr\left( E^{(i-1)}_{k-1} \right) \selectbound \right) \enspace .
+    \label{eqn:logy}
+\end{equation}
+Denote $x = \pr\left( E^{(i-1)}_{k-1} \right) \selectbound$. Given that $0 \leq x < 1$, and writing the Taylor series expansion of $\log\left( 1 - x \right)$ centered at $x = 0$ we have
+\begin{equation}
+    \log \left( 1 - x \right) = - \sum_{m=1}^\infty \frac{x^m}{m} \enspace .
+    \label{eqn:log1minusx}
+\end{equation}
+Substituting Eq.~\eqref{eqn:log1minusx} back into Eq.~\eqref{eqn:logy} we get
+\begin{equation}
+    \log y^{(n)}_k = - \sum_{i=1}^n \sum_{m=1}^\infty \frac{\left( \pr\left( E^{(i-1)}_{k-1} \right) \selectbound \right)^m}{m} \enspace .
+\end{equation}
+Dropping all but the first term in the infinite sum we get the bound
+\begin{equation}
+    \log y^{(n)}_k \leq -\sum_{i=1}^n \pr\left( E^{(i-1)}_{k-1} \right) \selectbound \enspace .
+\end{equation}
+Rearranging terms yields
+\begin{equation}
+    \log y^{(n)}_k \leq -\selectbound \sum_{i=1}^n \pr\left( E^{(i-1)}_{k-1} \right) \enspace .
+\end{equation}
+We now use the induction hypothesis. We know that $\pr( E^{(n)}_{k-1} ) \rightarrow 1$ as $n \rightarrow \infty$, thus $\sum_{i=1}^n \pr( E^{(i-1)}_{k-1} ) \rightarrow \infty$. Then
+\begin{equation}
+    \lim_{n \rightarrow \infty} \log y^{(n)}_k \leq -\selectbound \sum_{i=1}^n \lim_{n \rightarrow \infty} \pr\left( E^{(i-1)}_{k-1} \right) = -\infty \enspace .
+    \label{eqn:logy_bound}
+\end{equation}
+Taking the log of Eq.~\eqref{eqn:fail_enk_bound} and combining with Eq.~\eqref{eqn:logy_bound} we get
+\begin{equation}
+    \lim_{n \rightarrow \infty} \log \pr\left( \neg E^{(n)}_k \right) \leq \lim_{n \rightarrow \infty} \log y^{(n)}_k = -\infty
+\end{equation}
+and therefore
+\begin{equation}
+    \lim_{n \rightarrow \infty} \pr\left( \neg E^{(n)}_k \right) = 0 ,
+\end{equation}
+which completes the induction step.
+
+
+Thus, given that $\pr(\neg E^{(n)}_k) \rightarrow 0$ as $n \rightarrow \infty$ for any $1 \leq k \leq K$
+\begin{equation}
+    \lim_{n \rightarrow \infty} \pr(\textrm{Success}) = \lim_{n \rightarrow \infty} \left( 1 - \pr\left( \neg E^{(n)}_K \right) \right) = 1 \enspace.
+\end{equation}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Node Selection
+\subsubsection{Selection of an appropriate node ($\selectbound$):}
+\label{sec:select}
+
+% \begin{figure}
+%     \centering
+%     \includegraphics{placeholder}
+%     \caption{Figure for Sec.~\ref{sec:select} and Sec.~\ref{sec:prop}}
+%     \label{fig:select_and_prop}
+% \end{figure}
+First, we define the following restriction on the definition of $\bestneardist$: 
+
+\begin{definition}[$\bestneardist$ Restriction]
+\label{prop:bestnear_requirement}
+    For a reference path $\rpath_r$ with robustness $\delta_r$, $\bestneardist$ is defined such that $\innerballsize = \delta_r - \bestneardist > 0$.
+\end{definition}
+
+
+The proof that $\selectbound > 0$ follows directly from the related work of \cite{LiAOKP2016} (proof of Lemma 23).  To summarize, due to best-nearest neighbors selection, there exists a positive-measure region around the minimum cost vertex $\qnear_f$ which observes the optimal reference path in which its cost dominates all other nearby nodes, and therefore, when $\qrand_f$ is drawn in this volume, $\qnear_f = (\qnear_r, \qnear_b)$ is guaranteed to be selected (Fig.~\ref{fig:Yanbo_lemma_23_figure}).  Since our approach follows an equivalent sampling and nearest neighbor method to \cite{LiAOKP2016} Alg.~6 (as shown in Sec.~\ref{sec:nn_equiv}), 
+\begin{equation}
+    \selectbound = \frac{\mu\left( \hyperball_{\delta_\theta}\big( \config_{k,f}^* \big) \cap \hyperball_{\delta_{BN}}\big( \qnear_f \big) \right)}{\mu\left( \cspace_f \right)} > 0
+\end{equation}
+follows directly.
+
+To show that $\selectbound < 1$, we need only consider the case when there are at least 2 nodes in $\rrtnodeset$.
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Node Propagation
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{$\delta_r$-similar Propagation ($\propagationprobability$):}
+\label{sec:prop}
+Given that our nearest neighbor method is non-standard, and operating in the full configuration space $\cspace_f$, we need to carefully consider how this affects the propagation probability $\propagationprobability$. Given the kinematic model of our robot system, it is straightforward to show that the system in robot space is Small-Time Locally Controllable (STLC), i.e. $\robotconfig$ can be instantaneously moved in any direction, barring the presence of obstacles or configuration space limits.  
+
+Then, based on the construction of the covering ball sequence and the $\bestneardist$ restriction, the following lemma holds.
+
+\begin{lemma}
+    \label{lem:rand_to_next_dist}
+    If $\qrand_f$ is within the minimum domination region as described in \cite{LiAOKP2016} Lemma 23 (Fig.~\ref{fig:Yanbo_lemma_23_figure}), then $\qrand_r \in \hyperball_{\delta_r}(\config^*_{k, r})$ and Connect() will generate a segment that is $\delta_r$-similar to segment $k$ of the reference path.
+\end{lemma}
+
+
+
+\noindent
+{\bf Proof.}
+Assume that $\qrand_f \in \hyperball_{\innerballsize}(\config^*_{k-1,f})$. Then we have
+\begin{align*}
+    d_r(\qrand_r, \config^*_{k,r}) &\leq d_f(\qrand_f, \config^*_{k,f}) \\
+                                   &\leq d_f(\qrand_f, \config^*_{k-1,f}) + d_f(\config^*_{k-1,f}, \config^*_{k,f}) \\
+                                   &\leq \innerballsize + \ballseparation = \delta_r - \bestneardist + \ballseparation \enspace.
+\end{align*}
+Then by construction of the covering ball sequence, we have that $\ballseparation -\bestneardist < 0$ and thus $d_r(\qrand_r, \config^*_{k,r}) < \delta_r$. In addition, we have that the straight line between $\qnear_r$ as selected by $\qrand_r$ is entirely contained in $\hyperball_{\delta_r}(\config^*_{k-1,r})$, and thus is also in $\cfree_r$ as the reference path is optimal $\delta$-robust. We then have that the path generated by Connect is $\delta_r$-similar to the $k^{th}$ segment of the reference path.
+\qed
+
+\begin{lemma}
+    The probability of covering segment $k$ at iteration $i$, given that we have not yet covered segment $k$ but we have covered segment $k-1$
+    $$\pr\left( A_k^{(i)} \mid E_{k-1}^{(i-1)} \cap \neg E_k^{(i-1)} \right) = \selectprobability \propagationprobability$$
+    is lower-bounded by $\selectbound$.
+\end{lemma}
+
+\noindent
+{\bf Proof.}
+Consider two possible events. First, that $\qrand_f$ is within the minimum domination region (Fig.~\ref{fig:Yanbo_lemma_23_figure}) of $\qnear_f$. If $\qrand_f$ is within the minimum domination region of $\qnear_f$, then by Lemma~\ref{lem:rand_to_next_dist}, Connect() will generate a $\delta_r$-similar segment with probability 1. Denote this event as $B$. Second, the event that $\qrand_f$ is somewhere else. Denote this event as $C$. Then we can bound $\pr( A_k^{(i)} \mid E_{k-1}^{(i-1)} \cap \neg E_k^{(i-1)})$ by considering only $B$:
+\begin{align*}
+    \pr\left( A_k^{(i)} \mid E_{k-1}^{(i-1)} \cap \neg E_k^{(i-1)} \right) 
+        &= \pr(B) + \pr(C) \\
+        &\geq \pr(B) \geq \selectbound \enspace .
+\end{align*}
+\qed
+
+
+% \chups{It should be sufficient to say that this has positive probability of happening as long as the domination region for a vertex within $\delta_r$ of the $k-1^{th}$ state completely contains the $\delta_r$ ball around the $k^{th}$ state, i.e. sampling in the $k^{th}$ ball not only selects the appropriate node, but ensures we propagate into some state of the $k^{th}$ $\delta_r$ ball.  This means that the probability of doing so is invariant of $n$, and is proportional to the volume of the $\delta_r$ ball volume, which is PM. }
+
+% As for the second property, we examine the process of generating the $k_{th}$ $\delta_f$-similar segment over the reference trajectory.  Let segment $k$ of the reference trajectory be $\rpath_f(t)$ for $t \in [t^{init}_k,t^{end}_k]$.  If this property holds for each of the prior segments, then there is vertex $v_f \in \mathbb{T}$ selected for propagation such that $d_f(v_f, \rpath_f(t^{init}_k) \leq \delta_f$.  Then by our the STLC property of just the robot system, there must be a positive measure set of controls $U$ such that propagating the robot system by $u \in U$ from the robot state at the vertex $v_r$ according to $u$ produces a trajectory segment $\cspacepath^c_r$ which is $\delta_r$-similar to the $k^{th}$ segment of the robot reference trajectory $\rpath_r(t)$, $t \in [t^{init}_k,t^{end}_k]$.  Assuming reasonable projection by the forward simulation and assumptions outlined in Defintion~\ref{def:robust}, it must be that the full-space trajectory induced by this control $\cspacepath^c_f = \int g( v_f, \rpath_r(t) ) dt$ is $\delta_f$-similar to the $k^{th}$ segment of $\rpath_f$.  Since $U$ is a positive measure set, the probability of selecting an appropriate control in this set is always positive, and thus $\propagationbound > 0$.
+
+% \todo[inline]{$\propagationprobability$ is said to be "essentially constant" earlier, but no such claim is defined and substantiated here.}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Backwards
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsection{Correctness of using the Backwards Tree}
+
+% The above proof assumes that the method is only using the forward tree to generate solutions to the motion planning problem; however, for practical efficiency, the method employed is a Bi-space RRT, which uses a backwards tree as a strong bias toward the goal.  Since this process of propagating through the forward tree is interleaved with the expansion of the forward tree, it will not effect the growth of the forward tree.\todo[inline]{Wording needs work here, it does affect the growth.}  In fact, all it can do is heuristically guide the method to a quick solution to the problem.
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\columnwidth]{nearest_neighbour_domination_region}
+    \caption{Minimum domination region for a node $\config_{i,f}$, adapted from \cite{LiAOKP2016} Lemma 23. Sampling $\qrand_f$ in the shaded region guarantees that a node $\qnear_f \in \hyperball_{\delta_r}(\config_{k,f}^*)$ is selected for propagation so that either $\qnear_f = \config_{i,f}$ or $\cost(\qnear_f) < \cost(\config_{i,f})$.}
+    \label{fig:Yanbo_lemma_23_figure}
+\end{figure}

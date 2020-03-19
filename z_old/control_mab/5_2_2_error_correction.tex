@@ -1,0 +1,13 @@
+\begin{algorithm}[t]
+    \caption{ErrorCorrection$(\deformconfig, \deformtarget)$}
+    \begin{algorithmic}[1]
+        \State $\deformvelocity_e \gets \boldsymbol 0_{\deformconfigspacesize \times 1}$, $\pseudoinverseweight_e \gets \boldsymbol 0_{\numdeformpoints \times 1}$
+        \For{$i \in \{1,2,\dots,\numtargetpoints \}$}
+            \State $k \gets \argmin_{j \in \{ 1,2,\dots,\numdeformpoints \}} \| \deformtarget_i - \deformconfig_j \|$
+            \State $\deformvelocity_{e,k} \gets \deformvelocity_{e,k} + \deformtarget_i - \deformconfig_k$
+            \State $\pseudoinverseweight_{e,k} \gets \max (\pseudoinverseweight_{e,k}, \| \deformtarget_i - \deformconfig_k \|)$
+        \EndFor
+        \State \Return $\{ \dot \deformconfig_e, \pseudoinverseweight_e \}$
+    \end{algorithmic}
+    \label{alg:error_correction}
+\end{algorithm}

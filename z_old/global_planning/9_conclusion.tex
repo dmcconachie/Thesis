@@ -1,0 +1,33 @@
+\section{Discussion and Conclusion}
+\label{sec:discussion}
+
+We have presented a method to interleave global planning and local control for deformable object manipulation that does not rely on high-fidelity modeling or simulation of the object. Our method combines techniques from topologically-based motion planning with a sampling-based planner to generate gross motion of the deformable object. The purpose of this gross motion is not to achieve the task alone, but rather to move the object into a position from which the local controller is able to complete the task. This division of labor enables each component to focus on their strengths rather than attempt to solve the entire problem directly. We also presented a probabilistic completeness proof for our planner which does not rely on either a steering function or choosing controls at random, and addresses our underactuated system. As part of our framework, we introduced a novel deadlock prediction algorithm to determine when to use the local controller and when to use the global planner.
+
+Our experiments demonstrate that our framework is able to be applied to several interesting tasks for rope and cloth, including an adversarial case where we set up the planner to fail on the first attempt. For the simulated tasks, our framework is able to succeed at each task 100/100 times, with average planning and smoothing time under 4 seconds for 3 tasks, and under 11 seconds for the larger environment. The physical robot experiment shows that our framework can be used for practical tasks in the real world, with planning and smoothing taking less than 60 seconds on average. This experiment also shows that our methods can function despite noisy and occluded perception of the deformable object.
+
+\subsection{Parameter Selection}
+There are several parameters in both the local controller and the global planner that can have a large impact on the performance of our method. In particular, if the local controller is prone to oscillations, this can cause the deadlock prediction algorithm to incorrectly predict that the local controller will get stuck, leading to an unnecessary planning phase. In the worse case, this can cause the global planner to be unable to find an acceptable path due to the blacklisting procedure. In practice we have set the deadlock prediction parameters relatively conservatively in order to avoid these false positives. One interesting direction of future research is how to perform reachability analysis for deformable objects in general, in particular when a high-fidelity model of the deformable object is not available.
+
+In addition, if $\banddistscale$ is not small, then nearest neighbour checks can become very expensive. In practice distances in band space are used to disambiguate between nodes that are at nearly identical configurations in robot configuration space. This happens when multiple nodes connect to the position goal $\eepositiongoal$, but their bands are similar to a blacklisted band. One potential way to make distances in band space more informative would be to develop a way to sample interesting band configurations.
+
+
+
+
+
+
+
+
+\subsection{Limitations}
+We made a choice to favor speed over model accuracy. As a consequence, there are several issues that our method does not address. In particular environments with ``hooks'' can cause problems due to our approximation methods; the virtual elastic band we use for constraint checking and planning assumes that there is no minimum length of the deformable object. This assumption means that our planner cannot detect cases where the slack material can get snagged on corners or hooks, preventing the motion plan from being executed. One way this can be mitigated is by using a more accurate model (at the cost of speed and task-specific tuning). Other potential solutions include online modeling methods such as~\cite{Hu2018deformable_gpr}, or learning which features of the workspace can lead to highly inaccurate approximations and planning paths that avoid those areas. In addition we have no explicit method to avoid twisting or knot-tying behavior. While shortcut smoothing can potentially mitigate the worst effects, avoiding such cases is not something that is within the scope of this work. Last, we cannot guarantee that we can achieve any given task in general; while our blacklisting method is designed to encourage exploration of the state space, it also has the potential to block regions of the state space from which the local controller can achieve the task. Despite these limitations we find that our framework is able to reliably perform complex tasks where neither planning nor control alone are sufficient. In future work we plan to address these weaknesses, in particular the snagging and twisting limitations which are artifacts of our approximation methods. We also seek to extend our framework to a broader range of tasks, beyond coverage and point matching applications.
+
+% \subsection{\rev{Building and End to End System}}
+% \rev{Two aspects of an end to end-system that are undressed in our work is how and when to grasp (or re-grasp) an object, as well has how to handling sensing without the aid of fiducial markers. 
+
+% uncertainty in a principled fashion, in particular when dealing with occlusions, both by other objects in the scene as well as by the deformable object itself. \cite{Schulman2013tracking} as well as \cite{Petit2017} have impressive ways to address some of the sensing problem, but these methods do still require a high-fidelity model \textit{a priori}.}
+
+%\subsection{\rev{Planning Improvements}}
+%\rev{Another research direction is how to use a backwards search tree for deformable object planning. \cite{Diankov2008bispace} and \cite{Berenson2009b} offer two possible directions, building a backwards tree in gripper configuration space instead of robot configuration space, or using inverse kinematics solutions to extend the backwards tree respectively. One challenge is that we do not have an explicit representation for the virtual elastic band goal region, nor the ability to propagate the virtual elastic band backwards via the solution to a boundary value problem.}
+
+% \rev{One aspect of this domain that is relatively untapped is how to take advantage of previous state-action-state transitions from the local controller as well as previous plans generated by the global planner.}
+
+% \rev{Sampling (90k samples, 8k nodes)}
