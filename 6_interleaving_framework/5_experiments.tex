@@ -3,12 +3,12 @@
 
 We now present four example tasks to demonstrate our algorithm, two with cloth, and two with rope. These tasks are designed to show that our framework is able to handle non-trivial tasks which cannot be performed using either our controller or planner alone. In Sec.~\ref{sec:live_robot} we demonstrate that our method can also be applied to a physical robot.
 
-For these simulation tasks $\cspace_r = \gripperconfigspace$ -- i.e. there are two free flying grippers. In the first and second tasks, two grippers manipulate the cloth so that it covers a table. In the first task the cloth is obstructed by a pillar while in the second task the grippers must pass through a narrow passage before the table can be covered. The third and fourth scenarios require the robot to navigate a rope through a three-dimensional maze before aligning the rope with a line traced on the floor (see Figure~\ref{fig:example_tasks}). The video accompanying this paper shows the task executions.
+For these simulation tasks $\robotCspace = \gripperCspace$ -- i.e. there are two free flying grippers. In the first and second tasks, two grippers manipulate the cloth so that it covers a table. In the first task the cloth is obstructed by a pillar while in the second task the grippers must pass through a narrow passage before the table can be covered. The third and fourth scenarios require the robot to navigate a rope through a three-dimensional maze before aligning the rope with a line traced on the floor (see Figure~\ref{fig:example_tasks}). The video accompanying this paper shows the task executions.
  %(\url{https://youtu.be/JyJPjLSXzYo})
 
 
 All experiments were conducted in the open-source Bullet simulator (\cite{Coumans2010}), with additional wrapper code developed at UC Berkeley 
-(\cite{ucberkley_bullet}). The cloth is modeled as a triangle mesh using 1500 vertices with a total size of $0.3\text{m} \times 0.5\text{m}$. The rope is modeled as a series of small capsules linked together by springs. In the first rope experiment we use 39 capsules for a 0.78m long rope, and 47 capsules for a 0.94m rope in the last experiment. We emphasize that our method does not have access to the model of the deformable object or the simulation parameters. The simulator is used as a ``black box'' for testing. We set the maximum stretching factor $\maxstretchfactor$ to 1.17 for the cloth and 1.15 for the rope. All tests are performed using an i7-8700K 3.7 GHz CPU with 32 GB of RAM. We use the same deadlock prediction and planner parameters for all tasks, shown in Tables~\ref{tab:deadlock_param_table} and~\ref{tab:rrt_param_table}. For the purpose of the planner we treat the grippers as spheres, reducing the planning space from $\gripperconfigspace \times \bandspace$ to $\reals^6 \times \bandspace$.
+(\cite{ucberkley_bullet}). The cloth is modeled as a triangle mesh using 1500 vertices with a total size of $0.3\text{m} \times 0.5\text{m}$. The rope is modeled as a series of small capsules linked together by springs. In the first rope experiment we use 39 capsules for a 0.78m long rope, and 47 capsules for a 0.94m rope in the last experiment. We emphasize that our method does not have access to the model of the deformable object or the simulation parameters. The simulator is used as a ``black box'' for testing. We set the maximum stretching factor $\stretchmax$ to 1.17 for the cloth and 1.15 for the rope. All tests are performed using an i7-8700K 3.7 GHz CPU with 32 GB of RAM. We use the same deadlock prediction and planner parameters for all tasks, shown in Tables~\ref{tab:deadlock_param_table} and~\ref{tab:rrt_param_table}. For the purpose of the planner we treat the grippers as spheres, reducing the planning space from $\gripperCspace \times \bandspace$ to $\reals^6 \times \bandspace$.
 
 To smooth the path returned by the planner, at each iteration we randomly select either a single gripper or both grippers and two configurations in the path. To smooth between the configurations we use the same forward-propagation method for the virtual elastic band as used in the planning process. If we have selected only one gripper for smoothing, we do not change the configuration of the second gripper during that smoothing iteration. We also forward-propagate the virtual elastic band to the end of the path to ensure that the band at the end of the smoothed path is dissimilar from the blacklist. We perform 500 smoothing iterations for experiments 1, 2, and 4; and 1500 for experiment 3 due to the larger environment.
 
@@ -18,15 +18,7 @@ To smooth the path returned by the planner, at each iteration we randomly select
 \subsection{Single Pillar}
 \label{sec:single_pillar}
 
-
-
-
-
-
-
-
-
-In the first example task, the objective is to spread the cloth across a table that is on the far side  of a pillar (see Figure~\ref{fig:cloth_single_pole}). We uniformly discretize the surface of the table to create the target points $\deformtarget$, with each discretized point creating a navigation function that pulls the closest point on the deformable object towards the target. These target points are set slightly above the surface to allow for collision margins within the simulator. A single point on the cloth can have multiple ``pulls'' or none. Task error $\errorfunction$ is defined as the sum of the Dijkstra's distances from each target point to the closest point on the cloth. If a target point in $\deformtarget$ is within a small-enough threshold of their nearest neighbors in $\deformconfig$, then these points are considered ``covered'' and do not influence task error or any other calculation. Our results show that even though the global planner is only planning using the gripper positions and a virtual elastic band between them, it is able to find the correct neighbourhood for the local controller to complete the task. On average we are able to find and smooth a path in 3.0 seconds (Table~\ref{tab:planning_statistics}, Table~\ref{tab:smoothing_statistics}), with the majority of the planning time spent on forward propagation of the virtual elastic band as part of the validity check for a potential movement of the grippers. In all 100 trials the global planner is only invoked once, with the local controller completing the task after the plan finishes.
+In the first example task, the objective is to spread the cloth across a table that is on the far side  of a pillar (see Figure~\ref{fig:cloth_single_pole}). We uniformly discretize the surface of the table to create the target points $\target$, with each discretized point creating a navigation function that pulls the closest point on the deformable object towards the target. These target points are set slightly above the surface to allow for collision margins within the simulator. A single point on the cloth can have multiple ``pulls'' or none. Task error $\ErrorFn$ is defined as the sum of the Dijkstra's distances from each target point to the closest point on the cloth. If a target point in $\target$ is within a small-enough threshold of their nearest neighbors in $\deformconfig$, then these points are considered ``covered'' and do not influence task error or any other calculation. Our results show that even though the global planner is only planning using the gripper positions and a virtual elastic band between them, it is able to find the correct neighbourhood for the local controller to complete the task. On average we are able to find and smooth a path in 3.0 seconds (Table~\ref{tab:planning_statistics}, Table~\ref{tab:smoothing_statistics}), with the majority of the planning time spent on forward propagation of the virtual elastic band as part of the validity check for a potential movement of the grippers. In all 100 trials the global planner is only invoked once, with the local controller completing the task after the plan finishes.
 
 
 
@@ -37,8 +29,7 @@ In the first example task, the objective is to spread the cloth across a table t
 
 
 \subsection{Double Slit}
-
-
+\label{sec:double_slit}
 The second experiment uses the same setup as the first, with the only change being that the single pillar obstacle is replaced by a wide wall with two narrow slits (Figure~\ref{fig:cloth_double_slit}). This adds a narrow passage problem and also demonstrates the utility of the progress detection filter. In this example the local controller is trying to move the deformable object straight forward, but with the wall in the way it is unable to make progress; the local controller cannot explicitly go around obstacles. This experiment shows comparable planning time, but it takes longer to smooth the resulting path (as expected given that the virtual elastic band forward propagation takes longer near obstacles). The local controller is again able to complete the task after invoking the planer a single time on all 100 trials.
 
 
@@ -66,10 +57,10 @@ Configuration Distance Threshold    & $\motionprogressthreshold$    &  0.03 \\
 \begin{tabular}{lcc}
 \noalign{\smallskip}\hline\noalign{\smallskip}
 Goal Bias                           & $\goalbias$                   &     0.1 \\
-Workspace Goal Radius               & $\goalreachradius$            &     0.02 \\
+Workspace Goal Radius               & $\eegoalradius$               &     0.02 \\
 Best Nearest Radius                 & $\bestneardist$               &     0.001 \\
 Band Distance Scaling Factor        & $\banddistscale$              & $10^{-6}$ \\
-Maximum Band Points                 & $\maxbandpoints$              & 500 \\
+Maximum Band Points                 & $\nbandpointsmax$             & 500 \\
 \noalign{\smallskip}\hline
 \end{tabular}
 \end{table}
@@ -78,11 +69,8 @@ Maximum Band Points                 & $\maxbandpoints$              & 500 \\
 
 
 \subsection{Moving a Rope Through a Maze}
-
-
-In the third task, the robot must navigate a rope through a three-dimensional maze before aligning the rope with a line traced on the floor (Figure~\ref{fig:rope_maze}). This scenario is meant to represent tasks such as moving a heavy cable through a construction zone without crane access. In this task, the correspondences between the target points $\deformtarget$ and the deformable object points $\deformconfig$ are fixed in advance, thus the CalculateCorrespondences() function does not have to do any work, as shown in Table~\ref{tab:control_statistics}. Task error $\errorfunction$ is defined in the same way as in the first two experiments. Again the planner is invoked a single time per trial, but planning and smoothing times are longer than the previous tasks. This is a function of the size of the environment rather than any particular difference in the difficulty of performing the planning or smoothing. The planner finds a feasible path in 4.2s on average, suggesting that our method can maintain fast planning times, even in larger environments with many more obstacles.
-
-
+\label{sec:rope_maze}
+In the third task, the robot must navigate a rope through a three-dimensional maze before aligning the rope with a line traced on the floor (Figure~\ref{fig:rope_maze}). This scenario is meant to represent tasks such as moving a heavy cable through a construction zone without crane access. In this task, the correspondences between the target points $\target$ and the deformable object points $\deformconfig$ are fixed in advance, thus the CalculateCorrespondences() function does not have to do any work, as shown in Table~\ref{tab:control_statistics}. Task error $\ErrorFn$ is defined in the same way as in the first two experiments. Again the planner is invoked a single time per trial, but planning and smoothing times are longer than the previous tasks. This is a function of the size of the environment rather than any particular difference in the difficulty of performing the planning or smoothing. The planner finds a feasible path in 4.2s on average, suggesting that our method can maintain fast planning times, even in larger environments with many more obstacles.
 
 
 \begin{figure*}[ht]
@@ -131,9 +119,6 @@ Rope Maze                           & 1500 & \parbox{0.5in}{\centering{6.4 \\{[3
 \end{table}
 
 
-
-
-
 \begin{figure*}[ht]
     \centering
     \includegraphics[width=\textwidth]{CombinedImages_ClothDoubleSlit}
@@ -164,8 +149,7 @@ Rope Maze                           & 1500 & \parbox{0.5in}{\centering{6.4 \\{[3
 
 
 \subsection{Repeated Planning}
-
-
+\label{sec:repeated_rope_maze}
 
 The fourth task is a variant of the third, with the start configuration of the rope moved near the goal region on the top layer of the maze and a longer rope. This task has the most potential for a planned path to move the deformable object into a configuration from which the local controller cannot finish the task by wrapping the rope around an obstacle near the goal. For this experiment we reduce the size of the planning arena to only the goal area, and the immediate surroundings on the top layer (Figure~\ref{fig:repeated_planning}). From this starting position, the planner is more likely to find the incorrect neighborhood for the local controller, which corresponds to placing the rope into the wrong homotopy class, on the first attempt. We emphasize that the correct homotopy class is unknown, as we assume no information is given about the connectivity of the target points. Thus our method must discover the correct homotopy class by trail-and-error, invoking the planner when the deadlock prediction determines the controller will be stuck.
 
@@ -175,10 +159,6 @@ In 71 of the 100 trials, the planner was invoked twice, in 13 other trials it wa
 
 
 \subsection{Computation Time}
-
-
-% The average times \rev{per iteration} for the local controller and deadlock prediction algorithms are shown in Table~\ref{tab:control_statistics}, averaged across all trials of all experiments.
-
 
 To verify the practicality of our deadlock prediction algorithm and virtual elastic band approximation, we gathered data comparing computation time for these components to the local controller by itself, and to using the Bullet simulator. Table~\ref{tab:control_statistics} shows the average times per iteration for the local controller and deadlock prediction algorithms, averaged across all trials of all experiments. As expected, adding in the deadlock prediction step does increase computation time, but the overall control loop is still fast enough for practical use.
 
@@ -239,23 +219,14 @@ Table~\ref{tab:prediction_statistics} shows a comparison between the average tim
 In order to show that our method is practical for a physical robotic system, not only free floating end-effectors, we set up a task similar to the single pillar task (Sec.~\ref{sec:single_pillar}) with a dual-arm robot. It also shows that while our methods strong assumptions about the ability to perceive the deformable object in Sec.~\ref{sec:main_problem_statement} (in particular no occlusions and no sensor noise), our framework is still able to perform meaningful tasks when those assumptions are violated. In this task the robot must align a cloth placemat inside of the pink rectangle, going around an obstacle in the process (Fig.~\ref{fig:cloth_placemat}).
 
 
-
-
-
-
 \subsection{Experiment Setup}
 
 \subsubsection{Robotic Platform:}
-Val is a stationary robotic platform with a 2-DOF torso, two 7-DOF arms, and a rotary pincer per arm. As in the simulated environments it is assumed that Val is already holding the cloth, leaving 16 DOF to be controlled and planned for ($\cspace_r = \reals^{16})$.
-
-
-
+Val is a stationary robotic platform with a 2-DOF torso, two 7-DOF arms, and a rotary pincer per arm. As in the simulated environments it is assumed that Val is already holding the cloth, leaving 16 DOF to be controlled and planned for ($\robotCspace = \reals^{16})$.
 
 
 \subsubsection{Cloth Perception:}
 \label{sec:cloth_perception}
-
-
 
 The placemat is $0.33\text{m} \times 0.46\text{m}$ which we discretize into a $3 \times 3$ grid. As tracking of deformable objects is a difficult problem, and out of scope of this paper, we instead use fiducials to track the configuration of the cloth. Two of the points are tracked using the position of the grippers; the other 7 points are tracked with AprilTags (\cite{olson2011tags}) and a Kinect V2 RGB-D sensor (\cite{iai_kinect2}).
 
@@ -339,14 +310,6 @@ Iterations &
 \noalign{\smallskip}\hline
 \end{tabular}
 \end{table}
-
-
-
-
-
-
-
-
 
 
 

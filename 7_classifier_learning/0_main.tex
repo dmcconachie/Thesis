@@ -3,6 +3,8 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\todoin{Rework this chapter to account for the previous chapters existing in the same document}
+
 
 \section{INTRODUCTION}
 
@@ -15,7 +17,6 @@ Motivated by tasks where dynamics are difficult to specify and evaluate, we pres
     \includegraphics[trim={0 1.5in 5.3in 0},clip,width=\columnwidth]{icra_fig_1}
     \caption{Top: a plan generated without using a classifier moves the rope under a hook and gets caught. Bottom: a plan generated with a classifier avoids this mistake, and reaches the goal.}
     \label{fig:intro_figure}
-    \vspace{-0.15in}
 \end{figure}
 
 After gathering a dataset where transitions are labeled as reliable or unreliable, we train a classifier to predict the reliability of a given transition. We then incorporate this classifier into an RRT-based planner by biasing the planner to reject transitions that are classified as unreliable. The resulting planner tends to find sequences of transitions that are likely to produce the desired outcome when the true dynamics of the system are applied, even though the planner plans with no explicit knowledge of the true dynamics.
@@ -108,10 +109,8 @@ To label the data we require a function that evaluates if the two predictions ar
 Intuitively, this function first checks if $\hat{\reducedstate}_t$ $\tilde{\reducedstate}_t$ are close. If they are, and $\hat{\reducedstate}_{t+1}$ and $\tilde{\reducedstate}_{t+1}$ are not close, then the transition is labeled \texttt{Unreliable} because the reduced dynamics prediction was inaccurate. If the starting states $\hat{\reducedstate}_t$ and $\tilde{\reducedstate}_t$ \textit{are not} similar, then the rollout and reduced dynamics predictions have already diverged and we do not have a meaningful ground-truth label for this transition. To be conservative in our prediction, we label this transition \texttt{Unreliable}. If both $\hat{\reducedstate}_t$, $\tilde{\reducedstate}_t$ are close and $\hat{\reducedstate}_{t+1}$, $\tilde{\reducedstate}_{t+1}$ are close then $r$ and $g$ have performed well and we label the transition \texttt{Reliable}.
 
 \begin{figure}[t]
-    \vspace{0.02in}
     \centering
     \includegraphics[width=\columnwidth]{overview_hz}
-    \vspace{-0.15in}
     \caption{An outline of our framework. First, we plan and execute many control sequences to gather a dataset of transitions. These transitions are labeled according to a function $l$ and used to train a classifier which predicts whether a transition is reliable given the model reduction. This classifier is used to bias the planner away from unreliable transitions.}
     \label{fig:overview}
 % \end{figure}
@@ -167,7 +166,7 @@ First, we demonstrate our framework on a 3-link arm that moves in the X-Z plane 
 % \floatstyle{spaceruled}% Select new float style
 % \restylefloat{algorithm}
 \begin{algorithm}[t]
-\caption{\strut \texttt{CheckTransition}($T^b$)}%}\reducedstate, \reducedcommand, \robotconfig')$}
+\caption{\strut \texttt{CheckTransition}($T^b$)}%}\reducedstate, \reducedcommand, \gripperconfig')$}
 \begin{algorithmic}[1]
     \algtext*{EndIf}
     \State $\reducedstate' \gets g(T^\reducedstate.\reducedstate,  T^\reducedstate.\reducedcommand, \obstacle)$
@@ -265,12 +264,12 @@ We now present the application of our framework to rope manipulation, where we u
 \subsection{Problem Statement}
 
 
-Let the robot be represented by a pair of grippers with configuration $\robotconfig \in \robotconfigspace$. We assume that the robot configuration can be measured exactly. In this work we assume the robot to be a set of free floating grippers; in practice we can track the motion of these with inverse kinematics.
 
-We assume that our model of the robot is purely kinematic, with no higher order dynamics. We assume that the robot has two end-effectors that are rigidly attached to the rope. The configuration of a rope is a set $\deformconfig \subset \reals^3$ of $\numdeformpoints = | \deformconfig |$ points. We assume that we have a method of sensing $\deformconfig$. The rest of the environment $\obstacle$ is assumed to be both static, and known exactly. We assume that the robot moves slowly enough that we can treat the combined robot and rope as quasi-static. The true state of the system is then $\truestate = [\robotconfig,\deformconfig]$ and $\statecommand = \Delta \robotconfig$. Let $f$ be a joint-space controller for the robot that stops when any of the following occur: 1) the grippers contact an object; or 2) the object stretches by more than a factor $\lambda$. Due to the difficulty of simulating rope physics, we do not assume we can execute $f$ within a motion planner.
+Let the robot be represented by a pair of grippers with configuration $\gripperconfig \in \gripperCspace$. We assume that the robot configuration can be measured exactly. In this work we assume the robot to be a set of free floating grippers; in practice we can track the motion of these with inverse kinematics.
 
-\todo{Fix $q_g$ vs $q_{r,g}$ (ie robotconfig[g])}
-We wish to find a sequence of $\taskexecutiontime$ commands $\{\statecommand_1, \dots, \statecommand_{\taskexecutiontime} \}$ to move from a start state $\truestate_0$ to a goal gripper configuration $\robotconfig[g]$ such that each motion is feasible (this corresponds to Problem \eqref{eqn:main_planning_problem}). Note that this planning problem does not require bringing the rope to a specific configuration, which can often be done using local control \textit{after} bringing the object to a desired area (as in~\cite{McConachie2020}). %Local control for shaping the object can be handled after the gross motion is completed. This the gross motion planning problem is the focus of this work.} 
+We assume that our model of the robot is purely kinematic, with no higher order dynamics. We assume that the robot has two end-effectors that are rigidly attached to the rope. The configuration of a rope is a set $\deformconfig \subset \reals^3$ of $\ndeformpoints = | \deformconfig |$ points. We assume that we have a method of sensing $\deformconfig$. The rest of the environment $\obstacle$ is assumed to be both static, and known exactly. We assume that the robot moves slowly enough that we can treat the combined robot and rope as quasi-static. The true state of the system is then $\truestate = [\gripperconfig,\deformconfig]$ and $\statecommand = \Delta \gripperconfig$. Let $f$ be a joint-space controller for the robot that stops when any of the following occur: 1) the grippers contact an object; or 2) the object stretches by more than a factor $\lambda$. Due to the difficulty of simulating rope physics, we do not assume we can execute $f$ within a motion planner.
+
+We wish to find a sequence of $\taskexecutiontime$ commands $\{\statecommand_1, \dots, \statecommand_{\taskexecutiontime} \}$ to move from a start state $\truestate_0$ to a goal gripper configuration $\gripperconfig[g]$ such that each motion is feasible (this corresponds to Problem \eqref{eqn:main_planning_problem}). Note that this planning problem does not require bringing the rope to a specific configuration, which can often be done using local control \textit{after} bringing the object to a desired area (as in~\cite{McConachie2020}). %Local control for shaping the object can be handled after the gross motion is completed. This the gross motion planning problem is the focus of this work.} 
 Because we do not have access to $f$, we cannot solve this problem by planning in $\truestatespace$ directly.
 
 
@@ -286,7 +285,7 @@ To make planning tractable we will perform a reduction and learn a classifier fr
 \label{sec:isrr_model_approx}
 
 % M\textsuperscript{c}Conachie \textit{et. al.}~
-\cite{McConachie2017} introduced the idea of a \textit{virtual elastic band} (VEB) between the robot's end-effectors. This VEB represents the shortest path through the rope between the end-effectors. The band approximates the constraint imposed by the rope on the motion of the robot; if the end-effectors move too far apart, then the VEB will be too long, and thus the rope is stretched beyond a task-specified maximum stretching factor. Similarly, if the VEB gets caught on an obstacle and becomes too long, then the rope is also overstretched. By considering only the geodesic between the end-effectors, we are assuming that the rest of the rope will comply to the environment, and does not need to be considered when predicting overstretch. The VEB representation allows us to use a fast prediction method when planning, but does not account for the part of the material that is slack. Denote the configuration of a VEB (i.e. a sequence of points) as $\band$. Then $\reducedstate = [\robotconfig,\band]$ and can be generated by $\reducedstate = r(\truestate,\obstacle)$ for the reduction function defined in Section 4.2.2 of~\cite{McConachie2017}. The dynamics of a VEB, $g(\reducedstate,\reducedcommand,\obstacle)$, are based on Quinlan's path deformation algorithm as presented in \cite{Quinlan1994} (see Section~4.2.3 of \cite{McConachie2017}). We also augment $g$ to return $\emptyset$ when $\reducedcommand$ causes the object to become overstretched. %the model and constraint approximations $\tilde f$ and $\tilde A$. 
+\cite{McConachie2017} introduced the idea of a \textit{virtual elastic band} (VEB) between the robot's end-effectors. This VEB represents the shortest path through the rope between the end-effectors. The band approximates the constraint imposed by the rope on the motion of the robot; if the end-effectors move too far apart, then the VEB will be too long, and thus the rope is stretched beyond a task-specified maximum stretching factor. Similarly, if the VEB gets caught on an obstacle and becomes too long, then the rope is also overstretched. By considering only the geodesic between the end-effectors, we are assuming that the rest of the rope will comply to the environment, and does not need to be considered when predicting overstretch. The VEB representation allows us to use a fast prediction method when planning, but does not account for the part of the material that is slack. Denote the configuration of a VEB (i.e. a sequence of points) as $\band$. Then $\reducedstate = [\gripperconfig,\band]$ and can be generated by $\reducedstate = r(\truestate,\obstacle)$ for the reduction function defined in Section 4.2.2 of~\cite{McConachie2017}. The dynamics of a VEB, $g(\reducedstate,\reducedcommand,\obstacle)$, are based on Quinlan's path deformation algorithm as presented in \cite{Quinlan1994} (see Section~4.2.3 of \cite{McConachie2017}). We also augment $g$ to return $\emptyset$ when $\reducedcommand$ causes the object to become overstretched. %the model and constraint approximations $\tilde f$ and $\tilde A$. 
 %Every deformable object configuration $\deformconfig$ can be mapped to a band configuration through a reduction function:
 $b$ is then propagated using $g$ and $\reducedcommand = \statecommand$. Since the commands are the same, our rollout function $\Gamma$, which uses $\reducedcommand$, is equivalent to $f$. To find a path in $\reducedstatespace$ we must solve Problem \eqref{eqn:approx_planning_problem}.
 

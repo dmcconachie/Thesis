@@ -1,158 +1,109 @@
 \section{Global Planning}
 \label{sec:global_planning}
 
-The purpose of the global planner is not to find a path to a configuration where the task is complete, but rather to move the system into a state from which the local controller can complete the task. Planning directly in configuration space of the full system $\cspace_r \times \deformconfigspace$ is not practical for two important reasons. First, this space is very high-dimensional and the system is highly underactuated. More importantly, to accurately know the state of the deformable object after a series of robot motions one would need a high-fidelity simulation that has been tuned to represent a particular task. We seek to plan paths very quickly without knowing the physical properties of a deformable object \textit{a priori}. The key idea that allows us to plan paths quickly is to consider only the constraint on robot motion that is imposed by the deformable object; i.e. the robot motion shall not tear or cause excessive stretching of the deformable object. We represent this constraint using a virtual elastic band and enforce the constraint that the band's length cannot exceed $\maxbandlength$.
+The purpose of the global planner is not to find a path to a configuration where the task is complete, but rather to move the system into a state from which the local controller can complete the task. Planning directly in configuration space of the full system $\robotCspace \times \deformCspace$ is not practical for two important reasons. First, this space is very high-dimensional and the system is highly underactuated. More importantly, to accurately know the state of the deformable object after a series of robot motions one would need a high-fidelity simulation that has been tuned to represent a particular task. We seek to plan paths very quickly without knowing the physical properties of a deformable object \textit{a priori}. The key idea that allows us to plan paths quickly is to consider only the constraint on robot motion that is imposed by the deformable object; i.e. the robot motion shall not tear or cause excessive stretching of the deformable object. We represent this constraint using a virtual elastic band and enforce the constraint that the band's length cannot exceed $\bandlengthmax$.
 
 
 \subsection{Planning Setup}
 
-% This work examines both the configuration space of just the robot $\cspace_r$ and the configuration space of the robot and band $\cspace_f = \cspace_r \times \bandspace$.  Both of these sets can be partitioned into a valid and invalid set.  For the robot configuration space, the valid set is referred to as \rev{$\cfree_r$}, and is the set of configurations where the robot is not in collision with the static geometry of the world.  \rev{T}he invalid set is referred to as $\cinv_r = \cspace_r \setminus \cfree_r$.
+% This work examines both the configuration space of just the robot $\robotCspace$ and the configuration space of the robot and band $\pspace = \pspacefull$.  Both of these sets can be partitioned into a valid and invalid set.  For the robot configuration space, the valid set is referred to as \rev{$\robotCvalid$}, and is the set of configurations where the robot is not in collision with the static geometry of the world.  \rev{T}he invalid set is referred to as $\cinv_r = \robotCspace \setminus \robotCvalid$.
 
-Denote the planning configuration space as $\cspace_f = \cspace_r \times \bandspace$. In order to split $\cspace_f$ into valid and invalid sets, we first define what it means for a band $\band \in \bandspace$ to be valid. A band $\band \in \bandspace$ is considered valid if the band is not overstretched and the path defined by $\band$ does not \textit{penetrate} an obstacle:
+Denote the planning configuration space as $\pspace = \pspacefull$. In order to split $\pspace$ into valid and invalid sets, we first define what it means for a band $\band \in \bandspace$ to be valid. A band $\band \in \bandspace$ is considered valid if the band is not overstretched and the path defined by $\band$ does not \textit{penetrate} an obstacle:
 \begin{equation}
-    \bandspacevalid = \{ \band \mid \textrm{Length}(\band) \leq \maxbandlength \textrm{ and } 
+    \bandspacevalid = \{ \band \mid \textrm{Length}(\band) \leq \bandlengthmax \textrm{ \textbf{and} } 
                                     \textrm{Path(\band)} \cap \textrm{Interior}(\obstacle) = \emptyset \} \enspace .
 \end{equation}
-Then the invalid set is $\bandspaceinv = \bandspace \setminus \bandspacevalid$. Similarly define $\cfree_f = \cfree_r \times \bandspacevalid$ and $\cinv_f = \cspace_f \setminus \cfree_f$.
+Then the invalid set is $\bandspaceinv = \bandspace \setminus \bandspacevalid$. Similarly define $\pspacevalid = \pspacevalidfull$ and $\pspaceinv = \pspaceinvfull$. An individual element is then $\pstate = (\pstater, \pstateb) = \pstatefull \in \pspace$.
 
-
-
-
-\begin{algorithm}[t]
-\caption{MainLoop$(\deformtarget, \terminationcondition, \errorfunction, \deformconfig_\textrm{flat}, \maxstretchfactor, \stretchingcorrectionweightfactor,\predictionhorizon, \goalreachradius,\bestneardist)$}
-\begin{algorithmic}[1]
-    \State $\relaxeddistancematrix \gets$ GeodesicDistanceBetweenEndEffectors$(\deformconfig_\textrm{flat})$
-    \State $\maxbandlength \gets \maxstretchfactor \relaxeddistancematrix$
-    \State Blacklist $\gets \emptyset$
-    \State Path $\gets \emptyset$
-    \State $t \gets 0$
-    \State $\robotconfig[0] \gets$ SenseRobotConfig$()$
-    \State $\deformconfig_0 \gets$ SensePoints$()$
-    
-    \While{$\neg \terminationcondition(\deformconfig_t)$}
-        \State $\band_t \gets$ InitializeBand$(\deformconfig_t)$
-        
-        \If {PredictDeadlock$(\errorfunction, \robotconfig[t], \deformconfig_t, \band_t, \deformtarget, \maxbandlength, \predictionhorizon,\textrm{Path})$}
-            \State Blacklist $\gets$ Blacklist $\cup \{ \band_t \}$
-            \State Path $\gets$ PlanPath$(\robotconfig[t], \deformconfig_t, \band_t, \deformtarget, \goalreachradius, \maxbandlength, \bestneardist, \textrm{Blacklist})$
-            \If {Path = Failure}
-                \State \Return Failure
-            \EndIf
-        \EndIf
-        
-        \If {Path $\neq \emptyset$}
-            \State $\robotcommandvel \gets$ FollowPath(Path)
-            \If {PathFinished(Path)}
-                \State Path $\gets \emptyset$
-            \EndIf
-        \Else
-            \State $\robotcommandvel \gets$ LocalController$(\robotconfig[t], \deformconfig_t, \deformtarget, \relaxeddistancematrix, \maxstretchfactor, \stretchingcorrectionweightfactor)$
-        \EndIf
-        
-        \State CommandConfiguration$(\robotconfig[t] + \robotcommandvel)$
-        \State $\robotconfig[t+1] \gets$ SenseRobotConfig$()$
-        \State $\deformconfig_{t+1} \gets$ SensePoints$()$
-        \State $t \gets t + 1$
-    \EndWhile
-    \State \Return Success
-\end{algorithmic}
-\label{alg:interleaving_mainloop}
-\end{algorithm}
-
-
-
-
-
-
-$\cspace_r$ and $\cspace_f$ are imbued with distance metrics $d_r(\cdot,\cdot) : \cspace_r \times \cspace_r \rightarrow \reals^{\geq 0}$ and $d_f(\cdot,\cdot) : (\cspace_r \times \bandspace) \times (\cspace_r \times \bandspace) \rightarrow \reals^{\geq 0}$, respectively. We define distances in robot configuration space and band space to be additive. I.e.
+$\robotCspace$ and $\pspace$ are imbued with distance metrics $d_\robotconfig(\cdot,\cdot) : \robotCspace \times \robotCspace \rightarrow \reals^{\geq 0}$ and $d_\pstate(\cdot,\cdot) : (\pspacefull) \times (\pspacefull) \rightarrow \reals^{\geq 0}$, respectively. We define distances in robot configuration space and band space to be additive. I.e.
 \begin{equation}
-    d_f(\cdot, \cdot)^2 = d_r(\cdot, \cdot)^2 + \banddistscale d_b(\cdot, \cdot)^2
+    d_\pstate(\cdot, \cdot)^2 = d_\robotconfig(\cdot, \cdot)^2 + \banddistscale d_\band(\cdot, \cdot)^2
     \label{eqn:dist_metric}
 \end{equation}
-for some scaling factor $\banddistscale > 0$. To measure distances in $\bandspace$, we first upsample each band using linear interpolation to use the maximum number of points $\maxbandpoints$ for the given task, then measure the Euclidean distance between the upsampled points when considered as a single vector (Alg.~\ref{alg:band_dist}).
+for some scaling factor $\banddistscale > 0$. To measure distances in $\bandspace$, we first upsample each band using linear interpolation to use the maximum number of points $\nbandpointsmax$ for the given task, then measure the Euclidean distance between the upsampled points when considered as a single vector (Alg.~\ref{alg:band_dist}).
 
-For a given planning problem, we are given a query $( \qinit_f, \Qgoal_f )$ which describes the initial configuration of the robot and band, as well as a goal region for the system to reach.  Note that $\Qgoal_f$ is defined implicitly via the GoalCheck() function and the parameters $(\eepositiongoal, \goalreachradius,\textrm{ Blacklist})$ rather than any explicit enumeration.
+For a given planning problem, we are given a query $( \pstateinit, \Pspacegoal )$ which describes the initial configuration of the robot and band, as well as a goal region for the system to reach.  Note that $\Pspacegoal$ is defined implicitly via the GoalCheck() function and the parameters $(\eepositiongoal, \eegoalradius, \textrm{ Blacklist})$ rather than any explicit enumeration.
 
 
 \begin{algorithm}[t]
-\caption{BandDistance: $d_b(\band_1, \band_2)$}
+\caption{BandDistance: $d_\band(\band_1, \band_2)$}
 \begin{algorithmic}[1]
-    \State $\tilde \band_1 \gets$ UpsamplePoints$(\band_1, \maxbandpoints)$
-    \State $\tilde \band_2 \gets$ UpsamplePoints$(\band_2, \maxbandpoints)$
-    \State \Return $\| \tilde \band_1 - \tilde \band_2\|$
+    \State $\tilde \band_1 \gets$ UpsamplePoints$(\band_1, \nbandpointsmax)$
+    \State $\tilde \band_2 \gets$ UpsamplePoints$(\band_2, \nbandpointsmax)$
+    \State \Return $\left\| \tilde \band_1 - \tilde \band_2 \right\|$
 \end{algorithmic}
 \label{alg:band_dist}
 \end{algorithm}
 
 %Before describing the properties of $\rpath_f$, a few additional definitions and assumptions must be provided. 
 
-We now establish a relationship between a path in robot configuration space $\cspacepath_r$ and one in the full configuration space $\cspacepath_f$ by making the following assumption.
+We now establish a relationship between a path in robot configuration space $\rspacepath$ and one in the full configuration space $\pspacepath$ by making the following assumption.
 
 
 \begin{assumption}[Deterministic Propagation]
 \label{ass:deterministic}
-    Given an initial configuration in full space $\qinit_f \in \cfree_f$ and the corresponding robot configuration $\qinit_r \in \cfree_r$, a path $\cspacepath_r : [0, 1] \rightarrow \cfree_r$ in robot configuration space with $\cspacepath_r(0) = \qinit_r$ uniquely defines a single path in full space $\cspacepath_f$, where $\cspacepath_f(0) = \qinit_f$.  Specifically, define
+    Given an initial configuration in full space $\pstateinit \in \pspacevalid$ and the corresponding robot configuration $\pstateinitr \in \robotCvalid$, a path $\rspacepath : [0, 1] \rightarrow \robotCvalid$ in robot configuration space with $\rspacepath(0) = \pstateinitr$ uniquely defines a single path in full space $\pspacepath$, where $\pspacepath(0) = \pstateinit$.  Specifically, define
     \begin{equation}
-        \cspacepath_f(t) =\\ \begin{bmatrix} \cspacepath_r(t) \\ \lim_{h \rightarrow 0^-} \textup{ForwardPropogateBand}(\band(t-h), \cspacepath_r(t)) \end{bmatrix} \enspace .
+        \pspacepath(t) =\\ \begin{bmatrix} \rspacepath(t) \\ \lim_{h \rightarrow 0^-} \textup{ForwardPropogateBand}(\band(t-h), \rspacepath(t)) \end{bmatrix} \enspace .
         \label{eqn:deterministic}
     \end{equation}
 \end{assumption}
 
-Eq.~\eqref{eqn:deterministic} implicitly defines an underactuated system where the only way we can change the state of the band is by moving the robot; for a path in the full configuration space $\cspacepath_f$ to be achievable there must be a robot configuration space path $\cspacepath_r$, which when propagated using Eq.~\eqref{eqn:deterministic}, produces $\cspacepath_f$. Let $\textrm{FullSpace}(\cspacepath_r, \qinit_f)$ be the function that maps a given robot configuration space path $\cspacepath_r$ and full space initial configuration $\qinit_f$ to the full space path defined by Eq.~\eqref{eqn:deterministic}.
+Eq.~\eqref{eqn:deterministic} implicitly defines an underactuated system where the only way we can change the state of the band is by moving the robot; for a path in the full configuration space $\pspacepath$ to be achievable there must be a robot configuration space path $\rspacepath$, which when propagated using Eq.~\eqref{eqn:deterministic}, produces $\pspacepath$. Let $\textrm{FullSpace}(\rspacepath, \pstateinit)$ be the function that maps a given robot configuration space path $\rspacepath$ and full space initial configuration $\pstateinit$ to the full space path defined by Eq.~\eqref{eqn:deterministic}.
 
 
 
 
 \subsection{Planning Problem Statement}
 
-For a given planning instance, the task is to find a path starting from $\qinit_f$ through $\cfree_f$ to any point in $\Qgoal_f$, while obeying the constraints implied by Eq.~\eqref{eqn:deterministic}.
+For a given planning instance, the task is to find a path starting from $\pstateinit$ through $\pspacevalid$ to any point in $\Pspacegoal$, while obeying the constraints implied by Eq.~\eqref{eqn:deterministic}.
 
-For a sequence of robot configurations $\qinit_f, \config_{1,r}, \dots, \config_{M,r} \in \cspace_r$, let 
+For a sequence of robot configurations $\pstateinitr, \pstate_{1,\robotconfig}, \dots, \pstate_{M,\robotconfig} \in \robotCspace$, let 
 \begin{equation}
-    \cspacepath_r = \textrm{Path}(\qinit_r, \config_{1,r}, \dots, \config_{M,r})    
+    \rspacepath = \textrm{Path}(\pstateinitr, \pstate_{1,\robotconfig}, \dots, \pstate_{M,\robotconfig})
 \end{equation}
 be the path defined by linearly interpolating between each point in order. Then, formally, the problem our planner addresses is the following:
 \begin{equation}
     \begin{aligned}
-        & \text{find}   & & \{ \config_{1,r}, \dots, \config_{M,r} \} \\
-        & \text{s.t.}   & & \cspacepath_r = \textrm{Path}(\qinit_r, \config_{1,r}, \dots, \config_{M,r}) \\
-        &               & & \cspacepath_f(s) \in \cfree_f, \; \forall s \in [0, 1] \\
-        &               & & \cspacepath_f(1) \in \Qgoal_f \enspace .
+        & \text{find}   & & M, \{ \pstate_{1,\robotconfig}, \dots, \pstate_{M,\robotconfig} \} \\
+        & \text{s.t.}   & & \rspacepath = \textrm{Path}(\pstateinitr, \pstate_{1,\robotconfig}, \dots, \pstate_{M,\robotconfig}) \\
+        &               & & \pspacepath = \textrm{FullSpace}(\rspacepath, \pstateinit) \\
+        &               & & \pspacepath(s) \in \pspacevalid, \; \forall s \in [0, 1] \\
+        &               & & \pspacepath(1) \in \Pspacegoal \enspace . \\
     \end{aligned}
     \label{eqn:planning_problemstatement}
 \end{equation}
-\noindent where $\cspacepath_f = \textrm{FullSpace}(\cspacepath_r, \qinit_f)$.
 
 
 \subsection{RRT-EB}
 
 \begin{algorithm}[t]
-\caption{RRT-EB$(\robotconfig[t], \band_t, \eepositiongoal, \goalreachradius, \bandgoal, \maxbandlength, \bestneardist, \goalbias)$}
+\caption{RRT-EB$(\robotconfig_t, \band_t, \eepositiongoal, \eegoalradius, \bandgoal)$}
 \begin{algorithmic}[1]
-    \State $\rrtnodeset \gets \{(\robotconfig[t], \band_t)\}$
+    \State $\rrtnodeset \gets \{(\robotconfig_t, \band_t)\}$
     \State $\rrtedgeset \gets \emptyset$
-    \State $\Qapproxgoal \gets$ GetGoalConfigs$(\eepositiongoal)$
+    \State $\robotCspacegoal \gets$ GetGoalConfigs$(\eepositiongoal)$
     
     \While {$\neg$MaxTimeEllapsed()}
-            \State $\qrand_f \gets$ SampleUniformConfig() \label{alg:bandrrt:basic_start}
-            \State $\qnear_f \gets$ BestNearest$(\rrtnodeset, \rrtedgeset, \bestneardist, \qrand_f)$
-            \State $\nodesnew, \edgesnew \gets$ Connect$(\qnear_f, \qrand_r, \maxbandlength)$
+            \State $\pstaterand = \pstaterandfull \gets$ SampleUniformConfig() \label{alg:bandrrt:basic_start}
+            \State $\pstatenear \gets$ BestNearest$(\rrtnodeset, \rrtedgeset, \bestneardist, \pstaterand)$
+            \State $\nodesnew, \edgesnew \gets$ Connect$(\pstatenear, \robotconfigrand, \bandlengthmax)$
             \State $\rrtnodeset \gets \rrtnodeset \cup \nodesnew$
             \State $\rrtedgeset \gets \rrtedgeset \cup \edgesnew$
             
-            \If {GoalCheck$(\nodesnew, \eepositiongoal, \goalreachradius, \bandgoal) = 1$}
+            \If {GoalCheck$(\nodesnew, \eepositiongoal, \eegoalradius, \bandgoal) = 1$}
                 \State \Return ExtractPath$(\rrtnodeset, \rrtedgeset)$
             \EndIf \label{alg:bandrrt:basic_end}
             
             \State $\gamma \sim$ Uniform$[0, 1]$ \label{alg:bandrrt:bias_start}
             \If {$\gamma \leq \goalbias$}
-                \State $\qlast_f \gets$ LastConfig$(\qnear_f, \nodesnew)$ \label{alg:bandrrt:lastconfig}
-                \State $\qbias \gets \argmin_{\robotconfig \in \Qapproxgoal} d_r(\qlast_r, \robotconfig)$
-                \State $\nodesnew, \edgesnew \gets$ Connect$(\qlast_f, \qbias, \maxbandlength)$
+                \State $\pstatelast = \pstatelastfull \gets$ LastConfig$(\pstatenear, \nodesnew)$ \label{alg:bandrrt:lastconfig}
+                \State $\robotconfigbias \gets \argmin_{\robotconfig \in \robotCspacegoal} d_\robotconfig(\robotconfiglast, \robotconfig)$
+                \State $\nodesnew, \edgesnew \gets$ Connect$(\pstatelast, \robotconfigbias, \bandlengthmax)$
             \State $\rrtnodeset \gets \rrtnodeset \cup \nodesnew$
             \State $\rrtedgeset \gets \rrtedgeset \cup \edgesnew$
                 
-                \If {GoalCheck$(\nodesnew, \eepositiongoal, \goalreachradius, \bandgoal) = 1$}
+                \If {GoalCheck$(\nodesnew, \eepositiongoal, \eegoalradius, \bandgoal)$}
                     \State \Return ExtractPath$(\rrtnodeset, \rrtedgeset)$
                 \EndIf
             \EndIf \label{alg:bandrrt:bias_end}
@@ -163,28 +114,27 @@ be the path defined by linearly interpolating between each point in order. Then,
 \end{algorithm}
 
 \begin{algorithm}[t]
-\caption{BestNearest$(\rrtnodeset, \rrtedgeset, \bestneardist, \qrand_f)$}
+\caption{BestNearest$(\rrtnodeset, \rrtedgeset, \bestneardist, \pstaterand)$}
 \begin{algorithmic}[1]
-    \State $\Qnear_f \gets \{ \config_f | \config_f \in \rrtnodeset, d_f(\config, \qrand_f) \leq \bestneardist \}$
-    \If {$\Qnear_f \neq \emptyset$}
-        \State \Return $\argmin_{\rrtnode \in \rrtnodeset} \cost(\rrtnode, \rrtnodeset, \rrtedgeset)$
+    \State $\Pstatenear \gets \{ \pstate \mid \pstate \in \rrtnodeset, d_\pstate(\pstate, \pstaterand) \leq \bestneardist \}$
+    \If {$\Pstatenear \neq \emptyset$}
+        \State \Return $\argmin_{\pstate \in \rrtnodeset} \cost(\pstate, \rrtnodeset, \rrtedgeset)$
     \Else
-        \State $\Dnear[r]^2 \gets \min_{\config \in \rrtnodeset}{d_r(\qrand, \robotconfig)^2}$ \label{alg:nearst:robotspace}
-        \State $\Dmax[f]^2 \gets \Dnear[r]^2\ + \banddistscale \Dmax[b]^2$
-        \State $\Qnear_f \gets \{ \config | \config \in \rrtnodeset, d_r(\robotconfig, \qrand_r)^2 \leq \Dmax[f]^2 \}$ \label{alg:nearest:radius}
-        \State \Return $\argmin_{\config_f \in \Qnear_f}{d_f(\config_f, \qrand_f)}$ \label{alg:nearest:fullspace}
+        \State $\Dnearr^2 \gets \min_{\pstatefull \in \rrtnodeset}{d_\robotconfig(\robotconfigrand, \robotconfig)^2}$ \label{alg:nearst:robotspace}
+        \State $\Dmaxf^2 \gets \Dnearr^2\ + \banddistscale \Dmaxb^2$
+        \State $\Pstatenear \gets \{ \pstate \mid \pstate \in \rrtnodeset, d_\robotconfig(\robotconfig, \robotconfigrand)^2 \leq \Dmaxf^2 \}$ \label{alg:nearest:radius}
+        \State \Return $\argmin_{\pstate \in \Pstatenear}{d_\pstate(\pstate, \pstaterand)}$ \label{alg:nearest:fullspace}
     \EndIf
 \end{algorithmic}
 \label{alg:nearest}
 \end{algorithm}
 
-
 Our planner, RRT for Elastic Bands (RRT-EB), (Alg.~\ref{alg:bandrrt}) is based on an RRT with changes to account for a virtual elastic band in addition to the robot configuration. Lines \ref{alg:bandrrt:basic_start}-\ref{alg:bandrrt:basic_end} perform random exploration with lines \ref{alg:bandrrt:bias_start}-\ref{alg:bandrrt:bias_end} biasing the tree expansion towards the goal region. The key variations are the BestNearest function (Alg.~\ref{alg:nearest}) and the goal bias method.
 
-BestNearest is based on the selection method used by~\cite{LiAOKP2016}, selecting the node of smallest cost within a radius $\bestneardist$ if one exists, falling back to standard nearest neighbour behaviour if no node in the tree is within $\bestneardist$ of the random sample. We use path length in robot configuration space $\cspace_r$ as a cost function in our implementation. This helps reduce path length and ensures that we can specify lower bounds in Sec.~\ref{sec:delta_sim_traj_construction}. In order to avoid calculating distances in the full configuration space when it is not necessary, our method for finding the nearest neighbor is split into two parts, first searching in robot space, then searching in the full configuration space (see Fig.~\ref{fig:nearest}). Sec.~\ref{sec:nn_equiv} shows that this method is equivalent to searching in the full configuration space directly. $\bestneardist$ is an additional parameter compared to a standard RRT; it controls how much focus is placed on path cost versus exploration. The smaller $\bestneardist$, the less impact it has as compared to a standard RRT.  The larger $\bestneardist$ is, the harder it is to find narrow passages. We discuss further constraints on $\bestneardist$ in Section \ref{sec:select}.
+BestNearest is based on the selection method used by~\cite{LiAOKP2016}, selecting the node of smallest cost within a radius $\bestneardist$ if one exists, falling back to standard nearest neighbour behaviour if no node in the tree is within $\bestneardist$ of the random sample. We use path length in robot configuration space $\robotCspace$ as a cost function in our implementation. This helps reduce path length and ensures that we can specify lower bounds in Sec.~\ref{sec:delta_sim_traj_construction}. In order to avoid calculating distances in the full configuration space when it is not necessary, our method for finding the nearest neighbor is split into two parts, first searching in robot space, then searching in the full configuration space (see Fig.~\ref{fig:nearest}). Sec.~\ref{sec:nn_equiv} shows that this method is equivalent to searching in the full configuration space directly. $\bestneardist$ is an additional parameter compared to a standard RRT; it controls how much focus is placed on path cost versus exploration. The smaller $\bestneardist$, the less impact it has as compared to a standard RRT.  The larger $\bestneardist$ is, the harder it is to find narrow passages. We discuss further constraints on $\bestneardist$ in Section \ref{sec:select}.
 
-To sample $\qrand_f = (\qrand_r,B^\textrm{rand})$, we sample the robot and band configurations independently, then combine the samples. For typical robot arms $\qrand_r$ is generated by sampling each joint independently and uniformly from the joint limits. To sample from $\bandspace$, we draw a sequence of $\maxbandpoints$ points from the bounded workspace. For our example tasks, workspace is a rectangular prism, and we sample each axis independently and uniformly.
+To sample $\pstaterand = \pstaterandfull$, we sample the robot and band configurations independently, then combine the samples. For typical robot arms $\robotconfigrand$ is generated by sampling each joint independently and uniformly from the joint limits. To sample from $\bandspace$, we draw a sequence of $\nbandpointsmax$ points from the bounded workspace. For our example tasks, workspace is a rectangular prism, and we sample each axis independently and uniformly.
 
-Due to the fact that our system is highly underactuated, and the goal region is defined implicitly by a function call rather than an explicit set of configurations, we cannot sample from the goal set directly as is typically done for a goal bias. Instead we precompute a finite set of robot configurations $\Qapproxgoal$ such that the end-effectors of the robot are at $\eepositiongoal$. Then, as a goal bias mechanism, $\goalbias$ percent of the time, we attempt to connect to a potential goal configuration starting from the last configuration created by a call to the Connect function (or the last node selected by BestNearest if $\nodesnew = \emptyset$). A connection is then attempted between $\qlast_f$ and the nearest configuration in $\Qapproxgoal$. This allows us to bias exploration toward the robot component of the goal region, which we are able to define explicitly.
+Due to the fact that our system is highly underactuated, and the goal region is defined implicitly by a function call rather than an explicit set of configurations, we cannot sample from the goal set directly as is typically done for a goal bias. Instead we precompute a finite set of robot configurations $\robotCspacegoal$ such that the end-effectors of the robot are at $\eepositiongoal$. Then, as a goal bias mechanism, $\goalbias$ percent of the time, we attempt to connect to a potential goal configuration starting from the last configuration created by a call to the Connect function (or the last node selected by BestNearest if $\nodesnew = \emptyset$). A connection is then attempted between $\pstatelast$ and the nearest configuration in $\robotCspacegoal$. This allows us to bias exploration toward the robot component of the goal region, which we are able to define explicitly.
 
 

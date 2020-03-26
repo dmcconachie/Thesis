@@ -103,8 +103,10 @@
 \newcommand{\robotconfighistfull}{\left\{ \robotconfig_0, \dots \right\}}
 
 \newcommand{\robotvel}{\dot{\robotconfig}}
-\newcommand{\robotvelcmd}{\robotvel_{\textrm{cmd}}}
-\newcommand{\robotvelact}{\robotvel_{\textrm{act}}}
+\newcommand{\robotvelcmd}{\robotvel^{\textrm{cmd}}}
+\newcommand{\robotvelact}{\robotvel^{\textrm{act}}}
+\newcommand{\robotvelcmdseq}{\dot Q^{\textrm{cmd}}}
+\newcommand{\robotvelcmdexpanded}{\left\{ \robotvelcmd_0, \dots, \robotvelcmd_{\taskexecutiontime-1} \right\}}
 
 %%%%%%%% Gripper specific notation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -133,7 +135,7 @@
 \newcommand{\transvelGPerp}{\transvelG^{\textrm{perp}}}
 \newcommand{\grippervelindiv}{\begin{bmatrix}\transvelG^T & \rotvelG^T\end{bmatrix}^T}
 \newcommand{\grippervelexpanded}{\begin{bmatrix}\grippervel_1^T & \dots & \grippervel_\ngrippers^T \end{bmatrix}^T}
-\newcommand{\grippervelcmd}{\grippervel_\textrm{cmd}}
+\newcommand{\grippervelcmd}{\grippervel^\textrm{cmd}}
 
 \newcommand{\rotvelweight}{c}
 \newcommand{\grippervelinnerprod}{\innerprod{\grippervel_1}{\grippervel_2}}
@@ -254,7 +256,7 @@
 % Task variables
 \newcommand{\obstacle}{\mathcal{O}}
 \newcommand{\stretchcurr}{\gamma}
-\newcommand{\stretchmax}{\gamma_{\textrm{max}}}
+\newcommand{\stretchmax}{\gamma^{\textrm{max}}}
 \newcommand{\ntargetpoints}{T}
 \newcommand{\targetCspace}{\reals^{3 \ntargetpoints}}
 \newcommand{\target}{\mathcal{T}}
@@ -270,7 +272,7 @@
 
 % Controller definitions
 \newcommand{\Ctrl}{C}
-\newcommand{\CtrlFull}{\Ctrl(\robotconfig, \deformconfig, \target)}
+\newcommand{\CtrlFull}{\Ctrl(\target, \robotconfig, \deformconfig)}
 \newcommand{\correspondences}{\deformconfig_C}
 
 % T-ASE/IJRR
@@ -279,10 +281,10 @@
 \newcommand{\grippervelS}{\grippervel_{s}}
 \newcommand{\grippervelGS}{\grippervel_{g,s}}
 \newcommand{\grippervelGC}{\grippervel_{\gripperidx, c}}
-\newcommand{\grippervelmaxservo}{\grippervel_\textrm{max,s}^{\tanse3}}
-\newcommand{\grippervelmaxobs}{\grippervel_\textrm{max,c}^{\tanse3}}
-\newcommand{\robotvelmax}{\robotvel_\textrm{max}}
-\newcommand{\physrobotvelmax}{\robotvel_\textrm{max}^{\reals^\ndof}}
+\newcommand{\grippervelmaxservo}{\grippervel^\textrm{max,s}_{\tanse3}}
+\newcommand{\grippervelmaxobs}{\grippervel^\textrm{max,c}_{\tanse3}}
+\newcommand{\robotvelmax}{\robotvel^\textrm{max}}
+\newcommand{\physrobotvelmax}{\robotvel^\textrm{max}_{\reals^\ndof}}
 \newcommand{\dbuffer}{d_\textrm{buffer}}
 
 % Mengyao IROS
@@ -319,142 +321,141 @@
 \newcommand{\correlationfactor}{\xi}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\iffalse
-% Robot configuration variables
-\newcommand{\robotconfig}[1][]{\config_
-    {\ifthenelse{\isempty{#1}}{r}{r,#1}}
-}
-\newcommand{\robotvelocity}{\dot \config_r}
-\newcommand{\robotconfigspace}{\reals^\ndof}
-\newcommand{\robotcommandvel}[1][]{\dot \config^{cmd}_
-    {\ifthenelse{\isempty{#1}}{r}{r,#1}}
-}
-\newcommand{\robotactualvel}[1][]{\dot \config^{act}_
-    {\ifthenelse{\isempty{#1}}{r}{r,#1}}
-}
-\newcommand{\robotcommandsequence}{\dot \Config^{cmd}_r}
-
-\newcommand{\maxrobotvel}[1][]{\robotvelocity^%
-    {\ifthenelse{\isempty{#1}}{\textrm{max}}{\textrm{max},#1}}
-}
-
-\newcommand{\eeposition}[1][]{\config_%
-    {\ifthenelse{\isempty{#1}}{\textrm{xyz}}{\textrm{xyz},#1}}
-}
-\newcommand{\eepositiongoal}[1][]{
-    {\ifthenelse{\isempty{#1}}{\eeposition^\textrm{goal}}{\eeposition[#1]^\textrm{goal}}}
-}
+% Learning section
+\newcommand{\truestate}{x}
+\newcommand{\truestatespace}{\mathcal{X}}
+\newcommand{\statecommand}{u^\truestate}
+\newcommand{\reducedstate}{c}
+\newcommand{\reducedstatespace}{\mathbb{C}}
+\newcommand{\reducedcommand}{u^\reducedstate}
+\newcommand{\reducedstatespacevalid}{\reducedstatespace^\textrm{valid}}
+\newcommand{\reducedstatespaceinv}{\reducedstatespace^\textrm{inv}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Model set variables
-\newcommand{\modelset}{\mathcal{M}}
-\newcommand{\nummodels}{M}
-\newcommand{\modelindex}{m}
-
-% Regret and reward
-\newcommand{\reward}{r}
-\newcommand{\totalregret}{R}
-
-% KF-MANDB variables
-\newcommand{\utility}{u}
-\newcommand{\utilityprocessnoise}{v}
-\newcommand{\utilityprocessnoisecovar}{\Sigma}
-\newcommand{\utilityprocessscale}{\eta}
-\newcommand{\transitionnoisefactor}{\sigma_{tr}}
-\newcommand{\utilityobs}{\reward}
-\newcommand{\utilityobsnoise}{w}
-\newcommand{\observationnoisefactor}{\sigma_{obs}}
-\newcommand{\modelchosen}{m}
-\newcommand{\correlationfactor}{\xi}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% Virtual rubber band variables
-\newcommand{\band}{B}
-\newcommand{\bandlength}{L}
-\newcommand{\maxbandlength}{L_\textrm{max}}
-\newcommand{\bandspace}{\mathbb{B}}
-\newcommand{\bandspacevalid}{\bandspace^{valid}}
-\newcommand{\bandspaceinv}{\bandspace^{inv}}
-\newcommand{\bandgoal}{\bandspace^\textrm{goal}}
-\newcommand{\numbandpoints}{N_{b,t}}
-\newcommand{\maxbandpoints}{N_b^\textrm{max}}
-
-% External logic parameters
+% Interleaving Definitions
 \newcommand{\taskexecutiontime}{N_e}
 \newcommand{\truemotion}{E}
+\newcommand{\truemotionfull}{\truemotion(\robotconfig, \deformconfig, \robotvelcmd)}
 \newcommand{\predictionhorizon}{N_p}
 \newcommand{\bandlengthannealing}{\alpha}
 \newcommand{\historywindow}{N_h}
 \newcommand{\errorprogressthreshold}{\beta_e}
 \newcommand{\motionprogressthreshold}{\beta_m}
 
-% RRT parameters
-\newcommand{\goalreachradius}{\delta_\textrm{goal}}
-\newcommand{\rrtnode}{\config}
-\newcommand{\rrtnodeset}{\mathcal{V}}
-\newcommand{\rrtedgeset}{\mathcal{E}}
-\newcommand{\rrtgraph}{G}
-\newcommand{\cost}{\textrm{Cost}}
-\newcommand{\nodesnew}{\rrtnodeset^\textrm{new}}
-\newcommand{\edgesnew}{\rrtedgeset^\textrm{new}}
-\newcommand{\goalbias}{\gamma_{gb}}
+% Virtual rubber band variables
+\newcommand{\band}{b}
+\newcommand{\bandlength}{L}
+\newcommand{\bandlengthmax}{L^\textrm{max}}
+\newcommand{\bandspace}{\mathbb{B}}
+\newcommand{\bandspacevalid}{\bandspace^{\textrm{valid}}}
+\newcommand{\bandspaceinv}{\bandspace^{\textrm{inv}}}
+\newcommand{\bandgoal}{\bandspace^\textrm{goal}}
+\newcommand{\nbandpoints}{N_{\band,t}}
+\newcommand{\nbandpointsmax}{N_\band^\textrm{max}}
 
-% \newcommand{\rrtgoal}{\Config^\textrm{goal}}
-% \newcommand{\rrttree}{\Config^\textrm{tree}}
-\newcommand{\qnew}{\config^\textrm{new}}
-% \newcommand{\Qnew}{\Config^{\textrm{new}}}
-\newcommand{\qbias}{\config_r^\textrm{bias}}
-\newcommand{\Qapproxgoal}{\mathcal{\Config}_r^\textrm{goal}}
-\newcommand{\Qgoal}{\mathbb{\Config}^\textrm{goal}}
-
-% Nearest Neighbour/distance Terms
-\newcommand{\bestneardist}{\delta_{BN}}
-
-\newcommand{\Dnear}[1][]{D_%
-    {\ifthenelse{\isempty{#1}}{\textrm{near}}{\textrm{near},#1}}
+% End effector position variables
+\newcommand{\eeposition}[1][]{\robotconfig_%
+    {\ifthenelse{\isempty{#1}}{\textrm{xyz}}{\textrm{xyz},#1}}
 }
-\newcommand{\Dmax}[1][]{D_%
-    {\ifthenelse{\isempty{#1}}{\textrm{max}}{\textrm{max},#1}}
+\newcommand{\eepositiongoal}[1][]{
+    {\ifthenelse{\isempty{#1}}{\eeposition^\textrm{goal}}{\eeposition[#1]^\textrm{goal}}}
 }
-\newcommand{\qrand}{\config^\textrm{rand}}
-\newcommand{\qnear}{\config^\textrm{near}}
-\newcommand{\qnearapprox}{\tilde{\config}^\textrm{near}}
-\newcommand{\Qnear}{\Config^\textrm{near}}
-\newcommand{\qlast}{\config^\textrm{last}}
-\newcommand{\qtarget}{\config^\textrm{target}}
-\newcommand{\qinit}{\config^\textrm{init}}
-\newcommand{\banddistscale}{\lambda_b}
+\newcommand{\eegoalradius}{\delta^\textrm{goal}}
 
-\newcommand{\innerballsize}{\delta_\theta}
-\newcommand{\ballseparation}{\delta_c}
-\newcommand{\hyperball}{\mathcal{B}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Spaces and variable definitions
+\newcommand{\pspace}{\reducedstatespace}
+\newcommand{\pspacefull}{\robotCspace \times \bandspace}
+\newcommand{\pspacevalid}{\reducedstatespacevalid}
+\newcommand{\pspacevalidfull}{\robotCvalid \times \bandspacevalid}
+\newcommand{\pspaceinv}{\reducedstatespaceinv}
+\newcommand{\pspaceinvfull}{\pspace \setminus \pspacevalid}
+\newcommand{\pstate}{\reducedstate}
+\newcommand{\Pstate}{C}
+\newcommand{\pstatefull}{(\robotconfig, \band)}
+\newcommand{\pstater}{\pstate_\robotconfig}
+\newcommand{\pstateb}{\pstate_\band}
+
+% Planning Query
+\newcommand{\pstateinit}{\pstate^\textrm{init}}
+\newcommand{\pstateinitr}{\pstateinit_\robotconfig}
+\newcommand{\pstateinitb}{\pstateinit_\band}
+\newcommand{\Pspacegoal}{\pspace^\textrm{goal}}
+\newcommand{\robotCspacegoal}{\robotCspace^\textrm{goal}}
 
 % Motion Planning Terms
-\newcommand{\cspace}{\mathbb{C}}
-\newcommand{\cfree}{\cspace^{valid}}
-\newcommand{\cinv}{\cspace^{inv}}
-\newcommand{\cspacepath}{\pi}
-\newcommand{\rpath}{\cspacepath^{ref}}
+\newcommand{\configpath}{\pi}
+\newcommand{\pspacepath}{\configpath_{\pstate}}
+\newcommand{\rspacepath}{\configpath_{\robotconfig}}
+\newcommand{\refpathf}{\pspacepath^{ref}}
+\newcommand{\refpathr}{\rspacepath^{ref}}
 \newcommand{\setofpaths}{\mathbb{T}}
+\newcommand{\setofpathsr}{\setofpaths_\robotconfig}
+\newcommand{\setofpathsf}{\setofpaths_\pstate}
+
+% RRT-EB Parameters
+\newcommand{\goalbias}{\gamma_{gb}}
+\newcommand{\bestneardist}{\delta_{BN}}
+\newcommand{\banddistscale}{\lambda_b}
+
+% RRT definitions
+\newcommand{\rrtnodeset}{\mathcal{V}}
+\newcommand{\rrtedgeset}{\mathcal{E}}
+\newcommand{\nodesnew}{\rrtnodeset^\textrm{new}}
+\newcommand{\edgesnew}{\rrtedgeset^\textrm{new}}
+
+\newcommand{\cost}{\textrm{Cost}}
+\newcommand{\pstatenew}{\pstate^\textrm{new}}
+
+\newcommand{\robotconfigrand}{\robotconfig^\textrm{rand}}
+\newcommand{\bandrand}{\band^\textrm{rand}}
+\newcommand{\pstaterand}{\pstate^\textrm{rand}}
+\newcommand{\pstaterandfull}{( \robotconfigrand, \bandrand )}
+\newcommand{\pstaterandr}{\pstaterand_\robotconfig}
+\newcommand{\pstaterandb}{\pstaterand_\band}
+
+\newcommand{\robotconfignear}{\robotconfig^\textrm{near}}
+\newcommand{\bandnear}{\band^\textrm{near}}
+\newcommand{\pstatenear}{\pstate^\textrm{near}}
+\newcommand{\pstatenearfull}{\robotconfignear, \bandnear}
+\newcommand{\pstatenearr}{\pstatenear_\robotconfig}
+\newcommand{\pstatenearb}{\pstatenear_\band}
+
+\newcommand{\Pstatenear}{\Pstate^{\textrm{near}}}
+
+\newcommand{\robotconfiglast}{\robotconfig^\textrm{last}}
+\newcommand{\bandlast}{\band^\textrm{last}}
+\newcommand{\pstatelast}{\pstate^\textrm{last}}
+\newcommand{\pstatelastfull}{( \robotconfiglast, \bandlast )}
+\newcommand{\pstatelastr}{\pstatelast_\robotconfig}
+\newcommand{\pstatelastb}{\pstatelast_\band}
+
+\newcommand{\robotconfigbias}{\robotconfig^\textrm{bias}}
+
+\newcommand{\Dnearr}{D_{\textrm{near},\robotconfig}}
+\newcommand{\Dmaxb}{D_{\textrm{max},\band}}
+\newcommand{\Dmaxf}{D_{\textrm{max},\pstate}}
+\newcommand{\Dmaxw}{D_{\textrm{max}, w}}
+
+\newcommand{\deltar}{\delta_\robotconfig}
+
+\newcommand{\nearapproxr}{\tilde{\robotconfig}^\textrm{near}}
+\newcommand{\nearapproxb}{\tilde{\band}^\textrm{near}}
+\newcommand{\nearapproxf}{\tilde{\pstate}^\textrm{near}}
+
+% \newcommand{\pstatetarget}{\pstate^\textrm{target}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Proof terms
+\newcommand{\innerballsize}{\delta_\theta}
+\newcommand{\ballseparation}{\delta_s}
+\newcommand{\hyperball}{\mathcal{B}}
+
 \newcommand{\selectprobability}{\gamma_k^{(i)}}
 \newcommand{\selectbound}{\gamma_k^{(\infty)}}
 \newcommand{\propagationprobability}{\rho_k^{(i)}}
 \newcommand{\propagationbound}{\rho_k^{(\infty)}}
-
-
-% Learning section
-\newcommand{\truestate}{x}
-\newcommand{\truestatespace}{\mathcal{X}}
-\newcommand{\statecommand}{u^\truestate}
-\newcommand{\reducedstate}{b}
-\newcommand{\reducedstatespace}{\mathcal{B}}
-\newcommand{\reducedcommand}{u^\reducedstate}
-
-\fi
