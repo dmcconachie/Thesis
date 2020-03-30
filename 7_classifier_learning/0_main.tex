@@ -6,7 +6,7 @@
 \todoin{Rework this chapter to account for the previous chapters existing in the same document}
 
 
-\section{INTRODUCTION}
+\section{Introduction}
 
 Robot motion planning algorithms have been extremely successful for systems where the dynamics can be easily specified and efficiently evaluated. However, for tasks such as manipulation of deformable objects, the dynamics are very difficult to model \cite{Essahbi2012} and usually require numerical simulation to evaluate. This simulation can be time-consuming and/or inaccurate. Including such simulations inside a planner can result in plans that take hours to compute \cite{Bai2016}.
 
@@ -156,9 +156,7 @@ While the above approach of incorporating classification can be applied to a wid
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\section{APPLICATION TO A TORQUE-LIMITED PLANAR ARM}
-
-
+\section{Application to a Torque-Limited Planar Arm}
 
 First, we demonstrate our framework on a 3-link arm that moves in the X-Z plane with gravity in the $-z$ direction. For this system we focus on the effects of including a classifier in the planner without using a reduction function. This allows us to disentangle the effects of model reduction and inaccurate dynamics. %For demonstration, we will use a purely kinematic planner which assumes that the system can move in arbitrary straight lines in configuration space.
 
@@ -255,16 +253,13 @@ To test the effect of using the learned classifier, we randomly generate 100 pla
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
 
 
-\section{APPLICATION TO ROPE MANIPULATION}
+\section{Application to Rope Manipulation}
 
 
 We now present the application of our framework to rope manipulation, where we use both a reduction of the state space and an approximate dynamics model.
 
 
 \subsection{Problem Statement}
-
-
-
 Let the robot be represented by a pair of grippers with configuration $\gripperconfig \in \gripperCspace$. We assume that the robot configuration can be measured exactly. In this work we assume the robot to be a set of free floating grippers; in practice we can track the motion of these with inverse kinematics.
 
 We assume that our model of the robot is purely kinematic, with no higher order dynamics. We assume that the robot has two end-effectors that are rigidly attached to the rope. The configuration of a rope is a set $\deformconfig \subset \reals^3$ of $\ndeformpoints = | \deformconfig |$ points. We assume that we have a method of sensing $\deformconfig$. The rest of the environment $\obstacle$ is assumed to be both static, and known exactly. We assume that the robot moves slowly enough that we can treat the combined robot and rope as quasi-static. The true state of the system is then $\truestate = [\gripperconfig,\deformconfig]$ and $\statecommand = \Delta \gripperconfig$. Let $f$ be a joint-space controller for the robot that stops when any of the following occur: 1) the grippers contact an object; or 2) the object stretches by more than a factor $\lambda$. Due to the difficulty of simulating rope physics, we do not assume we can execute $f$ within a motion planner.
@@ -346,7 +341,7 @@ The input for our classifier consists is a three-channel binary voxel grid, with
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\section{ROPE MANIPULATION EXPERIMENTS}
+\section{Rope Manipulation Experiments}
 
 
 To characterize the planner performance with the classifier, we designed seven simulation scenarios where the rope must be moved from one side of the scene to the other, along with one physical experiment for real-world validation.
@@ -445,7 +440,7 @@ To evaluate the planning performance when using the classifier, we generated 30 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\section{DISCUSSION}
+\section{Discussion}
 \label{sec:discussion}
 
 
@@ -460,11 +455,8 @@ One interesting point is that increased classification accuracy does not necessa
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\section{CONCLUSION}
-
-\label{sec:conclusion}
-
-
-This paper proposed a novel formulation of planning in reduced state spaces that directly addresses the challenge of generating plans that are feasible in the true state space while planning in a reduced space with approximate dynamics. We addressed this model mismatch problem by introducing the use of a classifier into the planning process. This classifier is trained to classify state transitions in the reduced state space as reliable or unreliable. Our experiments on both a torque-limited 3-link planar arm and rope manipulation tasks show that 1) we can learn a classifier from training data with high validation accuracy; and 2) using this classifier to bias the planner away from unreliable transitions improves success rate in all tested scenarios.
+% \section{Conclusion}
+% \label{sec:conclusion}
+% This paper proposed a novel formulation of planning in reduced state spaces that directly addresses the challenge of generating plans that are feasible in the true state space while planning in a reduced space with approximate dynamics. We addressed this model mismatch problem by introducing the use of a classifier into the planning process. This classifier is trained to classify state transitions in the reduced state space as reliable or unreliable. Our experiments on both a torque-limited 3-link planar arm and rope manipulation tasks show that 1) we can learn a classifier from training data with high validation accuracy; and 2) using this classifier to bias the planner away from unreliable transitions improves success rate in all tested scenarios.
 
 
