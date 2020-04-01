@@ -30,10 +30,10 @@
 \label{tab:param_table}
 \begin{tabular}{lcccccc}
 \hline\noalign{\smallskip}
-                                        &                   & \parbox{0.5in}{\centering Synthetic\\Trials} 
-                                                            & \parbox{0.5in}{\centering Rope\\Winding}
-                                                            & \parbox{0.5in}{\centering Table\\Coverage}
-                                                            & \parbox{0.6in}{\centering Two Stage\\Coverage} \\
+                                                            &                               & \makecell{Synthetic\\Trials} 
+                                                                                            & \makecell{Rope\\Winding}
+                                                                                            & \makecell{Table\\Coverage}
+                                                                                            & \makecell{Two Stage\\Coverage} \\
 \noalign{\smallskip}\hline\noalign{\smallskip}
 \makecell[l]{Correlation strength factor\\(KF-MANDB only)}  & $\correlationfactor$          &  0.9 &   0.9 &   0.9 &   0.9 \\
 \noalign{\smallskip}
@@ -91,6 +91,13 @@ To generate a model for the model set we start with the true Jacobian $J$ and ad
 We now demonstrate the effectiveness of multi-arm bandit techniques on three example tasks, show how to encode those tasks for use in our framework, and discuss experimental results. The first task shows how our method can be applied to a rope, with the goal of winding the rope around a cylinder in the environment. The second and third tasks show the method applied to cloth. In the second task, two grippers manipulate the cloth so that it covers a table. In the third task, we perform a two-stage coverage task, covering portions of two different cylinders. In all three tasks, the alignment error $\ErrorFn(\deformconfig, \target)$ is measured as the sum of the distances between every point in $\target$ and the closest point in $\deformconfig$ in meters. Figure~\ref{fig:simulation_task_screenshots} shows the target points in red, and the deformable object in green. The video accompanying this paper shows the task executions.
 
 All experiments were conducted in the open-source Bullet simulator~\cite{Coumans2010}, with additional wrapper code developed at UC Berkeley. The rope is modeled as a series of 49 small capsules linked together by springs and is 1.225m long. The cloth is modeled as a triangle mesh of size $0.5\text{m} \times 0.5\text{m}$ for the table coverage task, and size $0.5\text{m} \times 0.625\text{m}$ for the two-stage coverage task. We emphasize that our method does not have access to the model of the deformable object or the simulation parameters. The simulator is used as a ``black box'' for testing.\footnote{Our code is available at \url{https://github.com/UM-ARM-Lab/mab_ms}.}
+
+In addition to the diminishing rigidity model introduced in Section~\ref{sec:diminishing_rigidity} we will also use \textit{adaptive Jacobian} models based on the work of \citet{Navarro-Alarcon2014}. This formulation uses an online estimation method to approximate $\Jacobian(\gripperconfig, \deformconfig)$.
+First we with some estimate of the Jacobian $\tilde \Jacobian(0)$ at time $t = 0$ and then use the Broyden update rule~\cite{Broyden1965} to update $\tilde \Jacobian(t)$ at each timestep $t$
+\begin{equation}
+    \tilde \Jacobian(t) = \tilde J(t-1) + \ajrate \frac{\left( \deformvel(t) - \tilde \Jacobian(t-1) \grippervel(t) \right)}{\grippervel(t)^T \grippervel(t)} \grippervel(t)^T \enspace.
+\end{equation}
+This update rule depends on a update rate $\ajrate \in (0, 1]$ which controls how quickly the estimate shifts between timesteps.
 
 We use models generated using the same parameters for all three tasks with a total of 60 models: 49 diminishing rigidity models with rotation and translational deformability values $\drktrans$ and $\drkrot$ ranging from 0 to 24 in steps of 4, as well as 11 adaptive Jacobian models with learning rates $\ajrate$ ranging from $1$ to $10^{-10}$ in multiples of 10. All adaptive Jacobian models are initialized with the same starting values; we use the diminishing rigidity Jacobian for this seed with $\drktrans=\drkrot=10$ for the rope experiment and $\drktrans=\drkrot=14$ for the cloth experiments to match the best model found in~\cite{Berenson2013}. We use the same strategy for setting $\utilityprocessscale$ as we use for the synthetic tests. 
 %App~\ref{apx:param_table} shows all other parameters.
