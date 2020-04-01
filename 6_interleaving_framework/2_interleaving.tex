@@ -57,7 +57,7 @@ In general we cannot predict if the system will get stuck in the limit; to do so
 
 \subsubsection{Estimating Gross Motion}
 
-The idea central to our prediction (Alg.~\ref{alg:predict_deadlock}) is that while we may not be able to determine precisely how a given controller will steer the system, we can capture the gross motion of the system and estimate if the controller will be deadlocked. We split the prediction into two parts; first we assume that controller $\Ctrl$ is able to manipulate the deformable object with a reasonable degree of accuracy within a local neighborhood of the current state. This allows us to approximate the motion of the deformable object by following the task-defined navigation functions for each $\deformconfig_\deformidx \in \deformconfig$. Examples of this approximation are shown in Figure~\ref{fig:gross_deformable_motion}.
+The idea central to our prediction (Alg.~\ref{alg:predict_deadlock}) is that while we may not be able to determine precisely how a given controller will steer the system, we can capture the gross motion of the system and estimate if the controller will be deadlocked. We split the prediction into two parts; first we assume that controller $\Ctrl$ is able to manipulate the deformable object with a reasonable degree of accuracy within a local neighborhood of the current state. This allows us to approximate the motion of the deformable object by following the task-defined navigation functions for each $\deformconfigI \in \deformconfig$. Examples of this approximation are shown in Figure~\ref{fig:gross_deformable_motion}.
 
 Next we use a simplified version of LocalController() which omits the stretching avoidance terms (Alg.~\ref{alg:stretching_avoidance_controller} lines 3 and 4) to predict the commands sent to the robot. These terms are omitted as they can be sensitive to the exact configuration of the deformable object, which is not considered in this approximation. If we are executing a path then we can use the planned path directly to predict overstretch.
 
@@ -73,7 +73,7 @@ Next we use a simplified version of LocalController() which omits the stretching
         \If {Path $\neq \emptyset$}
             \State $\deformvel_e, \Pinvweight_e \gets$ FollowNavigationFunction$(\deformconfig_n, \correspondences)$
             \State $\deformconfig_{n + 1} \gets \deformconfig_n + \deformvel_e$
-            \State $\robotvelcmd_n \gets$ FindBestRobotMotion$(\robotconfig_n, \deformconfig_{n}, \deformvel_e, \Pinvweight_e)$
+            \State $\robotvelcmd_n \gets$ FindBestRobotMotion$(\robotconfig_n, \deformconfig_n, \deformvel_e, \Pinvweight_e)$
             \State $\robotconfig_{n + 1} \gets \robotconfig_n + \robotvelcmd_n$
         \Else
             \State $\robotconfig_{n + 1} \gets \robotconfig_n + $ FollowPath(Path)
