@@ -25,11 +25,18 @@ where $\rotvelweight$ is a non-negative scaling factor relating rotational and t
     \grippervelGnormsq = \innerprod{\grippervelG}{\grippervelG}_\rotvelweight \enspace .
 \end{equation}
 
-Let the configuration of a deformable object be a set of $\ndeformpoints$ points with configuration $\deformconfig = \deformconfigexpanded \in \deformCspace$. We assume that we have a method of sensing $\deformconfig$. Let $\RelaxedDistMatrix$ be a symmetric $\ndeformpoints \times \ndeformpoints$ matrix where $\geodistIJ$ is the the geodesic distance (see Fig.~\ref{fig:geodesic}) between $\deformconfigI$ and $\deformconfigJ$ when the deformable object is in its ``natural'' or ``relaxed'' state. To measure the norm of a deformable object velocity $\deformvel = \deformvelexpanded \in \deformVspace $ we will use a weighted Euclidean norm
+Let the configuration of a deformable object be a set of $\ndeformpoints$ points with configuration $\deformconfig = \deformconfigexpanded \in \deformCspace$. We assume that we have a method of sensing $\deformconfig$. Let $\RelaxedDistMatrix$ be a symmetric $\ndeformpoints \times \ndeformpoints$ matrix where $\geodistIJ$ is the the geodesic distance (see Figure~\ref{fig:geodesic}) between $\deformconfigI$ and $\deformconfigJ$ when the deformable object is in its ``natural'' or ``relaxed'' state. To measure the norm of a deformable object velocity $\deformvel = \deformvelexpanded \in \deformVspace$ we will use a weighted Euclidean norm
 \begin{equation}
     \deformvelnormsq = \deformvelnormsqexpanded
 \end{equation}
 where $\Pinvweight = \Pinvweightexpanded \in \reals^\ndeformpoints$ is a set of non-negative weights. The rest of the environment is denoted $\obstacle$ and is assumed to be both static, and known exactly.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[height=1.5in]{EuclideanVsGeodesic}
+    \caption{Euclidean distance measures length of the shortest path between $\deformconfigI$ and $\deformconfigJ$ in $\reals^3$ (gold). Geodesic distance measures the length of the shortest path, constrained to stay within the deformable object (red).}
+    \label{fig:geodesic}
+\end{figure}
 
 The current state of the deformable object is a function of the current gripper pose $\deformconfig$, the history of gripper motions that have been applied $\robotconfighist$, the object's initial configuration $\deformconfig_0$, and the obstacles in the environment $\obstacle$:
 \begin{equation}
@@ -69,7 +76,7 @@ Note that $\robotconfighist$ and $\deformconfig_0$ are need in $\DeformMapping$ 
 \begin{figure}[t]
     \centering
     \includegraphics[width=2in]{method_geodesic}
-    \caption{The length of the the red segment on the rope is the geodesic distance $\geodistIJ$. $\straightvecIJ$ is the vector showing the relative position of $\deformconfigJ$ with respect to $\deformconfigI$. \rev{Fix the notation in this image, considering moving Fig~\ref{fig:geodesic} here}}
+    \caption{The length of the the red segment on the rope is the geodesic distance $\geodistIJ$. $\straightvecIJ$ is the vector showing the relative position of $\deformconfigJ$ with respect to $\deformconfigI$. \rev{Fix the notation in this image}}
     \label{fig:distance_vec_defs}
 \end{figure}
 
@@ -120,12 +127,12 @@ and then combine the results into a single matrix
     \label{fig:intro_directional_rigidity}
 \end{figure}
 
-While the diminishing rigidity Jacobian method has been used to do practical manipulation tasks with a deformable object~\cite{Berenson2013}, we observe that this rigidity does not only diminish as the distance from the gripper increases. Instead, it is a function of a larger set of variables derived from the configuration of the object. First, the rigidity also depends on the direction of gripper motion. Fig.~\ref{fig:intro_directional_rigidity} shows an example of an object's \textit{directional rigidity}. In addition capturing the effects of directional rigidity, in this section we seek to address contact with the environment, increasing the accuracy of the approximation.
+While the diminishing rigidity Jacobian method has been used to do practical manipulation tasks with a deformable object~\cite{Berenson2013}, we observe that this rigidity does not only diminish as the distance from the gripper increases. Instead, it is a function of a larger set of variables derived from the configuration of the object. First, the rigidity also depends on the direction of gripper motion. Figure~\ref{fig:intro_directional_rigidity} shows an example of an object's \textit{directional rigidity}. In addition capturing the effects of directional rigidity, in this section we seek to address contact with the environment, increasing the accuracy of the approximation.
 
 \subsection{Model Overview}
 % The approximate model locally describes the object's motion when given a motion of the grippers. Below we describe our approach first by specifying the model and then enforcing collision constraints on the prediction this model makes.
 
-In Section~\ref{sec:diminishing_rigidity}, $\Jacobian$ is assumed to be independent of $\grippervel$ and $\obstacle$, yielding $\frac{\partial \DeformMapping}{\partial \gripperconfig} = \Jacobian(\gripperconfig, \robotconfighist, \deformconfig_0) = \Jacobian(\gripperconfig, \deformconfig)$, which is analogous to a rigid-body Jacobian. While these assumptions allow a linear relationship between $\grippervel$ and $\deformvel$, and thus computational convenience, they are not accurate in many situations (see Figure \ref{fig:intro_directional_rigidity} for an example). In this section we augment the definition of $\Jacobian$ to include effects from $\grippervel$ and $\obstacle$:
+In Section~\ref{sec:diminishing_rigidity}, $\Jacobian$ is assumed to be independent of $\grippervel$ and $\obstacle$, yielding $\frac{\partial \DeformMapping}{\partial \gripperconfig} = \Jacobian(\gripperconfig, \robotconfighist, \deformconfig_0) = \Jacobian(\gripperconfig, \deformconfig)$, which is analogous to a rigid-body Jacobian. While these assumptions allow a linear relationship between $\grippervel$ and $\deformvel$, and thus computational convenience, they are not accurate in many situations (see Figure~\ref{fig:intro_directional_rigidity} for an example). In this section we augment the definition of $\Jacobian$ to include effects from $\grippervel$ and $\obstacle$:
 \begin{equation}
     \deformvel = \JacobianFull \grippervel = \DeformForwardFnFull \enspace .
 \end{equation}
@@ -139,7 +146,7 @@ We build on the idea proposed by Berenson~\cite{Berenson2013}, which approximate
 To incorporate the above effects into our model, we define the following variables, which can be derived from $\gripperconfig, \grippervel$, and $\deformconfig$:
 \begin{itemize}
     \item $\geodistIJ$: the geodesic distance (a scalar) between points $\deformconfigI$ and $\deformconfigJ$ on the surface of the object.
-    \item $\straightvecIJ$: the vector starting at a point $\deformconfigI$ and ending at the point $\deformconfigJ$, as shown in Fig.~\ref{fig:distance_vec_defs}.
+    \item $\straightvecIJ$: the vector starting at a point $\deformconfigI$ and ending at the point $\deformconfigJ$, as shown in Figure~\ref{fig:distance_vec_defs}.
     \item $\gripperconfigG$: the configuration of gripper $\gripperidx$.
     \item $\grippervelG$: the velocity of gripper $\gripperidx$.
 \end{itemize}
@@ -170,7 +177,7 @@ From observation, we find two key reasons related to the slackness of the object
 \end{equation}
 where $\tensionIG$ addresses the effect in the first case (motion reducing tension), and $\slackIG$ addresses the effect in the second case (object slackness). Both $\tensionIG$ and $\slackIG$ are functions of some of $\gripperconfigG, \grippervelG, \deformconfigI$, or variables derived from these.
 
-For $\deformconfigI$ on the object, we find $\tensionIG$ is greatly impacted by $\straightvecIG$ and $\transvelG$. Decomposing $\transvelG$ into $\transvelGRad$, the component in the direction of $\straightvecIG$, and $\transvelGPerp$, the component perpendicular to $\straightvecIG$. We observed that if $\transvelGRad$ is in the opposite direction to $\straightvecIG$, then it is more likely to make the intervening region slacker and thus reduce the transmission of force from the gripper to $\deformconfigI$. Moreover, if $\transvelGRad$ and $\straightvecIG$ are in the same direction when the object is not already slack, $\deformconfigI$ can move almost rigidly with $\grippervelG$. Fig.~\ref{fig:intro_directional_rigidity} shows an example of the impact of this alignment. Based on these observations, we design the function $\tensionIG = \tensionIGfull$ with the following properties:
+For $\deformconfigI$ on the object, we find $\tensionIG$ is greatly impacted by $\straightvecIG$ and $\transvelG$. Decomposing $\transvelG$ into $\transvelGRad$, the component in the direction of $\straightvecIG$, and $\transvelGPerp$, the component perpendicular to $\straightvecIG$. We observed that if $\transvelGRad$ is in the opposite direction to $\straightvecIG$, then it is more likely to make the intervening region slacker and thus reduce the transmission of force from the gripper to $\deformconfigI$. Moreover, if $\transvelGRad$ and $\straightvecIG$ are in the same direction when the object is not already slack, $\deformconfigI$ can move almost rigidly with $\grippervelG$. Figure~\ref{fig:intro_directional_rigidity} shows an example of the impact of this alignment. Based on these observations, we design the function $\tensionIG = \tensionIGfull$ with the following properties:
 \begin{enumerate}
     \item $\tensionIGfull$ ranges between $0$ and $1$.
     \item $\tensionIGfull > \tensionJGfull$
@@ -228,7 +235,7 @@ By combining the contributions of each individual gripper using the model develo
 \end{equation}
 However, at this stage, we haven't take into account the effect from the obstacles $\obstacle$. Thus the predicted $\approxPVI$ can move $\deformconfigI$ into an obstacle.
 
-When the prediction of $\deformconfigI$ enters the obstacle, we project any penetration by the predicted $\approxPVI$ into the tangent space of the obstacle surface (Fig.~\ref{fig:point_projection}). Let $d_\deformidx < \| \approxPVI \|$ be the distance to collision in direction $\approxPVI$ from point $\deformconfigI$; let $\lambda_\deformidx = \frac{d_\deformidx}{\| \approxPVI \|}$; let $n_\deformidx$ be the unit surface normal of the obstacle in contact; and let $N_\deformidx = (\eye_{3\times 3} - \vec{n}_\deformidx \vec{n}_\deformidx^+)$. Then to account for obstacles we compute
+When the prediction of $\deformconfigI$ enters the obstacle, we project any penetration by the predicted $\approxPVI$ into the tangent space of the obstacle surface (Figure~\ref{fig:point_projection}). Let $d_\deformidx < \| \approxPVI \|$ be the distance to collision in direction $\approxPVI$ from point $\deformconfigI$; let $\lambda_\deformidx = \frac{d_\deformidx}{\| \approxPVI \|}$; let $n_\deformidx$ be the unit surface normal of the obstacle in contact; and let $N_\deformidx = (\eye_{3\times 3} - \vec{n}_\deformidx \vec{n}_\deformidx^+)$. Then to account for obstacles we compute
 \begin{equation}
     \tilde \Jacobian_\deformidx(\gripperconfig, \grippervel, \deformconfig, \obstacle) =
     \begin{cases}
@@ -263,9 +270,9 @@ We ran experiments with scenarios involving both cloth and rope. The parameters 
     \label{fig:cloth_model_accuracy_plot}
 \end{figure}
 
-We evaluated model accuracy by pulling the rope in a straight line along the direction of the rope, then turning the gripper and pulling back towards the rope as shown in Fig.~\ref{fig:intro_directional_rigidity}. As shown in Fig.~\ref{fig:rope_model_accuracy_plot}, our new model is a better approximation of the true motion when the gripper is pulling the rope. When the gripper is turning, both the baseline and the new model produce comparable error, but when the gripper starts pulling again (this time in the opposite direction), the new model is a significantly better approximation.
+We evaluated model accuracy by pulling the rope in a straight line along the direction of the rope, then turning the gripper and pulling back towards the rope as shown in Figure~\ref{fig:intro_directional_rigidity}. As shown in Figure~\ref{fig:rope_model_accuracy_plot}, our new model is a better approximation of the true motion when the gripper is pulling the rope. When the gripper is turning, both the baseline and the new model produce comparable error, but when the gripper starts pulling again (this time in the opposite direction), the new model is a significantly better approximation.
 
-We also evaluated model accuracy by pulling the cloth in a similar fashion; pulling the cloth one way, turning the grippers, and then pulling in the opposite direction. As shown in Fig.~\ref{fig:cloth_model_accuracy_plot}, our new model is a better approximation of the true motion when the grippers are pulling the cloth. As in the rope test, when rotating the grippers both models produce comparable error. While the cloth is folded on itself both models produce noisy results, but when the cloth lies flat again, the new model achieves lower error.
+We also evaluated model accuracy by pulling the cloth in a similar fashion; pulling the cloth one way, turning the grippers, and then pulling in the opposite direction. As shown in Figure~\ref{fig:cloth_model_accuracy_plot}, our new model is a better approximation of the true motion when the grippers are pulling the cloth. As in the rope test, when rotating the grippers both models produce comparable error. While the cloth is folded on itself both models produce noisy results, but when the cloth lies flat again, the new model achieves lower error.
 
 
 
@@ -278,7 +285,7 @@ We also evaluated model accuracy by pulling the cloth in a similar fashion; pull
     \label{fig:physical_experiment_screenshots}
 \end{figure}
 
-To evaluate our new model on a physical system, we set up an experiment with a cloth-like object manipulated by two 7DoF KUKA iiwa arms (Fig.~\ref{fig:physical_experiment_screenshots}). To sense the position of the cloth, we use the AprilTags~\cite{olson2011tags} and IAI Kinect2~\cite{iai_kinect2} libraries. The parameters are set as $\drkdir = 4$, $\drkdist = 10$, $\drkrot = 10$ for the new model. This test, which evaluates model accuracy, uses a motion profile similar to the simulation accuracy tests (Fig.~\ref{fig:cloth_model_accuracies_live}). Similar to the simulation results, the new model improves performance when dragging the cloth (first and last sections of Fig.~\ref{fig:cloth_model_accuracies_live}), and is comparable during rotational motion and when the cloth is resting on edge perpendicular to the table (see video).
+To evaluate our new model on a physical system, we set up an experiment with a cloth-like object manipulated by two 7DoF KUKA iiwa arms (Figure~\ref{fig:physical_experiment_screenshots}). To sense the position of the cloth, we use the AprilTags~\cite{olson2011tags} and IAI Kinect2~\cite{iai_kinect2} libraries. The parameters are set as $\drkdir = 4$, $\drkdist = 10$, $\drkrot = 10$ for the new model. This test, which evaluates model accuracy, uses a motion profile similar to the simulation accuracy tests (Figure~\ref{fig:cloth_model_accuracies_live}). Similar to the simulation results, the new model improves performance when dragging the cloth (first and last sections of Figure~\ref{fig:cloth_model_accuracies_live}), and is comparable during rotational motion and when the cloth is resting on edge perpendicular to the table (see video).
 
 \begin{figure}[ht]
     \centering
@@ -319,4 +326,4 @@ CDR         & 0.029 & 0.014 & 1.172 & 0.339 \\
 \end{tabular}
 \end{table}
 
-To verify the practicality of our method, we gathered data comparing its computation time to the benchmark's and to using the Bullet simulator for a variety of tasks (see Fig.~\ref{fig:modelling_timing_tests} and Section~\ref{sec:stretching_constraint_controller_results}). Table~\ref{tbl:simulation_time_report} shows a comparison between the average time needed to evaluate the new model and the time needed to simulate a gripper motion with the Bullet simulator. Note that the amount of time required for the simulator to converge to a stable estimate depends on many conditions, including what object is being simulated. Through experimentation we determined that 4 simulation steps were adequate for rope and 10 for cloth. Comparing the time needed to do this simulation to the time needed to evaluate our model, we see that the new model is indeed faster by at least an order of magnitude, in some cases by two orders of magnitude, confirming that, despite being slower than the diminishing rigidity model, our method still outperforms the simulator in terms of computation time. This is particularly important given the average number of times a model is evaluated in a control loop.
+To verify the practicality of our method, we gathered data comparing its computation time to the benchmark's and to using the Bullet simulator for a variety of tasks (see Figure~\ref{fig:modelling_timing_tests} and Section~\ref{sec:stretching_constraint_controller_results}). Table~\ref{tbl:simulation_time_report} shows a comparison between the average time needed to evaluate the new model and the time needed to simulate a gripper motion with the Bullet simulator. Note that the amount of time required for the simulator to converge to a stable estimate depends on many conditions, including what object is being simulated. Through experimentation we determined that 4 simulation steps were adequate for rope and 10 for cloth. Comparing the time needed to do this simulation to the time needed to evaluate our model, we see that the new model is indeed faster by at least an order of magnitude, in some cases by two orders of magnitude, confirming that, despite being slower than the diminishing rigidity model, our method still outperforms the simulator in terms of computation time. This is particularly important given the average number of times a model is evaluated in a control loop.

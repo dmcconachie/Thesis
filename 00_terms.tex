@@ -155,18 +155,19 @@
 \newcommand{\ndeformpoints}{P}
 \newcommand{\deformidx}{i}
 \newcommand{\deformconfig}{\mathcal{P}}
-\newcommand{\deformconfigI}{\deformconfig_\deformidx}
-\newcommand{\deformconfigJ}{\deformconfig_j}
+\newcommand{\deformpoint}{p}
+\newcommand{\deformconfigI}{\deformpoint_\deformidx}
+\newcommand{\deformconfigJ}{\deformpoint_j}
 \newcommand{\deformCspacesize}{{3\ndeformpoints}}
 \newcommand{\deformCspace}{\reals^\deformCspacesize}
-\newcommand{\deformconfigexpanded}{\begin{bmatrix} \deformconfig_1^T & \dots & \deformconfig_\ndeformpoints^T \end{bmatrix}^T}
+\newcommand{\deformconfigexpanded}{\begin{bmatrix} \deformpoint_1^T & \dots & \deformpoint_\ndeformpoints^T \end{bmatrix}^T}
 \newcommand{\deformvel}{\dot{\deformconfig}}
 \newcommand{\deformvelexpanded}{\begin{bmatrix} \deformvel_1^T & \dots & \deformvel_\ndeformpoints^T \end{bmatrix}^T}
 \newcommand{\deformvelI}{\dot{\deformconfigI}}
 \newcommand{\deformvelJ}{\dot{\deformconfigJ}}
-\newcommand{\deformvelIpre}[1]{\dot{\deformconfig}_{#1,\deformidx}}
-\newcommand{\deformvelJpre}[1]{\dot{\deformconfig}_{#1,j}}
-\newcommand{\approxPVI}{\tilde{\deformvel}_\deformidx}
+\newcommand{\deformvelIpre}[1]{\dot{\deformpoint}_{#1,\deformidx}}
+\newcommand{\deformvelJpre}[1]{\dot{\deformpoint}_{#1,j}}
+\newcommand{\approxPVI}{\tilde{\deformpoint}_\deformidx}
 \newcommand{\deformVspace}{\reals^\deformCspacesize}
 \newcommand{\deformvelnormsq}{\left\| \deformvel \right\|^2_\Pinvweight}
 \newcommand{\deformvelnormsqexpanded}{\sum_{\deformidx = 1}^\ndeformpoints \pinvweight_\deformidx \deformvelI^T \deformvelI = \deformvel^T \diag{(\Pinvweight)} \deformvel}
@@ -191,7 +192,7 @@
 \newcommand{\straightvecIG}{\straightvec_{\deformidx \closestpointIG}}
 \newcommand{\straightvecJG}{\straightvec_{j \closestpointJG}}
 
-\newcommand{\deformconfigIG}{\deformconfig_{\closestpointIG}}
+\newcommand{\deformconfigIG}{\deformpoint_{\closestpointIG}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -292,8 +293,8 @@
 % Mengyao IROS
 \newcommand{\closestpointGK}{\mathcal{I}_\gripperidx(\gripperconfigG, \gripperconfigK)}
 \newcommand{\closestpointKG}{\mathcal{I}_k(\gripperconfigG, \gripperconfigK)}
-\newcommand{\deformconfigGK}{\deformconfig_{\closestpointGK}}
-\newcommand{\deformconfigKG}{\deformconfig_{\closestpointKG}}
+\newcommand{\deformconfigGK}{\deformpoint_{\closestpointGK}}
+\newcommand{\deformconfigKG}{\deformpoint_{\closestpointKG}}
 \newcommand{\geodesicGK}{\mathcal{S}_{\gripperidx k}}
 \newcommand{\geodesicKG}{\mathcal{S}_{k \gripperidx}}
 \newcommand{\savoidGK}{u_\gripperidx^k}

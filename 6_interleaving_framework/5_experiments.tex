@@ -216,7 +216,7 @@ Table~\ref{tab:prediction_statistics} shows a comparison between the average tim
 \section{Physical Robot Experiment and Results}
 \label{sec:live_robot}
 
-In order to show that our method is practical for a physical robotic system, not only free floating end-effectors, we set up a task similar to the single pillar task (Sec.~\ref{sec:single_pillar}) with a dual-arm robot. It also shows that while our methods strong assumptions about the ability to perceive the deformable object in Sec.~\ref{sec:main_problem_statement} (in particular no occlusions and no sensor noise), our framework is still able to perform meaningful tasks when those assumptions are violated. In this task the robot must align a cloth placemat inside of the pink rectangle, going around an obstacle in the process (Fig.~\ref{fig:cloth_placemat}).
+In order to show that our method is practical for a physical robotic system, not only free floating end-effectors, we set up a task similar to the single pillar task (Sec.~\ref{sec:single_pillar}) with a dual-arm robot. It also shows that while our methods strong assumptions about the ability to perceive the deformable object in Sec.~\ref{sec:main_problem_statement} (in particular no occlusions and no sensor noise), our framework is still able to perform meaningful tasks when those assumptions are violated. In this task the robot must align a cloth placemat inside of the pink rectangle, going around an obstacle in the process (Figure~\ref{fig:cloth_placemat}).
 
 
 \subsection{Experiment Setup}
@@ -230,7 +230,7 @@ Val is a stationary robotic platform with a 2-DOF torso, two 7-DOF arms, and a r
 
 The placemat is $0.33\text{m} \times 0.46\text{m}$ which we discretize into a $3 \times 3$ grid. As tracking of deformable objects is a difficult problem, and out of scope of this paper, we instead use fiducials to track the configuration of the cloth. Two of the points are tracked using the position of the grippers; the other 7 points are tracked with AprilTags (\cite{olson2011tags}) and a Kinect V2 RGB-D sensor (\cite{iai_kinect2}).
 
-In order to address occlusions and noisy data, we filter the raw observations using a set of objective terms, and a set of constraints (see Fig.~\ref{fig:cloth_estimation}). Denote $z_i$ as the last observed position of point $i$, and denote $t_i$ as the last time point $i$ was observed. Then we add objective terms to pull the cloth estimate towards the observations, combined with constraints between each pair of points to ensure that the estimate is plausible:
+In order to address occlusions and noisy data, we filter the raw observations using a set of objective terms, and a set of constraints (see Figure~\ref{fig:cloth_estimation}). Denote $z_i$ as the last observed position of point $i$, and denote $t_i$ as the last time point $i$ was observed. Then we add objective terms to pull the cloth estimate towards the observations, combined with constraints between each pair of points to ensure that the estimate is plausible:
 \begin{equation}
 \begin{aligned}
     \deformconfig(t) = &\argmin_{\{ p_i \}} 
@@ -244,7 +244,6 @@ $K_T$ and $K_L$ are task defined scale factors which we set to $1.5$ and $1.0001
 
 \subsection{Experiment Results}
 
-
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.6\columnwidth]{ClothEstimation}
@@ -253,14 +252,7 @@ $K_T$ and $K_L$ are task defined scale factors which we set to $1.5$ and $1.0001
 \end{figure}
 
 
-
-
-
-
-
 We use the same deadlock, distance, and planner parameters as used in the simulation experiments, performing 500 smoothing iterations once a path is found. We constrain the rotation of the end-effectors to stay within 1.6 radians of their starting orientation during the planning process as well as constrain the grippers to stay close to the table. This forces the planner to move the placemat around the obstacle rather than over the obstacle. Last, we also introduce planning restarts (\cite{Wedge2008}) into the planning process in order to address the greater complexity added by using a 16-DOF robot and the relatively strict workspace constraints; the restart timeout we set is 60 seconds.
-
-
 
 \begin{table*}[ht]
 \centering
@@ -270,21 +262,21 @@ We use the same deadlock, distance, and planner parameters as used in the simula
 \noalign{\smallskip}\hline\noalign{\smallskip}
 Samples & 
 States &
-\parbox{0.4in}{\centering NN Time (s)} & 
-\parbox{0.7in}{\centering Validity Checking Time (s)} & 
-\parbox{0.8in}{\centering Random Restarts} &
-\parbox{0.5in}{\centering Total Time (s)} \\
+\makecell{NN\\Time\\(s)} & 
+\makecell{Validity\\Checking\\Time (s)} & 
+\makecell{Random\\Restarts} &
+\makecell{Total\\Time\\(s)} \\
 % Iterations & 
 % \parbox{0.55in}{\centering Validity\\Checking\\Time (s)} & 
 % \parbox{0.75in}{\centering Visibility\\Deformation\\Time (s)}& 
 % \parbox{0.3in}{\centering \smallskip Total\\Time (s) \smallskip} \\
 \noalign{\smallskip}\hline\noalign{\smallskip}
-\parbox{0.5in}{\centering 83041\\{[83677]}} &
-\parbox{0.5in}{\centering 8438\\{[6182]}} &
-\parbox{0.3in}{\centering 4.5\\{[4.9]}} &
-\parbox{0.4in}{\centering 44.1\\{[44.5]}} &
-\parbox{0.3in}{\centering 0.5\\{[0.9]}} &
-\parbox{0.4in}{\centering 50.0\\{[50.9]}} \\
+\makecell{83041\\{[83677]}} &
+\makecell{8438\\{[6182]}} &
+\makecell{4.5\\{[4.9]}} &
+\makecell{44.1\\{[44.5]}} &
+\makecell{0.5\\{[0.9]}} &
+\makecell{50.0\\{[50.9]}} \\
 \noalign{\smallskip}\hline
 \end{tabular}
 \end{table*}
@@ -299,19 +291,17 @@ States &
 \begin{tabular}{cccc}
 \noalign{\smallskip}\hline\noalign{\smallskip}
 Iterations & 
-\parbox{0.7in}{\centering Validity\\Checking\\Time (s)} &
-\parbox{0.9in}{\centering Visibility\\Deformation\\Time (s)} &
-\parbox{0.5in}{\centering Total\\Time (s) } \\
+\makecell{Validity\\Checking\\Time (s)} &
+\makecell{Visibility\\Deformation\\Time (s)} &
+\makecell{Total\\Time\\(s)} \\
 \noalign{\smallskip}\hline\noalign{\smallskip}
 500 &
-\parbox{0.3in}{\centering 3.6\\{[1.1]}} &
-\parbox{0.4in}{\centering 0.1\\{[$\sim$0.0]}} &
-\parbox{0.3in}{\centering 3.6\\{[1.1]}} \\
+\makecell{3.6\\{[1.1]}} &
+\makecell{0.1\\{[$\sim$0.0]}} &
+\makecell{3.6\\{[1.1]}} \\
 \noalign{\smallskip}\hline
 \end{tabular}
 \end{table}
-
-
 
 
 \begin{figure}
@@ -321,11 +311,9 @@ Iterations &
     \label{fig:placemat_planning_time}
 \end{figure}
 
+Tables~\ref{tab:live_robot_stats_planning} and \ref{tab:live_robot_stats_smoothing} show the planning and smoothing statistics across 100 planning trials with identical starting configurations, but different random seeds. On average planning and smoothing takes less than 60 seconds, with forward kinematics and collision checking dominating the planning time. The restart timeout was unused in 68 out of 100 trials, with the other 32 trials requiring a total of 50 restarts between them. Figure~\ref{fig:placemat_planning_time} shows that the planning time follows a ``heavy tail'' distribution typical of sampling-based planners.
 
-
-Tables~\ref{tab:live_robot_stats_planning} and \ref{tab:live_robot_stats_smoothing} show the planning and smoothing statistics across 100 planning trials with identical starting configurations, but different random seeds. On average planning and smoothing takes less than 60 seconds, with forward kinematics and collision checking dominating the planning time. The restart timeout was unused in 68 out of 100 trials, with the other 32 trials requiring a total of 50 restarts between them. Fig.~\ref{fig:placemat_planning_time} shows that the planning time follows a ``heavy tail'' distribution typical of sampling-based planners.
-
-Our overall framework is able to complete this task as shown in Fig.~\ref{fig:cloth_placemat}. As in the simulated version of this task, we are able to predict deadlock before the robot gets stuck, plan and execute a path to a new neighbourhood, and then use the local controller to finish the task.
+Our overall framework is able to complete this task as shown in Figure~\ref{fig:cloth_placemat}. As in the simulated version of this task, we are able to predict deadlock before the robot gets stuck, plan and execute a path to a new neighbourhood, and then use the local controller to finish the task.
 
 
 

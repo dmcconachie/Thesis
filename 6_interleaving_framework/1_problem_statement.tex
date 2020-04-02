@@ -5,21 +5,11 @@
 Define the robot configuration space to be $\robotCspace$. We assume that the robot configuration can be measured exactly. Denote an individual robot configuration as $\robotconfig \in \robotCspace$. This set can be partitioned into a valid and invalid set. The valid set is referred to as $\robotCvalid$, and is the set of configurations where the robot is not in collision with the static geometry of the world. The invalid set is referred to as $\robotCinvalid = \robotCspace \setminus \robotCvalid$.
 
 \todoin{Confirm the `previous chapters' statement.}
-We assume that our model of the robot is purely kinematic, with no higher order dynamics. Previous chapters assumed an arbitrary number of grippers; in this chapter we restrict the problem to cases where two end-effectors that are rigidly attached to the object. 
-% The configuration of a deformable object is a set $\deformconfig \subset \reals^3$ of $\numdeformpoints = | \deformconfig |$ points. We assume that we have a method of sensing $\deformconfig$. The rest of the environment is denoted $\obstacle$ and is assumed to be both static, and known exactly. 
-We assume that the robot moves slowly enough that we can treat the combined robot and deformable object as quasi-static. Let the function $\DeformForwardFn(\robotconfig, \deformconfig, \robotvel)$ map the system configuration $(\robotconfig, \deformconfig)$ and robot movement $\robotvel$ to the corresponding deformable object movement $\deformvel$.
+We assume that our model of the robot is purely kinematic, with no higher order dynamics. Previous chapters assumed an arbitrary number of grippers; in this chapter we restrict the problem to cases where two end-effectors that are rigidly attached to the object. We assume that the robot moves slowly enough that we can treat the combined robot and deformable object as quasi-static. Let the function $\DeformForwardFn(\robotconfig, \deformconfig, \robotvel)$ map the system configuration $(\robotconfig, \deformconfig)$ and robot movement $\robotvel$ to the corresponding deformable object movement $\deformvel$.
 
 Similar to the previous chapter, we define a task based on a set of $\ntargetpoints$ target points $\target \subset \reals^3$, a function $\ErrorFnFull \rightarrow \reals^{\geq 0}$, which measures the alignment error between $\deformconfig$ and $\target$, and a termination function $\TermCondFull$ which indicates if the task is finished. Let a robot controller be a function $\CtrlFull$\footnote{A specific controller may have additional parameters (such as gains in a PID controller), but we do not include such parameters here to keep $\Ctrl(\dots)$ in a more general form.} which maps the system state $\left( \robotconfig, \deformconfig \right)$ and alignment targets $\target$ to a desired robot motion $\robotvelcmd$. In this work we restrict our discussion to tasks and controllers of the form introduced in Chapter~\ref{chap:local_control}; these controllers are local, i.e. at each time $t$ they choose an incremental movement $\robotvelcmd$ which reduces the alignment error as much as possible at time $t + 1$. 
 
 The problem we address in this chapter is how to find a sequence of $\taskexecutiontime$ robot commands $\robotvelcmdexpanded = \robotvelcmdseq$ such that each motion is feasible, i.e. it should not bring the grippers into collision with obstacles, should not cause the object to stretch excessively, and should not exceed the robot's maximum velocity $\robotvelmax$. Let these feasibility constraints be represented by $A(\robotvelcmdseq) = 0$. Then the problem we seek to solve is:
-% \begin{equation}
-%     \begin{aligned}
-%         & \text{find}   & & \robotcommandsequence \\
-%         & \text{s.t.}   & & \terminationcondition(\deformconfig_{\taskexecutiontime}) = \texttt{true} \\
-%         &               & & A(\robotcommandvel[t])                                    = 0, \; t = 1, \dots, \taskexecutiontime
-%     \end{aligned}
-%     \label{eqn:main_problem_statement}
-% \end{equation}
 \begin{equation}
     \begin{aligned}
         & \text{find}   & & \taskexecutiontime, \robotvelcmdseq \\

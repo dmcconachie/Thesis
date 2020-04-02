@@ -124,7 +124,7 @@ The upper bound of $\Dmaxb$ and our additive distance metric (Eq.~\eqref{eqn:dis
 \end{equation}
 Next, consider that in Line~\ref{alg:nearst:robotspace} of the algorithm, the nearest neighbor to $\robotconfigrand$ under distance metric $d_\robotconfig$ is found.  Let this nearest neighbor be denoted $\nearapproxr$, keeping in mind that it belongs to a vertex in the tree $\nearapproxf = (\nearapproxr, \nearapproxb)$.  Let the (squared) distance between these points under $d_\robotconfig$ be $\Dnearr^2$.  From Eq.~\eqref{eqn:bounded_config_distance}, we can bound the distance between the random sample and $\nearapproxf$ under $d_\pstate$ as $\Dmaxf^2 \leq \Dnearr^2 + \banddistscale \Dmaxb^2 = \Dmaxf^2$.
 
-In Line~\ref{alg:nearest:radius} of the algorithm, a radius nearest-neighbors query of radius $\Dmaxf$ is performed, returning a set $\Pstatenear$.  By construction if there is a node $\pstate \in \rrtnodeset$ that is closer to $\pstaterand$ than $\nearapproxf$, then $\pstate \in \Pstatenear$ (Fig.~\ref{fig:nearest}). Then, the method selects as the true nearest neighbor in full space $\pstate^\textrm{select} = \argmin_{\pstate \in \Pstatenear}{d_\pstate(\pstate, \pstaterand)}$.
+In Line~\ref{alg:nearest:radius} of the algorithm, a radius nearest-neighbors query of radius $\Dmaxf$ is performed, returning a set $\Pstatenear$.  By construction if there is a node $\pstate \in \rrtnodeset$ that is closer to $\pstaterand$ than $\nearapproxf$, then $\pstate \in \Pstatenear$ (Figure~\ref{fig:nearest}). Then, the method selects as the true nearest neighbor in full space $\pstate^\textrm{select} = \argmin_{\pstate \in \Pstatenear}{d_\pstate(\pstate, \pstaterand)}$.
 \qed
 
 % \noindent
@@ -158,7 +158,7 @@ The objective here is to show with probability approaching $1$, the planner gene
     \end{itemize}
 \end{definition}
 \noindent
-Denote $\robotconfig^*_k$ to be the center of the $k^{th}$ covering hyper-ball for the reference path $\refpathr$. Fig.~\ref{fig:covering_ball_sequence} shows an example of a covering ball sequence.
+Denote $\robotconfig^*_k$ to be the center of the $k^{th}$ covering hyper-ball for the reference path $\refpathr$. Figure~\ref{fig:covering_ball_sequence} shows an example of a covering ball sequence.
 
 
 The objective is to show that the vertex set of the planning tree after $n$ iterations $\rrtnodeset_n$ probabilistically contains a node within the goal set, i.e.
@@ -326,7 +326,7 @@ First, we define the following restriction on the definition of $\bestneardist$:
     For a reference path $\refpathr$ with robustness $\deltar$, $\bestneardist$ is defined such that $\innerballsize = \deltar - \bestneardist > 0$.
 \end{definition}
 
-The proof that $\selectbound > 0$ follows directly from the related work of \cite{LiAOKP2016} (proof of Lemma 23).  To summarize, due to best-nearest neighbors selection, there exists a positive-measure region around the minimum cost vertex $\pstatenear$ which observes the optimal reference path in which its cost dominates all other nearby nodes, and therefore, when $\pstaterand$ is drawn in this volume, $\pstatenear = (\pstatenearfull)$ is guaranteed to be selected (Fig.~\ref{fig:Yanbo_lemma_23_figure}).  Since our approach follows an equivalent sampling and nearest neighbor method to \cite{LiAOKP2016} (as shown in Sec.~\ref{sec:nn_equiv}), 
+The proof that $\selectbound > 0$ follows directly from the related work of \cite{LiAOKP2016} (proof of Lemma 23).  To summarize, due to best-nearest neighbors selection, there exists a positive-measure region around the minimum cost vertex $\pstatenear$ which observes the optimal reference path in which its cost dominates all other nearby nodes, and therefore, when $\pstaterand$ is drawn in this volume, $\pstatenear = (\pstatenearfull)$ is guaranteed to be selected (Figure~\ref{fig:Yanbo_lemma_23_figure}).  Since our approach follows an equivalent sampling and nearest neighbor method to \cite{LiAOKP2016} (as shown in Sec.~\ref{sec:nn_equiv}), 
 \begin{equation}
     \selectbound = \frac{\mu\left( \hyperball_{\innerballsize}\big( \pstate_k^* \big) \cap \hyperball_{\bestneardist}\big( \pstatenear \big) \right)}{\mu\left( \pspace \right)} > 0
 \end{equation}
@@ -352,7 +352,7 @@ Then, based on the construction of the covering ball sequence and the $\bestnear
 
 \begin{lemma}
     \label{lem:rand_to_next_dist}
-    If $\pstaterand$ is within the minimum domination region as described in \cite{LiAOKP2016} Lemma 23 (Fig.~\ref{fig:Yanbo_lemma_23_figure}), then $\robotconfigrand \in \hyperball_{\deltar}(\robotconfig^*_k)$ and Connect() will generate a segment that is $\deltar$-similar to segment $k$ of the reference path.
+    If $\pstaterand$ is within the minimum domination region as described in \cite{LiAOKP2016} Lemma 23 (Figure~\ref{fig:Yanbo_lemma_23_figure}), then $\robotconfigrand \in \hyperball_{\deltar}(\robotconfig^*_k)$ and Connect() will generate a segment that is $\deltar$-similar to segment $k$ of the reference path.
 \end{lemma}
 
 
@@ -376,7 +376,7 @@ Then by construction of the covering ball sequence, we have that $\ballseparatio
 
 \noindent
 {\bf Proof.}
-Consider two possible events. First, that $\pstaterand$ is within the minimum domination region (Fig.~\ref{fig:Yanbo_lemma_23_figure}) of $\Pstatenear$. If $\pstaterand$ is within the minimum domination region of $\Pstatenear$, then by Lemma~\ref{lem:rand_to_next_dist}, Connect() will generate a $\deltar$-similar segment with probability 1. Denote this event as $B$. Second, the event that $\pstaterand$ is somewhere else. Denote this event as $C$. Then we can bound $\pr( A_k^{(i)} \mid E_{k-1}^{(i-1)} \cap \neg E_k^{(i-1)})$ by considering only $B$:
+Consider two possible events. First, that $\pstaterand$ is within the minimum domination region (Figure~\ref{fig:Yanbo_lemma_23_figure}) of $\Pstatenear$. If $\pstaterand$ is within the minimum domination region of $\Pstatenear$, then by Lemma~\ref{lem:rand_to_next_dist}, Connect() will generate a $\deltar$-similar segment with probability 1. Denote this event as $B$. Second, the event that $\pstaterand$ is somewhere else. Denote this event as $C$. Then we can bound $\pr( A_k^{(i)} \mid E_{k-1}^{(i-1)} \cap \neg E_k^{(i-1)})$ by considering only $B$:
 \begin{align*}
     \pr\left( A_k^{(i)} \mid E_{k-1}^{(i-1)} \cap \neg E_k^{(i-1)} \right) 
         &= \pr(B) + \pr(C) \\
