@@ -3,7 +3,7 @@
 
 
 
-Proving probablistic completeness in $\pspace$ is challenging due to the multi-modal nature of the problem. Specifically, as the virtual elastic band moves in and out of contact the dimensionality of the manifold that the system is operating in can change. In addition, the virtual elastic band forward propagation function (Alg.~\ref{alg:band_propogation}) can allow the band to ``snap tight'' as the grippers move past the edge of an obstacle, changing the number of points in the band representation as it does so. By leveraging the assumptions from Sec.~\ref{sec:rpath_assumptions}, we are able to bypass most of these challenges by focusing on the portion of $\pspace$ that can be analyzed; i.e. $\robotCspace$.
+Proving probablistic completeness in $\pspace$ is challenging due to the multi-modal nature of the problem. Specifically, as the virtual elastic band moves in and out of contact the dimensionality of the manifold that the system is operating in can change. In addition, the virtual elastic band forward propagation function (Alg.~\ref{alg:band_propogation}) can allow the band to ``snap tight'' as the grippers move past the edge of an obstacle, changing the number of points in the band representation as it does so. By leveraging the assumptions from Section~\ref{sec:rpath_assumptions}, we are able to bypass most of these challenges by focusing on the portion of $\pspace$ that can be analyzed; i.e. $\robotCspace$.
 
 
 
@@ -70,7 +70,7 @@ A path $\refpathf$ is acceptable $\delta$-robust if the following hold:
 If a planning problem does not yield a reference path with this property, then it would be practically impossible for a sampling-based approach to solve it, as this would require sampling on a lower-dimensional manifold in robot space. Given that our planner is able to find paths, we believe this assumption is true except in special cases where the band must achieve a singular configuration to reach the goal.
 
 
-While the focus of this paper is not on asymptotic optimality, we will make use of a cost function $\cost(\configpath)$ of a path in Sec.~\ref{sec:select}. Our cost function is path length in robot configuration space. With a cost function of this form we then assume from here onward that the reference path in question is optimal under the following definition.
+While the focus of this paper is not on asymptotic optimality, we will make use of a cost function $\cost(\configpath)$ of a path in Section~\ref{sec:select}. Our cost function is path length in robot configuration space. With a cost function of this form we then assume from here onward that the reference path in question is optimal under the following definition.
 
 \begin{definition}[Optimal $\delta$-Robust Path]
     Let $\setofpaths_{\pstate,\delta}$ be the set of all acceptable $\delta$-robust paths. A path $\refpathf$ is optimal $\delta$-robust if
@@ -79,7 +79,7 @@ While the focus of this paper is not on asymptotic optimality, we will make use 
     \end{equation}
 \end{definition}
 
-Finally, we also assume that workspace is bounded. This will be true for any practical task and is rarely mentioned in the literature, but we will use this assumption in our analysis in Sec.~\ref{sec:nn_equiv}.
+Finally, we also assume that workspace is bounded. This will be true for any practical task and is rarely mentioned in the literature, but we will use this assumption in our analysis in Section~\ref{sec:nn_equiv}.
 
 
 
@@ -99,7 +99,7 @@ Finally, we also assume that workspace is bounded. This will be true for any pra
 
 \noindent
 {\bf Proof.}
-From the definition of $\bandspace$ in Sec.~\ref{sec:overstretch}, the number of points used to represent a virtual elastic band is bounded by $\nbandpointsmax$. Let $\band_1, \band_2 \in \bandspace$ be two virtual elastic band configurations, and let $\tilde \band_1 = (\tilde b_{1,1}, \dots, b_{1,\nbandpointsmax})$ and $\tilde \band_2 = (\tilde b_{2,1}, \dots, b_{2,\nbandpointsmax})$ be their upsampled versions as described in Alg.~\ref{alg:band_dist}. Then
+From the definition of $\bandspace$ in Section~\ref{sec:overstretch}, the number of points used to represent a virtual elastic band is bounded by $\nbandpointsmax$. Let $\band_1, \band_2 \in \bandspace$ be two virtual elastic band configurations, and let $\tilde \band_1 = (\tilde b_{1,1}, \dots, b_{1,\nbandpointsmax})$ and $\tilde \band_2 = (\tilde b_{2,1}, \dots, b_{2,\nbandpointsmax})$ be their upsampled versions as described in Alg.~\ref{alg:band_dist}. Then
 \begin{equation}
 \begin{split}
     d_\band(\band_1, \band_2)^2 &= \sum_{i=1}^{\nbandpointsmax} \left\| \tilde b_{1,i} - \tilde b_{2,i} \right\|^2 \\
@@ -316,7 +316,7 @@ Thus, given that $\pr(\neg E^{(n)}_k) \rightarrow 0$ as $n \rightarrow \infty$ f
 % \begin{figure}
 %     \centering
 %     \includegraphics{placeholder}
-%     \caption{Figure for Sec.~\ref{sec:select} and Sec.~\ref{sec:prop}}
+%     \caption{Figure for Section~\ref{sec:select} and Section~\ref{sec:prop}}
 %     \label{fig:select_and_prop}
 % \end{figure}
 First, we define the following restriction on the definition of $\bestneardist$: 
@@ -326,7 +326,7 @@ First, we define the following restriction on the definition of $\bestneardist$:
     For a reference path $\refpathr$ with robustness $\deltar$, $\bestneardist$ is defined such that $\innerballsize = \deltar - \bestneardist > 0$.
 \end{definition}
 
-The proof that $\selectbound > 0$ follows directly from the related work of \cite{LiAOKP2016} (proof of Lemma 23).  To summarize, due to best-nearest neighbors selection, there exists a positive-measure region around the minimum cost vertex $\pstatenear$ which observes the optimal reference path in which its cost dominates all other nearby nodes, and therefore, when $\pstaterand$ is drawn in this volume, $\pstatenear = (\pstatenearfull)$ is guaranteed to be selected (Figure~\ref{fig:Yanbo_lemma_23_figure}).  Since our approach follows an equivalent sampling and nearest neighbor method to \cite{LiAOKP2016} (as shown in Sec.~\ref{sec:nn_equiv}), 
+The proof that $\selectbound > 0$ follows directly from the related work of \cite{LiAOKP2016} (proof of Lemma 23).  To summarize, due to best-nearest neighbors selection, there exists a positive-measure region around the minimum cost vertex $\pstatenear$ which observes the optimal reference path in which its cost dominates all other nearby nodes, and therefore, when $\pstaterand$ is drawn in this volume, $\pstatenear = (\pstatenearfull)$ is guaranteed to be selected (Figure~\ref{fig:Yanbo_lemma_23_figure}).  Since our approach follows an equivalent sampling and nearest neighbor method to \cite{LiAOKP2016} (as shown in Section~\ref{sec:nn_equiv}), 
 \begin{equation}
     \selectbound = \frac{\mu\left( \hyperball_{\innerballsize}\big( \pstate_k^* \big) \cap \hyperball_{\bestneardist}\big( \pstatenear \big) \right)}{\mu\left( \pspace \right)} > 0
 \end{equation}

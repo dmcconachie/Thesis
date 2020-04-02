@@ -329,8 +329,8 @@
 \newcommand{\truestate}{x}
 \newcommand{\truestatespace}{\mathcal{X}}
 \newcommand{\statecommand}{u^\truestate}
-\newcommand{\reducedstate}{c}
-\newcommand{\reducedstatespace}{\mathbb{C}}
+\newcommand{\reducedstate}{b}
+\newcommand{\reducedstatespace}{\mathbb{B}}
 \newcommand{\reducedcommand}{u^\reducedstate}
 \newcommand{\reducedstatespacevalid}{\reducedstatespace^\textrm{valid}}
 \newcommand{\reducedstatespaceinv}{\reducedstatespace^\textrm{inv}}
@@ -348,10 +348,10 @@
 \newcommand{\motionprogressthreshold}{\beta_m}
 
 % Virtual rubber band variables
-\newcommand{\band}{b}
+\newcommand{\band}{v}
 \newcommand{\bandlength}{L}
 \newcommand{\bandlengthmax}{L^\textrm{max}}
-\newcommand{\bandspace}{\mathbb{B}}
+\newcommand{\bandspace}{\mathbb{V}}
 \newcommand{\bandspacevalid}{\bandspace^{\textrm{valid}}}
 \newcommand{\bandspaceinv}{\bandspace^{\textrm{inv}}}
 \newcommand{\bandgoal}{\bandspace^\textrm{goal}}
@@ -377,7 +377,7 @@
 \newcommand{\pspaceinv}{\reducedstatespaceinv}
 \newcommand{\pspaceinvfull}{\pspace \setminus \pspacevalid}
 \newcommand{\pstate}{\reducedstate}
-\newcommand{\Pstate}{C}
+\newcommand{\Pstate}{V}
 \newcommand{\pstatefull}{(\robotconfig, \band)}
 \newcommand{\pstater}{\pstate_\robotconfig}
 \newcommand{\pstateb}{\pstate_\band}
@@ -405,7 +405,7 @@
 \newcommand{\banddistscale}{\lambda_b}
 
 % RRT definitions
-\newcommand{\rrtnodeset}{\mathcal{V}}
+\newcommand{\rrtnodeset}{\mathcal{N}}
 \newcommand{\rrtedgeset}{\mathcal{E}}
 \newcommand{\nodesnew}{\rrtnodeset^\textrm{new}}
 \newcommand{\edgesnew}{\rrtedgeset^\textrm{new}}

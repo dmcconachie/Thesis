@@ -1,7 +1,7 @@
 \section{Simulation Experiments and Results}
 \label{sec:simulation_experiments}
 
-We now present four example tasks to demonstrate our algorithm, two with cloth, and two with rope. These tasks are designed to show that our framework is able to handle non-trivial tasks which cannot be performed using either our controller or planner alone. In Sec.~\ref{sec:live_robot} we demonstrate that our method can also be applied to a physical robot.
+We now present four example tasks to demonstrate our algorithm, two with cloth, and two with rope. These tasks are designed to show that our framework is able to handle non-trivial tasks which cannot be performed using either our controller or planner alone. In Section~\ref{sec:live_robot} we demonstrate that our method can also be applied to a physical robot.
 
 For these simulation tasks $\robotCspace = \gripperCspace$ -- i.e. there are two free flying grippers. In the first and second tasks, two grippers manipulate the cloth so that it covers a table. In the first task the cloth is obstructed by a pillar while in the second task the grippers must pass through a narrow passage before the table can be covered. The third and fourth scenarios require the robot to navigate a rope through a three-dimensional maze before aligning the rope with a line traced on the floor (see Figure~\ref{fig:example_tasks}). The video accompanying this paper shows the task executions.
  %(\url{https://youtu.be/JyJPjLSXzYo})
@@ -19,13 +19,6 @@ To smooth the path returned by the planner, at each iteration we randomly select
 \label{sec:single_pillar}
 
 In the first example task, the objective is to spread the cloth across a table that is on the far side  of a pillar (see Figure~\ref{fig:cloth_single_pole}). We uniformly discretize the surface of the table to create the target points $\target$, with each discretized point creating a navigation function that pulls the closest point on the deformable object towards the target. These target points are set slightly above the surface to allow for collision margins within the simulator. A single point on the cloth can have multiple ``pulls'' or none. Task error $\ErrorFn$ is defined as the sum of the Dijkstra's distances from each target point to the closest point on the cloth. If a target point in $\target$ is within a small-enough threshold of their nearest neighbors in $\deformconfig$, then these points are considered ``covered'' and do not influence task error or any other calculation. Our results show that even though the global planner is only planning using the gripper positions and a virtual elastic band between them, it is able to find the correct neighbourhood for the local controller to complete the task. On average we are able to find and smooth a path in 3.0 seconds (Table~\ref{tab:planning_statistics}, Table~\ref{tab:smoothing_statistics}), with the majority of the planning time spent on forward propagation of the virtual elastic band as part of the validity check for a potential movement of the grippers. In all 100 trials the global planner is only invoked once, with the local controller completing the task after the plan finishes.
-
-
-
-
-
-
-
 
 
 \subsection{Double Slit}
@@ -216,7 +209,7 @@ Table~\ref{tab:prediction_statistics} shows a comparison between the average tim
 \section{Physical Robot Experiment and Results}
 \label{sec:live_robot}
 
-In order to show that our method is practical for a physical robotic system, not only free floating end-effectors, we set up a task similar to the single pillar task (Sec.~\ref{sec:single_pillar}) with a dual-arm robot. It also shows that while our methods strong assumptions about the ability to perceive the deformable object in Sec.~\ref{sec:main_problem_statement} (in particular no occlusions and no sensor noise), our framework is still able to perform meaningful tasks when those assumptions are violated. In this task the robot must align a cloth placemat inside of the pink rectangle, going around an obstacle in the process (Figure~\ref{fig:cloth_placemat}).
+In order to show that our method is practical for a physical robotic system, not only free floating end-effectors, we set up a task similar to the single pillar task (Section~\ref{sec:single_pillar}) with a dual-arm robot. It also shows that while our methods strong assumptions about the ability to perceive the deformable object in Section~\ref{sec:main_problem_statement} (in particular no occlusions and no sensor noise), our framework is still able to perform meaningful tasks when those assumptions are violated. In this task the robot must align a cloth placemat inside of the pink rectangle, going around an obstacle in the process (Figure~\ref{fig:cloth_placemat}).
 
 
 \subsection{Experiment Setup}
@@ -266,10 +259,6 @@ States &
 \makecell{Validity\\Checking\\Time (s)} & 
 \makecell{Random\\Restarts} &
 \makecell{Total\\Time\\(s)} \\
-% Iterations & 
-% \parbox{0.55in}{\centering Validity\\Checking\\Time (s)} & 
-% \parbox{0.75in}{\centering Visibility\\Deformation\\Time (s)}& 
-% \parbox{0.3in}{\centering \smallskip Total\\Time (s) \smallskip} \\
 \noalign{\smallskip}\hline\noalign{\smallskip}
 \makecell{83041\\{[83677]}} &
 \makecell{8438\\{[6182]}} &
@@ -280,9 +269,6 @@ States &
 \noalign{\smallskip}\hline
 \end{tabular}
 \end{table*}
-
-
-
 
 \begin{table}[ht]
 \centering
@@ -314,7 +300,3 @@ Iterations &
 Tables~\ref{tab:live_robot_stats_planning} and \ref{tab:live_robot_stats_smoothing} show the planning and smoothing statistics across 100 planning trials with identical starting configurations, but different random seeds. On average planning and smoothing takes less than 60 seconds, with forward kinematics and collision checking dominating the planning time. The restart timeout was unused in 68 out of 100 trials, with the other 32 trials requiring a total of 50 restarts between them. Figure~\ref{fig:placemat_planning_time} shows that the planning time follows a ``heavy tail'' distribution typical of sampling-based planners.
 
 Our overall framework is able to complete this task as shown in Figure~\ref{fig:cloth_placemat}. As in the simulated version of this task, we are able to predict deadlock before the robot gets stuck, plan and execute a path to a new neighbourhood, and then use the local controller to finish the task.
-
-
-
-

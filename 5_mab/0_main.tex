@@ -283,11 +283,8 @@ Observation noise factor                                    & $\observationnoise
 We test our method on three synthetic tests and three deformable object manipulation tasks in simulation. The synthetic tasks show that the principles we use to estimate the coupling between models are reasonable; while the simulated tasks show that our method is effective at performing deformable object manipulation tasks. Table~\ref{tab:controller_param_table} shows the parameters used by the Jacobian-based controller, while Table~\ref{tab:param_table} shows the parameters used by the the bandit algorithms for all experiments. We chose these parameters by comparing performance across noise factors $\observationnoisefactor^2$ and $\transitionnoisefactor^2$ from $\{0.01, 0.1, 1, 10\}$ and correlation strength factor $\correlationfactor$ from $\{0.1, 0.5, 0.9, 0.99\}$. While performance on individual experiments could be marginally improved by using different values, we found that $\observationnoisefactor^2=0.01$, $\transitionnoisefactor^2=0.1$, and $\correlationfactor=0.9$ resulted in robust performance for all of our manipulation tasks. $\utilityprocessscale$ is set dynamically and discussed in Section~\ref{sec:synthetic_trials}.
 
 
-
-
 \subsection{Synthetic Tests}
 \label{sec:synthetic_trials}
-
 
 For the synthetic tests, we set up an underactuated system that is representative of manipulating a deformable object with configuration $y \in \reals^n$ and control input $\dot x \in \reals^m$ such that $m < n$ and $\dot y = J \dot x$. To construct the Jacobian of this system we start with $J = \begin{bmatrix}\eye_{m \times m} \\ \mathbf{0}_{(n-m) \times m} \end{bmatrix}$ and add uniform noise drawn from $[-0.1, 0.1]$ to each element of $J$. The system configuration starts at $\begin{bmatrix}10 & \dots & 10\end{bmatrix}^T$ with the target configuration set to the origin. Error is defined as $\ErrorFn(t) = \| y(t) \|$, and the desired direction to move the system at each timestep is $\dot y_d(t) = - y(t)$. These tasks have no obstacles or stretching, thus $\obsavoidfactor, \stretchweightfactor,$ and $\grippervelmaxobs$ are unused. Rather than setting the utility noise scale $\utilityprocessscale$ \textit{a priori}, we use an annealing filter
 \begin{equation}
