@@ -3,9 +3,6 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\todoin{Rework this chapter to account for the previous chapters existing in the same document}
-
-
 \section{Introduction}
 
 Robot motion planning algorithms have been extremely successful for systems where the dynamics can be easily specified and efficiently evaluated. However, for tasks such as manipulation of deformable objects, the dynamics are very difficult to model \cite{Essahbi2012} and usually require numerical simulation to evaluate. This simulation can be time-consuming and/or inaccurate. Including such simulations inside a planner can result in plans that take hours to compute \cite{Bai2016}.
@@ -14,67 +11,58 @@ Motivated by tasks where dynamics are difficult to specify and evaluate, we pres
 
 \begin{figure}[h]
     \centering
-    \includegraphics[trim={0 1.5in 5.3in 0},clip,width=\columnwidth]{icra_fig_1}
+    \includegraphics[trim={0 1.5in 5.3in 0},clip,width=0.8\columnwidth]{icra_fig_1}
     \caption{Top: a plan generated without using a classifier moves the rope under a hook and gets caught. Bottom: a plan generated with a classifier avoids this mistake, and reaches the goal.}
     \label{fig:intro_figure}
 \end{figure}
 
 After gathering a dataset where transitions are labeled as reliable or unreliable, we train a classifier to predict the reliability of a given transition. We then incorporate this classifier into an RRT-based planner by biasing the planner to reject transitions that are classified as unreliable. The resulting planner tends to find sequences of transitions that are likely to produce the desired outcome when the true dynamics of the system are applied, even though the planner plans with no explicit knowledge of the true dynamics.
 
-This paper presents both an abstract formulation of the problem of planning in a reduced state space with a classifier and how to apply this formulation to two systems. First, to illustrate our framework on a straightforward example, we consider a planar three-link arm with limited joint torque. Using a learned classifier for this system allows us to plan in configuration space (not considering dynamics) while avoiding transitions that cannot be accomplished with the limited torque. The second system focuses on rope manipulation tasks; we use a Virtual Elastic Band (VEB) \cite{McConachie2017} as the reduced dynamics model of the rope, as this has been shown to allow fast planning in difficult scenarios. However, this model assumes that there is no minimum length of the rope, which entails that the planner cannot detect cases where the slack material is caught on corners or hooks, preventing the motion plan from being completed because the caught object can overstretch (see Figure~\ref{fig:intro_figure}). Thus, we learn a classifier to bias the planner away from states where the object can be caught on an obstacle.
-The contributions of this paper are:
+This chapter presents both an abstract formulation of the problem of planning in a reduced state space with a classifier and how to apply this formulation to two systems. First, to illustrate our framework on a straightforward example, we consider a planar three-link arm with limited joint torque. Using a learned classifier for this system allows us to plan in configuration space (not considering dynamics) while avoiding transitions that cannot be accomplished with the limited torque. The second system focuses on rope manipulation tasks; we use a Virtual Elastic Band (VEB) (Section.~\ref{sec:overstretch} as the reduced dynamics model of the rope, as this has been shown to allow fast planning in difficult scenarios. However, this model assumes that there is no minimum length of the rope, which entails that the planner cannot detect cases where the slack material is caught on corners or hooks, preventing the motion plan from being completed because the caught object can overstretch (see Figure~\ref{fig:intro_figure}). Thus, we learn a classifier to bias the planner away from states where the object can be caught on an obstacle.
+The contributions of this chapter are:
 \begin{enumerate}
     \item A novel formulation of planning in reduced state spaces
     \item A method to generate and label data for classification of transition reliability
     \item Experiments demonstrating the efficacy of our framework for both the planar arm reaching and rope manipulation tasks
-    %\item Experiments demonstrating the efficacy of our method for rope manipulation tasks
 \end{enumerate}
 
-Our experiments suggest that we can learn a classification function for the reliability of transitions which improves the success rate of planning with the reduced model for both the planar arm and rope manipulation. Our simulation experiments considering rope manipulation in several challenging environments containing hooks demonstrate the classifier's ability to bias the planner away from unreliable transitions and to generalize over environments and rope lengths. %We find that using classification significantly increases the success rate of the planner. 
-Finally, to show a practical application of our work, we demonstrate our method running on a 16 DoF robot manipulating a rope near an engine assembly.
+Our experiments suggest that we can learn a classification function for the reliability of transitions which improves the success rate of planning with the reduced model for both the planar arm and rope manipulation. Our simulation experiments considering rope manipulation in several challenging environments containing hooks demonstrate the classifier's ability to bias the planner away from unreliable transitions and to generalize over environments and rope lengths. Finally, to show a practical application of our work, we demonstrate our method running on a 16 DoF robot manipulating a rope near an engine assembly.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 \section{General Problem Formulation}
-
 
 We begin by formulating our problem in a system-agnostic way and then describe how to apply this formulation to planning for rope manipulation. Let the true system operate in a state space $\truestatespace$ with dynamics $\truestate_{t+1} = f(\truestate_t,\statecommand,\obstacle)$, where $\statecommand$ is a command given to the system and $\obstacle$ is the environment. We assume that the true state space has Markovian dynamics. 
 
 The problem we address in this work is how to find a sequence of $\taskexecutiontime$ commands $\{\statecommand_1, \dots, \statecommand_{\taskexecutiontime} \}$ to move from a start state $\truestate_0$ to a goal state. The goal set is specified by the function $\texttt{Goal}_\truestate: \truestatespace \rightarrow \{ 0,1 \}$, which returns $1$ if a state is a goal and $0$ otherwise. We thus to seek to solve the following:
-
-
 \begin{equation}
     \begin{aligned}
         & \text{find}   & & \taskexecutiontime, \{\statecommand_1, \dots, \statecommand_{\taskexecutiontime} \} \\
         & \text{s.t.}   & & \texttt{Goal}_\truestate(\truestate_{\taskexecutiontime}) = 1\\ 
-        &               & & \truestate_t = f(\truestate_{t-1}, \statecommand_t,\obstacle), \:  t = 1, \dots, \taskexecutiontime\\
+        &               & & \truestate_t = f(\truestate_{t-1}, \statecommand_t,\obstacle), \:  t = 1, \dots, \taskexecutiontime \enspace . \\
     \end{aligned}
     \label{eqn:main_planning_problem}
 \end{equation}
-
-\noindent However, $f$ may not be known in closed-form or it may be expensive to evaluate within a planner. Thus we cannot solve this problem by planning in $\truestatespace$ with the true dynamics.
+However, $f$ may not be known in closed-form or it may be expensive to evaluate within a planner. Thus we cannot solve this problem by planning in $\truestatespace$ with the true dynamics.
 
 To create a more tractable planning problem we define $\reducedstatespace$ to be a \textit{reduced state space} and define a reduction function: $\reducedstate = r(\truestate,\obstacle)$. We do not assume that $r$ is invertible. Dynamics in $\reducedstatespace$ are defined as $\reducedstate_{t+1} = g(\reducedstate_t,\reducedcommand,\obstacle)$ (note that $\reducedcommand$ and $\statecommand$ may be in different spaces). We treat the dynamics in this reduced state space as Markovian. $\reducedstatespace$, $r$, and $g$ are user-defined. There is then an analogous goal function for reduced states $\texttt{Goal}_\reducedstate: \reducedstatespace \rightarrow \{ 0,1 \}$.  The planning problem then becomes:
-
-
 \begin{equation}
     \begin{aligned}
         & \text{find}   & & \taskexecutiontime, \{\reducedcommand_1, \dots, \reducedcommand_{\taskexecutiontime} \} \\
         & \text{s.t.}   & & \reducedstate_0 = r(\truestate_0,\obstacle) \\
         &               & &  \texttt{Goal}_\reducedstate(\reducedstate_{\taskexecutiontime}) = 1\\
-        &               & & \reducedstate_{t} = g(\reducedstate_{t-1},\reducedcommand_t,\obstacle), \:  t = 1, \dots, \taskexecutiontime \\
+        &               & & \reducedstate_{t} = g(\reducedstate_{t-1},\reducedcommand_t,\obstacle), \:  t = 1, \dots, \taskexecutiontime \enspace . \\
     \end{aligned}
     \label{eqn:approx_planning_problem}
 \end{equation}
 
-Rather than making explicit guarantees on the relationship between $f$ and $g$, we assume we have access to a rollout function $\truestate_{t+1} = \Gamma(\truestate_t,\reducedcommand,\obstacle)$, which outputs the next state when attempting to perform an action $\reducedcommand$ given some controller for the system. We assume that $\Gamma$ has built-in safety limits, so it will stop before violating a constraint (e.g. stopping before colliding with an obstacle). If $\Gamma$ reaches a constraint boundary it will output the state on the boundary and will not violate the constraint. $\Gamma$ is treated as a black box. The form of $\Gamma$ may be known but even if it is, we assume it is too expensive to evaluate within the planner, otherwise there would likely be no need for the reduction. We assume we are able to gather data by executing $\Gamma$.
+Rather than making explicit guarantees on the relationship between $f$ and $g$, we assume we have access to a rollout function $\truestate_{t+1} = \Gamma(\truestate_t, \reducedcommand, \obstacle)$, which outputs the next state when attempting to perform an action $\reducedcommand$ given some controller for the system. We assume that $\Gamma$ has built-in safety limits, so it will stop before violating a constraint (e.g. stopping before colliding with an obstacle). If $\Gamma$ reaches a constraint boundary it will output the state on the boundary and will not violate the constraint. $\Gamma$ is treated as a black box. The form of $\Gamma$ may be known but even if it is, we assume it is too expensive to evaluate within the planner, otherwise there would likely be no need for the reduction. We assume we are able to gather data by executing $\Gamma$.
 
-We will solve the problem in Equation \ref{eqn:approx_planning_problem} using a motion planner that plans in $\reducedstatespace$. However, the plan we generate may not lead to the goal in execution because we may have lost information in $r$ and/or $g$. Our approach is thus to bias our planner so that it avoids taking actions for which $r$ and $g$ are not reliable approximations of the behavior of the system. See Figure~\ref{fig:overview} for an overview of our framework.
+We will solve the problem in Eq.~\eqref{eqn:approx_planning_problem} using a motion planner that plans in $\reducedstatespace$. However, the plan we generate may not lead to the goal in execution because we may have lost information in $r$ and/or $g$. Our approach is thus to bias our planner so that it avoids taking actions for which $r$ and $g$ are not reliable approximations of the behavior of the system. See Figure~\ref{fig:overview} for an overview of our framework.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\columnwidth]{overview_hz}
+    \includegraphics[width=0.7\columnwidth]{overview_hz}
     \caption{An outline of our framework. First, we plan and execute many control sequences to gather a dataset of transitions. These transitions are labeled according to a function $l$ and used to train a classifier which predicts whether a transition is reliable given the model reduction. This classifier is used to bias the planner away from unreliable transitions.}
     \label{fig:overview}
 \end{figure}
@@ -95,7 +83,7 @@ To train our classifier, we need to gather a dataset of transitions and label th
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\linewidth]{flowgraph}
+    \includegraphics[width=0.7\linewidth]{flowgraph}
     \caption{Circles represent variables and boxes represent functions. Orange: variables defining the $t$th transition. Red path: reduced dynamics prediction; Blue path: rollout result.}
     \label{fig:flowgraph}
 \end{figure}
@@ -114,8 +102,8 @@ To label the data we require a function that evaluates if the two predictions ar
 Intuitively, this function first checks if $\hat{\reducedstate}_t$ $\tilde{\reducedstate}_t$ are close. If they are, and $\hat{\reducedstate}_{t+1}$ and $\tilde{\reducedstate}_{t+1}$ are not close, then the transition is labeled \texttt{Unreliable} because the reduced dynamics prediction was inaccurate. If the starting states $\hat{\reducedstate}_t$ and $\tilde{\reducedstate}_t$ \textit{are not} similar, then the rollout and reduced dynamics predictions have already diverged and we do not have a meaningful ground-truth label for this transition. To be conservative in our prediction, we label this transition \texttt{Unreliable}. If both $\hat{\reducedstate}_t$, $\tilde{\reducedstate}_t$ are close and $\hat{\reducedstate}_{t+1}$, $\tilde{\reducedstate}_{t+1}$ are close then $r$ and $g$ have performed well and we label the transition \texttt{Reliable}.
 
 \subsection{An Illustrative Navigation Example}
-
 \label{sec:car_example}
+
 To clarify the above framework and learning problem formulation, we describe an example system where the various functions and spaces can be easily visualized. Consider a car with state $\truestate = [q,\dot{q}]$, where $q = [q_x,q_y,q_\theta]$ and control inputs $\statecommand = [\statecommand_a,\statecommand_\phi]$, which correspond to the acceleration and steering angle. $f(x_t,\statecommand,\obstacle)$ is the standard second-order car dynamics. 
 
 We define a reduced state using the function $\reducedstate = r(\truestate,\obstacle) = x_q$ (i.e. we only consider position variables in the reduced space) and the controls to be $\reducedcommand = [\Delta x,\Delta y, \Delta \theta ]$. The reduced dynamics are $\reducedstate_{t+1} = g(\reducedstate_t,\reducedcommand,\obstacle) = \reducedstate_t + \reducedcommand$.
@@ -126,7 +114,7 @@ The task for the car is to drive to a given location while maintaining low speed
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.5\linewidth]{classifier}
+    \includegraphics[width=0.4\linewidth]{classifier}
     \caption{Illustration of desired prediction from a classifier. Dotted triangles indicate $\hat{\reducedstate}_1$s from different $u^\reducedstate_0$ inputs. Green: Classifier predicts these transitions are $\texttt{Reliable}$. Red: Classifier predicts these transitions are $\texttt{Unreliable}$. Note that the line between $\reducedstate_0$ and $\hat{\reducedstate}_1$ is collision-free for all examples shown.}
     \label{fig:classifier}
 \end{figure}
@@ -137,7 +125,7 @@ While we may produce a useful classifier for planning, it is important to know t
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\linewidth]{rollouts}
+    \includegraphics[width=0.9\linewidth]{rollouts}
     \caption{Illustration of the effect of information loss on the predictability of a transition. In both scenarios states with different velocities reduce to the same $\reducedstate_0$. Left: A case where rolling out the same $\reducedcommand$ from different initial velocities (blue) produces the same $\tilde{\reducedstate}_1$ values, since the controller is robust to initial velocity in this case. Right: A case where rolling out the same $\reducedcommand$ with different initial velocities produces different $\tilde{\reducedstate}_1$ values. At high initial velocity ($c$) the controller cannot turn before reaching the obstacle.}
     \label{fig:cars}
 \end{figure}
@@ -149,19 +137,6 @@ However, if there are many noisy labels in the data, it means that $r$ and $g$ a
 
 While it is possible to query every transition considered by the planner and reject all those that are classified as $\texttt{Unreliable}$, such a strategy would likely be overly optimistic about what the classifier has learned. In difficult scenarios the classifier may erroneously reject a set of transitions which is necessary to reach the goal, thus causing the planner to fail. Thus we accept transitions that are classified as \texttt{Unreliable} with a small probability determined by parameters $k$, a manually-specified constant, and $p_{acc}$, the validation accuracy of the classifier (see  Algorithm~\ref{alg:checktransition}). $p_{acc}$ is included because we wish to be more permissive about accepting transitions when the classifier performs more poorly in terms of generalization.
 
-While the above approach of incorporating classification can be applied to a wide range of planners, in this paper we focus on using RRT-based planners. An advantage of this approach for RRT-based planners is that we maintain the probabilistic completeness properties of the planner by guaranteeing that any transition will be accepted with a non-zero probability (although the probability is small for transitions classified as $\texttt{Unreliable}$).
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\section{Application to a Torque-Limited Planar Arm}
-
-First, we demonstrate our framework on a 3-link arm that moves in the X-Z plane with gravity in the $-z$ direction. For this system we focus on the effects of including a classifier in the planner without using a reduction function. This allows us to disentangle the effects of model reduction and inaccurate dynamics. %For demonstration, we will use a purely kinematic planner which assumes that the system can move in arbitrary straight lines in configuration space.
-
-% https://tex.stackexchange.com/questions/321765/how-to-increase-algorithms-top-space-to-page-margin?rq=1
-% \floatstyle{spaceruled}% Select new float style
-% \restylefloat{algorithm}
 \begin{algorithm}[h]
 \caption{\strut \texttt{CheckTransition}($T^b$)}%}\reducedstate, \reducedcommand, \gripperconfig')$}
 \begin{algorithmic}[1]
@@ -179,6 +154,16 @@ First, we demonstrate our framework on a 3-link arm that moves in the X-Z plane 
 \label{alg:checktransition}
 \end{algorithm}
 
+While the above approach of incorporating classification can be applied to a wide range of planners, in this paper we focus on using RRT-based planners. An advantage of this approach for RRT-based planners is that we maintain the probabilistic completeness properties of the planner by guaranteeing that any transition will be accepted with a non-zero probability (although the probability is small for transitions classified as $\texttt{Unreliable}$).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Application to a Torque-Limited Planar Arm}
+
+First, we demonstrate our framework on a 3-link arm that moves in the X-Z plane with gravity in the $-z$ direction. For this system we focus on the effects of including a classifier in the planner without using a reduction function. This allows us to disentangle the effects of model reduction and inaccurate dynamics. %For demonstration, we will use a purely kinematic planner which assumes that the system can move in arbitrary straight lines in configuration space.
+
 For this experiment we use the MuJoCo simulator~\cite{mujoco} as the ground truth dynamics. Each joint is controlled using the default position servo actuator available in MuJoCo. We convert the MuJoCo simulation to a quasistatic system by waiting for the arm to settle after a configuration is commanded (this is $f$). These experiments do not have any obstacles, so we omit $\obstacle$ for brevity.
 
 
@@ -186,7 +171,7 @@ For this experiment we use the MuJoCo simulator~\cite{mujoco} as the ground trut
 
 Let $\truestate \in \reals^3$ be the true state of the system. Let $u^\truestate = \truestate_{des} \in \reals^3$ be the commanded position of the arm at each timestep. Let $f(x_t, u_t)$ be the quasistatic dynamics defined by MuJoCo. We set torque limits $\tau_1, \tau_2, \tau_3$ so that $\tau_1 \ll \tau_2 = \tau_3$. This means the first joint cannot support the weight of the arm when extended horizontally. As we are not doing a model reduction, $\reducedstate = r(\truestate) = \truestate$. Commands in both spaces are also the same: $\reducedcommand = u^\truestate$. The dynamics in $\reducedstatespace$ are purely kinematic: $\reducedstate_{t+1} = g(\reducedstate_t, \reducedcommand_t) = \reducedcommand_t$. These dynamics are fast to evaluate and therefore efficient for planning, but can result in plans which do not reach the goal configuration when executed (Figure~\ref{fig:planar_arm}). As there are no obstacles and $\reducedcommand = u^\truestate$, the rollout function $\Gamma(x_t, \reducedcommand_t, \obstacle) = f(x_t, u_t^\truestate)$.
 
-The planning problem is for the arm to reach a goal end-effector position. Using the true dynamics, this corresponds to Problem \eqref{eqn:main_planning_problem}. However, since we assume the true dynamics are not available, we seek to solve Problem \eqref{eqn:approx_planning_problem} given the definitions of $r$ and $g$ above.
+The planning problem is for the arm to reach a goal end-effector position. Using the true dynamics, this corresponds to Problem~\eqref{eqn:main_planning_problem}. However, since we assume the true dynamics are not available, we seek to solve Problem~\eqref{eqn:approx_planning_problem} given the definitions of $r$ and $g$ above.
 
 
 \subsection{Data Collection, Labelling, and Training}
@@ -205,7 +190,7 @@ To test the effect of using the learned classifier, we randomly generate 100 pla
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\columnwidth]{armresults}
+    \includegraphics[width=0.7\columnwidth]{armresults}
     \caption{Left: Plan generated using the learned classifier to go from $[\frac{-pi}{2}, 0, 0]$ to $[\frac{pi}{2}, 0, 0]$. The plan avoids transitions which move the arm toward a horizontal position and successfully completes the task. Center: Plan generated without the classifier. The plan takes the arm to the horizontal position where it fails due to the torque limit. Right: Number of successes as success threshold $\beta$ varies}
     \label{fig:planar_arm}
 \end{figure}
@@ -221,19 +206,18 @@ Let the robot be represented by a pair of grippers with configuration $\gripperc
 
 We assume that our model of the robot is purely kinematic, with no higher order dynamics. We assume that the robot has two end-effectors that are rigidly attached to the rope. The configuration of a rope is a set $\deformconfig \subset \reals^3$ of $\ndeformpoints = | \deformconfig |$ points. We assume that we have a method of sensing $\deformconfig$. The rest of the environment $\obstacle$ is assumed to be both static, and known exactly. We assume that the robot moves slowly enough that we can treat the combined robot and rope as quasi-static. The true state of the system is then $\truestate = [\gripperconfig,\deformconfig]$ and $\statecommand = \Delta \gripperconfig$. Let $f$ be a joint-space controller for the robot that stops when any of the following occur: 1) the grippers contact an object; or 2) the object stretches by more than a factor $\lambda$. Due to the difficulty of simulating rope physics, we do not assume we can execute $f$ within a motion planner.
 
-We wish to find a sequence of $\taskexecutiontime$ commands $\{\statecommand_1, \dots, \statecommand_{\taskexecutiontime} \}$ to move from a start state $\truestate_0$ to a goal gripper configuration $\gripperconfig[g]$ such that each motion is feasible (this corresponds to Problem \eqref{eqn:main_planning_problem}). Note that this planning problem does not require bringing the rope to a specific configuration, which can often be done using local control \textit{after} bringing the object to a desired area (as in~\cite{McConachie2020}). Because we do not have access to $f$, we cannot solve this problem by planning in $\truestatespace$ directly.
+We wish to find a sequence of $\taskexecutiontime$ commands $\{\statecommand_1, \dots, \statecommand_{\taskexecutiontime} \}$ to move from a start state $\truestate_0$ to a goal gripper configuration $\gripperconfig[g]$ such that each motion is feasible (this corresponds to Problem~\eqref{eqn:main_planning_problem}). Note that this planning problem does not require bringing the rope to a specific configuration, which can often be done using local control \textit{after} bringing the object to a desired area (as in the previous chapter). Because we do not have access to $f$, we cannot solve this problem by planning in $\truestatespace$ directly.
 
 To make planning tractable we will perform a reduction and learn a classifier from data to predict when the reduction can be trusted. That classifier will then be used in a motion planner to bias it away from transitions that are not likely to be feasible under $\Gamma$.
 
 \subsection{Reduction}
-
 \label{sec:isrr_model_approx}
 
-\citet{McConachie2017} introduced the idea of a \textit{virtual elastic band} (VEB) between the robot's end-effectors. This VEB represents the shortest path through the rope between the end-effectors. The band approximates the constraint imposed by the rope on the motion of the robot; if the end-effectors move too far apart, then the VEB will be too long, and thus the rope is stretched beyond a task-specified maximum stretching factor. Similarly, if the VEB gets caught on an obstacle and becomes too long, then the rope is also overstretched. By considering only the geodesic between the end-effectors, we are assuming that the rest of the rope will comply to the environment, and does not need to be considered when predicting overstretch. The VEB representation allows us to use a fast prediction method when planning, but does not account for the part of the material that is slack. Denote the configuration of a VEB (i.e. a sequence of points) as $\band$. Then $\reducedstate = [\gripperconfig,\band]$ and can be generated by $\reducedstate = r(\truestate,\obstacle)$ for the reduction function defined in Chapter~\ref{chap:interleaving}. The dynamics of a VEB, $g(\reducedstate,\reducedcommand,\obstacle)$, are based on Quinlan's path deformation algorithm as presented in \cite{Quinlan1994} (see Section~4.2.3 of \cite{McConachie2017}). We also augment $g$ to return $\emptyset$ when $\reducedcommand$ causes the object to become overstretched. $\reducedstate$ is then propagated using $g$ and $\reducedcommand = \statecommand$. Since the commands are the same, our rollout function $\Gamma$, which uses $\reducedcommand$, is equivalent to $f$. To find a path in $\reducedstatespace$ we must solve Problem~\eqref{eqn:approx_planning_problem}.
+Chapter~\ref{chap:interleaving} introduced the idea of a \textit{virtual elastic band} (VEB) between the robot's end-effectors. This VEB represents the shortest path through the rope between the end-effectors. The band approximates the constraint imposed by the rope on the motion of the robot; if the end-effectors move too far apart, then the VEB will be too long, and thus the rope is stretched beyond a task-specified maximum stretching factor. Similarly, if the VEB gets caught on an obstacle and becomes too long, then the rope is also overstretched. By considering only the geodesic between the end-effectors, we are assuming that the rest of the rope will comply to the environment, and does not need to be considered when predicting overstretch. The VEB representation allows us to use a fast prediction method when planning, but does not account for the part of the material that is slack. Denote the configuration of a VEB (i.e. a sequence of points) as $\band$. Then $\reducedstate = [\gripperconfig,\band]$ and can be generated by $\reducedstate = r(\truestate,\obstacle)$ for the reduction function defined in Chapter~\ref{chap:interleaving}. The dynamics of a VEB, $g(\reducedstate,\reducedcommand,\obstacle)$, are based on Quinlan's path deformation algorithm as presented in \cite{Quinlan1994} (see Section~\ref{sec:overstretch}). We also augment $g$ to return $\emptyset$ when $\reducedcommand$ causes the object to become overstretched. $\reducedstate$ is then propagated using $g$ and $\reducedcommand = \statecommand$. Since the commands are the same, our rollout function $\Gamma$, which uses $\reducedcommand$, is equivalent to $f$. To find a path in $\reducedstatespace$ we must solve Problem~\eqref{eqn:approx_planning_problem}.
 
 We use the planner described in Chapter~\ref{chap:interleaving} to solve this problem; this is an RRT-based planner designed for use with virtual elastic bands as part of the planning configuration space. This planner searches for a feasible path for the robot between a given start and goal configuration, while ensuring the VEB is never overstretched.
 
-The virtual band approximation choice favors speed over model accuracy; as a consequence, there are several issues that it does not address. Specifically, environments with ``hooks'' can cause problems due to the approximation methods: The virtual elastic band assumes that there is no minimum length of the rope. This assumption means that the planner cannot detect cases where the slack material can get caught on corners or hooks, preventing the motion plan from being completed because the caught object can overstretch. To reduce the chances of this occurring we learn a classifier for $T^\reducedstate$ to predict if a given transition is either \texttt{Reliable} or \texttt{Unreliable} and bias the planner away from \texttt{Unreliable} transitions. We bias the planner using the \texttt{CheckTransition} function shown in Algorithm~\ref{alg:checktransition}, which is used as an edge validity check in addition to the collision and overstretching checks described in Chapter~\ref{chap:interleaving}.
+The VEB approximation choice favors speed over model accuracy; as a consequence, there are several issues that it does not address. Specifically, environments with ``hooks'' can cause problems due to the approximation methods: The virtual elastic band assumes that there is no minimum length of the rope. This assumption means that the planner cannot detect cases where the slack material can get caught on corners or hooks, preventing the motion plan from being completed because the caught object can overstretch. To reduce the chances of this occurring we learn a classifier for $T^\reducedstate$ to predict if a given transition is either \texttt{Reliable} or \texttt{Unreliable} and bias the planner away from \texttt{Unreliable} transitions. We bias the planner using the \texttt{CheckTransition} function shown in Algorithm~\ref{alg:checktransition}, which is used as an edge validity check in addition to the collision and overstretching checks described in Chapter~\ref{chap:interleaving}.
 
 \subsection{Learning the Classifier}
 
@@ -241,7 +225,11 @@ To learn the classifier we define the \texttt{Close} function for our domain to 
 $$
 \texttt{Close}(\hat \reducedstate_t, \tilde \reducedstate_t) = \left( D(\hat \reducedstate_t.\band, \tilde \reducedstate_t.\band) < \alpha \right) \land \texttt{FOH}(\hat \reducedstate_t.\band, \tilde \reducedstate_t.\band,\obstacle)
 $$
-\noindent Where $D$ computes the sum of the point-wise distances between the two virtual elastic bands, $\alpha$ is a constant, and \texttt{FOH} evaluates if the two bands are in the same first-order homotopy class \cite{Jaillet2008}. We then apply labeling function $l$ shown in Eq.~\ref{eqn:labeling} for each transition. We generate many plans using our planner (without the classifier) to produce the dataset (see Section~\ref{sec:ropedata}).
+\noindent Where $D$ computes the sum of the point-wise distances between the two virtual elastic bands, $\alpha$ is a constant, and \texttt{FOH} evaluates if the two bands are in the same first-order homotopy class \cite{Jaillet2008}. We then apply labeling function $l$ shown in Eq.~\eqref{eqn:labeling} for each transition. We generate many plans using our planner (without the classifier) to produce the dataset (see Section~\ref{sec:ropedata}).
+
+For our classifier we use a neural network based on \textit{VoxNet} \cite{Maturana2015VoxNet}, a network for classifying objects from a voxel grid. The network consists of two 3D convolutional layers (filter size 5, 3 and stride 2, 1 respectively) with max pooling followed by two fully-connected layers. All layers have ReLU activations except the output layer, which has a sigmoid activation.
+
+The input for our classifier consists is a three-channel binary voxel grid, with channels  $\left<\obstacle, \reducedstate, \reducedstate'\right>$, where $\reducedstate' = g(\reducedstate, \reducedcommand, E)$. Each voxel grid is $32\times32\times32$, and is constructed by checking for occupancy at every cell center. An example of the voxelized representation is shown in Figure~\ref{fig:VoxNet_input}.
 
 \begin{figure}[h]
     \centering
@@ -250,25 +238,7 @@ $$
     \label{fig:VoxNet_input}
 \end{figure}
 
-For our classifier we use a neural network based on \textit{VoxNet} \cite{Maturana2015VoxNet}, a network for classifying objects from a voxel grid. The network consists of two 3D convolutional layers (filter size 5, 3 and stride 2, 1 respectively) with max pooling followed by two fully-connected layers. All layers have ReLU activations except the output layer, which has a sigmoid activation.
-
-The input for our classifier consists is a three-channel binary voxel grid, with channels  $\left<\obstacle, \reducedstate, \reducedstate'\right>$, where $\reducedstate' = g(\reducedstate, \reducedcommand, E)$. Each voxel grid is $32\times32\times32$, and is constructed by checking for occupancy at every cell center. An example of the voxelized representation is shown in Figure~\ref{fig:VoxNet_input}.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{figure*}[h]
-    \centering
-    \includegraphics[height=1.6in,keepaspectratio]{simple_hook}\hfill
-    \includegraphics[height=1.6in,keepaspectratio]{multi_hook}\hfill
-    \includegraphics[height=1.6in,keepaspectratio]{complex_hook}\hfill
-    \includegraphics[height=1.6in,keepaspectratio]{engine_assembly}%
-    \caption{The rope is shown in green, with the grippers shown in blue. The target area for the grippers is shown in red. Walls with narrow slits for the grippers are shown in purple. Hooks and other obstacles are shown in dark cyan. Left: Simple Hook; Center Left: Multi Hook; Center Right: Complex Hook; Right: Engine Assembly}
-    \label{fig:scenarios}
-\end{figure*}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 \section{Rope Manipulation Experiments}
 
@@ -278,6 +248,16 @@ All simulation experiments were conducted in the open-source Bullet simulator \c
 \subsection{Scenarios}
 
 Each scenario involves moving the rope past one (or more) hooks, while the grippers traverse a narrow slit (Figure~\ref{fig:scenarios}).
+
+\begin{figure*}[h]
+    \centering
+    \includegraphics[height=1.63in,keepaspectratio]{simple_hook}\hfill
+    \includegraphics[height=1.63in,keepaspectratio]{multi_hook}\hfill
+    \includegraphics[height=1.63in,keepaspectratio]{complex_hook}\hfill
+    \includegraphics[height=1.63in,keepaspectratio]{engine_assembly}%
+    \caption{The rope is shown in green, with the grippers shown in blue. The target area for the grippers is shown in red. Walls with narrow slits for the grippers are shown in purple. Hooks and other obstacles are shown in dark cyan. Left: Simple Hook; Center Left: Multi Hook; Center Right: Complex Hook; Right: Engine Assembly}
+    \label{fig:scenarios}
+\end{figure*}
 
 \subsubsection{Simple Hook}
 In the Simple Hook environment, the end of the hook is not near any obstacles, thus the planner does not need to deal with the end of the hook and the narrow slit at the same time. We test four variants of the simple hook environment: Short, Regular, Long, Very Long corresponding to the lengths of the rope which are 0.55m, 0.87m, 1.13m, and 1.59m respectively.
@@ -303,13 +283,13 @@ To collect training data, we ran the planner without any classifier on the Simpl
 
 \subsection{Training the Classifier}
 VoxNet is trained using the Adam optimizer~\cite{adamOptimizer2015} with initial learning rate of $5 \times 10^{-4}$. We use a learning rate decay of $0.8$ every 4 epochs. Since the dataset set is imbalanced, with 32\% of the examples labelled as unreliable, and 68\% labelled as reliable, we use a weighted random sampler to make all minibatches balanced. A randomly selected 10\% of the data is held out for validation. Our minibatch size is 32, and we train for 100 epochs. We use the binary cross-entropy loss function during training. Training took approximately 16 hours on a Tesla V100-SMX2 GPU. The VoxNet classifier achieved 99\% accuracy on the training set and 91\% accuracy on the validation set. 
-
-
-
 \subsection{Planning Results}
 
+To evaluate the planning performance when using the classifier, we generated 30 plans using the classifier on each test environment and compare the success rate and planning time to planning without a classifier. A success is when executing the plan results in a final gripper configuration which is within a small tolerance of the goal gripper configuration. If, for example, the rope gets caught on a hook and prevents the grippers from reaching the goal, the trial is marked as a failure. Results are shown in Table~\ref{tab:planning_stats}. We set $k$ to 10 and $p_{acc}$ to $0.91$. Our results show that using a classifier improves the success rate of the planner over not using a classifier in all tested scenarios, but the effect is less prominent on the Multi Hook environment. The use of a classifier does lead to longer planning time, partially due to extra computation when checking each edge, as well as making the planning problem harder to solve. Section~\ref{sec:ral_discussion} discusses this in more detail. Example results can be found in the video at \ralurl.
+
 \begin{table}[h]
-\begin{center}
+\centering
+\caption{Planning statistics, averaged over 30  trials}
 \begin{tabular}{|l|l|c|c|}
 \hline
 \multirow{2}{*}{Environment} & \multirow{2}{*}{Metric} & \multicolumn{2}{c|}{Classifier} \\ 
@@ -345,13 +325,8 @@ VoxNet is trained using the Adam optimizer~\cite{adamOptimizer2015} with initial
                                             & Smoothing time (s)    & 0.3   & 4.1 \\
 \hline
 \end{tabular}
-\end{center}
-\caption{Planning statistics, averaged over 30  trials}
 \label{tab:planning_stats}
 \end{table}
-
-To evaluate the planning performance when using the classifier, we generated 30 plans using the classifier on each test environment and compare the success rate and planning time to planning without a classifier. A success is when executing the plan results in a final gripper configuration which is within a small tolerance of the goal gripper configuration. If, for example, the rope gets caught on a hook and prevents the grippers from reaching the goal, the trial is marked as a failure. Results are shown in Table~\ref{tab:planning_stats}. We set $k$ to 10 and $p_{acc}$ to $0.91$. Our results show that using a classifier improves the success rate of the planner over not using a classifier in all tested scenarios, but the effect is less prominent on the Multi Hook environment. The use of a classifier does lead to longer planning time, partially due to extra computation when checking each edge, as well as making the planning problem harder to solve. Section~\ref{sec:ral_discussion} discusses this in more detail. Example results can be found in the video at \ralurl.
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -364,7 +339,7 @@ It is important to note that while our method can find more feasible plans than 
 
 A major challenge in this work is determining how to label the data in a way that will lead to good performance. In particular, by including transitions where the reduced dynamics predictions have already diverged in our dataset and labelling these transitions as \texttt{Unreliable}, the classifier learns that interaction with objects is frequently poorly modelled by the VEB. This leads the planner to avoid contact with the environment when possible, but many interesting tasks involving deformable objects will explicitly require interaction with other objects.
 
-One interesting point is that increased classification accuracy does not necessarily lead to better planning performance. We experimented with different classifiers during development, and although VoxNet had the best classification accuracy on the validation set and usually the best performance, other classifiers performed equivalently or better for planning in some environments. It would therefore be desirable to find a way to use planner success to train the classifier, and we plan to investigate this in future work.
+One interesting point is that increased classification accuracy does not necessarily lead to better planning performance. We experimented with different classifiers during development, and although VoxNet had the best classification accuracy on the validation set and usually the best performance, other classifiers performed equivalently or better for planning in some environments. %It would therefore be desirable to find a way to use planner success to train the classifier, and we plan to investigate this in future work.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
