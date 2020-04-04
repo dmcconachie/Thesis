@@ -1,34 +1,15 @@
 \section{Probabilistic Completeness of Global Planning}
 \label{sec:analysis}
 
-
-
 Proving probablistic completeness in $\pspace$ is challenging due to the multi-modal nature of the problem. Specifically, as the virtual elastic band moves in and out of contact the dimensionality of the manifold that the system is operating in can change. In addition, the virtual elastic band forward propagation function (Alg.~\ref{alg:band_propogation}) can allow the band to ``snap tight'' as the grippers move past the edge of an obstacle, changing the number of points in the band representation as it does so. By leveraging the assumptions from Section~\ref{sec:rpath_assumptions}, we are able to bypass most of these challenges by focusing on the portion of $\pspace$ that can be analyzed; i.e. $\robotCspace$.
-
-
 
 This section proves the probabilistic completeness of the planning approach in two major steps.  First, it will show that the approach for selecting the nearest node in the tree for expansion is equivalent to performing a nearest-neighbor query in the full space.  Second, it proves that our algorithm will eventually return a path that is $\deltar$-similar to an optimal $\delta$-robust solution to the planning problem with probability 1 (if it exists), or it will terminate early having found an alternate path to the goal region. Recall that we do not require an optimal path, only a feasible one.
 
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.7\columnwidth]{nearest_neighbour}
-    \caption{Left: $\robotconfig^{(2)}$ is the nearest node to the $\pstaterand$ in robot space, but it my be as far as $\Dmaxf$ away in the full configuration space. By considering all nodes within $\Dmaxf$ in robot space, we ensure that any node (such as $\pstate^{(1)}$) that is closer to $\pstaterand$ than $\pstate^{(2)}$ is selected as part of $\Pstatenear$, while nodes such as $\pstate^{(4)}$ are excluded in order to avoid the expense of calculating the full configuration space distance. Right: we then measure the distance in the full configuration space to all nodes that could possibly be the nearest to $\pstaterand$, returning $\pstate^{(1)}$ as the nearest node in the tree.}
-    \label{fig:nearest}
-\end{figure}
-
-
-
-
-
-
 \subsection{Assumptions and Definitions:}
 \label{sec:rpath_assumptions}
-Our problem allows for the virtual elastic band to be in contact with the surface of an obstacle, both during execution and as part of the goal set; this means that common assumptions regarding the expansiveness (\cite{Hsu1999}) of the planning problem may not hold. Instead of relying on expansiveness, we will define a series of alternate definitions and assumptions which are sufficient to ensure the completeness of our method.
-
+Our problem allows for the virtual elastic band to be in contact with the surface of an obstacle, both during execution and as part of the goal set; this means that common assumptions regarding the expansiveness \cite{Hsu1999} of the planning problem may not hold. Instead of relying on expansiveness, we will define a series of alternate definitions and assumptions which are sufficient to ensure the completeness of our method.
 
 First, in line with prior work, we will be assuming properties of the problem instance in regards to robustness.  In particular, we will be assuming the existence of a solution to a given query $\refpathf : [0, 1] \rightarrow \pspacevalid$ which has several robustness properties.  This solution is called a reference path.
-
 
 To begin describing the properties of the reference path, we assume $\refpathf$ has robustness properties in the robot configuration space.  That is, the corresponding path in robot configuration space $\refpathr$ has strong $\deltar$-clearance under distance metric $d_\robotconfig(\cdot,\cdot)$ for some $\deltar > 0$.
 
@@ -37,7 +18,6 @@ To begin describing the properties of the reference path, we assume $\refpathf$ 
 \end{definition}
 
 Given our assumption about the $\deltar$-clearance of the reference path in robot space, there exists a set $\setofpathsr$ of $\deltar$-similar paths to the reference path which are also collision-free.
-
 
 \begin{definition}[$\delta$-similar path]
     Two paths $\configpath_a$ and $\configpath_b$ are $\delta$-similar if the Fr\'echet distance between the paths is less than or equal to $\delta$.
@@ -81,21 +61,16 @@ While the focus of this paper is not on asymptotic optimality, we will make use 
 
 Finally, we also assume that workspace is bounded. This will be true for any practical task and is rarely mentioned in the literature, but we will use this assumption in our analysis in Section~\ref{sec:nn_equiv}.
 
-
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% NN Equivalence
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Proof of Nearest-Neighbors Equivalence}
 \label{sec:nn_equiv}
 
-
 \begin{lemma}
     \label{lem:banddist}
      If the maximum distance between any two points in workspace is bounded by $\Dmaxw > 0$, then under distance metric $d_\band(\cdot, \cdot)$, the maximum distance between any two points in virtual elastic band space is bounded. I.e. $\exists \Dmaxb > 0$ such that $d_\band(\band_1, \band_2) \leq \Dmaxb \; \forall \band_1, \band_2 \in \bandspace$.
 \end{lemma}
-
 
 \noindent
 {\bf Proof.}
@@ -107,9 +82,6 @@ From the definition of $\bandspace$ in Section~\ref{sec:overstretch}, the number
 \end{split}
 \end{equation}
 \qed
-
-
-
 
 \begin{lemma}
     If workspace is bounded, then lines \ref{alg:nearst:robotspace}-\ref{alg:nearest:fullspace} in Alg.~\ref{alg:nearest} are equivalent to a nearest neighbor search in the full configuration space directly.
@@ -127,21 +99,19 @@ Next, consider that in Line~\ref{alg:nearst:robotspace} of the algorithm, the ne
 In Line~\ref{alg:nearest:radius} of the algorithm, a radius nearest-neighbors query of radius $\Dmaxf$ is performed, returning a set $\Pstatenear$.  By construction if there is a node $\pstate \in \rrtnodeset$ that is closer to $\pstaterand$ than $\nearapproxf$, then $\pstate \in \Pstatenear$ (Figure~\ref{fig:nearest}). Then, the method selects as the true nearest neighbor in full space $\pstate^\textrm{select} = \argmin_{\pstate \in \Pstatenear}{d_\pstate(\pstate, \pstaterand)}$.
 \qed
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\columnwidth]{nearest_neighbour}
+    \caption{Left: $\robotconfig^{(2)}$ is the nearest node to the $\pstaterand$ in robot space, but it my be as far as $\Dmaxf$ away in the full configuration space. By considering all nodes within $\Dmaxf$ in robot space, we ensure that any node (such as $\pstate^{(1)}$) that is closer to $\pstaterand$ than $\pstate^{(2)}$ is selected as part of $\Pstatenear$, while nodes such as $\pstate^{(4)}$ are excluded in order to avoid the expense of calculating the full configuration space distance. Right: we then measure the distance in the full configuration space to all nodes that could possibly be the nearest to $\pstaterand$, returning $\pstate^{(1)}$ as the nearest node in the tree.}
+    \label{fig:nearest}
+\end{figure}
+
 % \noindent
 % {\bf Proof.} We will show this with a simple contradiction.  Assume there is a tree vertex $q^{nearest}_f$ not in $N$ which is the closest to $q^{rand}_f$, having minimal distance under metric $d_\pstate$ of ${D^{nearest}_f}^2$.  This implies ${D^{nearest}_f}^2 < {D^{near}_f}^2 (1)$.  Given the above bound, it must be that the distance satisfies ${D^{nearest}_f}^2 \leq {D^{nearest}_r}^2 + \banddistscale \cdot {D^{max}}^2 (2)$; however, since $q^{nearest}_f \notin N$, it must be the case that ${D^{nearest}_r}^2 > {D^{near}_r}^2 + \banddistscale \cdot {D^{max}}^2 (3)$.  By substituting $(1)$ into $(3)$, we get that $ {d_\robotconfig^{nearest}}^2 > {d_\pstate^{nearest}}^2 + \banddistscale \cdot {D^{max}}^2$; however, by substituting $(2)$ into this equation, we get ${d_\robotconfig^{nearest}}^2 > {d_\robotconfig^{nearest}}^2 + 2\banddistscale \cdot {D^{max}}^2$ implying $0 > 2\banddistscale \cdot {D^{max}}^2$, which is clearly false.  Since $(2)$ and $(3)$ are true by definition, $(1)$ must be false; therefore, any node not in $N$ cannot be the closest node to $q^{rand}_f$.  Since the method returns the node $q^{select}_f$ with minimal distance to $q^{rand}_f$ in $N$, $q^{select}_f$ must be the nearest neighbor of $q^{rand}_f$. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  High-Level Proof
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.7\columnwidth]{CoveringBallSequence}
-    \caption{Example covering ball sequence for an example reference path with a distance along the path of $\ballseparation$ between each ball. Given that the path is $\deltar$-robust, each ball is a subset of $\robotCvalid$.}
-    \label{fig:covering_ball_sequence}
-\end{figure}
-
 
 \subsection{Construction of a $\deltar$-similar Path}
 \label{sec:delta_sim_traj_construction}
@@ -160,6 +130,12 @@ The objective here is to show with probability approaching $1$, the planner gene
 \noindent
 Denote $\robotconfig^*_k$ to be the center of the $k^{th}$ covering hyper-ball for the reference path $\refpathr$. Figure~\ref{fig:covering_ball_sequence} shows an example of a covering ball sequence.
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\columnwidth]{CoveringBallSequence}
+    \caption{Example covering ball sequence for an example reference path with a distance along the path of $\ballseparation$ between each ball. Given that the path is $\deltar$-robust, each ball is a subset of $\robotCvalid$. \rev{Update figure with correct notation}}
+    \label{fig:covering_ball_sequence}
+\end{figure}
 
 The objective is to show that the vertex set of the planning tree after $n$ iterations $\rrtnodeset_n$ probabilistically contains a node within the goal set, i.e.
 \begin{equation}
@@ -313,12 +289,6 @@ Thus, given that $\pr(\neg E^{(n)}_k) \rightarrow 0$ as $n \rightarrow \infty$ f
 \subsubsection{Selection of an appropriate node ($\selectbound$):}
 \label{sec:select}
 
-% \begin{figure}
-%     \centering
-%     \includegraphics{placeholder}
-%     \caption{Figure for Section~\ref{sec:select} and Section~\ref{sec:prop}}
-%     \label{fig:select_and_prop}
-% \end{figure}
 First, we define the following restriction on the definition of $\bestneardist$: 
 
 \begin{definition}[$\bestneardist$ Restriction]
@@ -332,10 +302,10 @@ The proof that $\selectbound > 0$ follows directly from the related work of \cit
 \end{equation}
 follows directly.
 
-\begin{figure}[t]
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.3\columnwidth]{nearest_neighbour_domination_region}
-    \caption{Minimum domination region for a node $\pstate_i$, adapted from \cite{LiAOKP2016} Lemma 23. Sampling $\pstaterand$ in the shaded region guarantees that a node $\pstatenear \in \hyperball_{\deltar}(\pstate_k^*)$ is selected for propagation so that either $\pstatenear = \pstate_i$ or $\cost(\pstatenear) < \cost(\pstate_i)$.}
+    \caption{Minimum domination region for a node $\pstate_i$, adapted from \citet{LiAOKP2016} Lemma 23. Sampling $\pstaterand$ in the shaded region guarantees that a node $\pstatenear \in \hyperball_{\deltar}(\pstate_k^*)$ is selected for propagation so that either $\pstatenear = \pstate_i$ or $\cost(\pstatenear) < \cost(\pstate_i)$. \rev{Update notation in this figure}}
     \label{fig:Yanbo_lemma_23_figure}
 \end{figure}
 

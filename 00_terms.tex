@@ -162,14 +162,14 @@
 \newcommand{\deformCspace}{\reals^\deformCspacesize}
 \newcommand{\deformconfigexpanded}{\begin{bmatrix} \deformpoint_1^T & \dots & \deformpoint_\ndeformpoints^T \end{bmatrix}^T}
 \newcommand{\deformvel}{\dot{\deformconfig}}
-\newcommand{\deformvelexpanded}{\begin{bmatrix} \deformvel_1^T & \dots & \deformvel_\ndeformpoints^T \end{bmatrix}^T}
+\newcommand{\deformvelexpanded}{\begin{bmatrix} \dot{\deformpoint}_1^T & \dots & \dot{\deformpoint}_\ndeformpoints^T \end{bmatrix}^T}
 \newcommand{\deformvelI}{\dot{\deformconfigI}}
 \newcommand{\deformvelJ}{\dot{\deformconfigJ}}
 \newcommand{\deformvelIpre}[1]{\dot{\deformpoint}_{#1,\deformidx}}
 \newcommand{\deformvelJpre}[1]{\dot{\deformpoint}_{#1,j}}
 \newcommand{\approxPVI}{\tilde{\deformpoint}_\deformidx}
 \newcommand{\deformVspace}{\reals^\deformCspacesize}
-\newcommand{\deformvelnormsq}{\left\| \deformvel \right\|^2_\Pinvweight}
+\newcommand{\deformvelnormsq}{\| \deformvel \|^2_\Pinvweight}
 \newcommand{\deformvelnormsqexpanded}{\sum_{\deformidx = 1}^\ndeformpoints \pinvweight_\deformidx \deformvelI^T \deformvelI = \deformvel^T \diag{(\Pinvweight)} \deformvel}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -295,8 +295,8 @@
 \newcommand{\closestpointKG}{\mathcal{I}_k(\gripperconfigG, \gripperconfigK)}
 \newcommand{\deformconfigGK}{\deformpoint_{\closestpointGK}}
 \newcommand{\deformconfigKG}{\deformpoint_{\closestpointKG}}
-\newcommand{\geodesicGK}{\mathcal{S}_{\gripperidx k}}
-\newcommand{\geodesicKG}{\mathcal{S}_{k \gripperidx}}
+\newcommand{\geodesicGK}{\mathcal{s}_{\gripperidx k}}
+\newcommand{\geodesicKG}{\mathcal{s}_{k \gripperidx}}
 \newcommand{\savoidGK}{u_\gripperidx^k}
 \newcommand{\savoidKG}{u_k^\gripperidx}
 
@@ -462,3 +462,10 @@
 \newcommand{\selectbound}{\gamma_k^{(\infty)}}
 \newcommand{\propagationprobability}{\rho_k^{(i)}}
 \newcommand{\propagationbound}{\rho_k^{(\infty)}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\taseurl}{\url{https://www.youtube.com/watch?v=d6ma_Kg8QlQ}}
+\newcommand{\irosurl}{\url{https://www.youtube.com/watch?v=Y-wPsPdQVgg}}
+\newcommand{\ijrrurl}{\url{https://www.youtube.com/watch?v=O9wOqpbev6U}}
+\newcommand{\ralurl}{\url{https://www.youtube.com/watch?v=esgWD8Iqi34}}

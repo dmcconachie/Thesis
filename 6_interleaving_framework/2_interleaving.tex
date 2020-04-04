@@ -1,16 +1,16 @@
 \section{Interleaving Planning and Control}
 \label{sec:main_framework_loop}
 
-\begin{figure}[t]
+Global planners are effective at finding paths through complex configuration spaces, but for highly underactuated systems such as deformable objects achieving a specific configuration is very difficult even with high-fidelity models; this means that we cannot rely on them to complete a task independent of a local controller. In order for the local controller to complete the task, the system must be in the correct basin of attraction. From this point of view it is not the planner's responsibility to complete a task but rather to move the system into the right basin for the local controller to finish the task. By explicitly separating planning from control we can use different representations of the deformable object for each component; this allows us to use a highly-simplified model of the deformable object for global planning to generate gross motion of the deformable object, while using an independent local approximation for the controller. The key question then is when should we use global planning versus local control?
+
+Our framework can be broken down into three major components: (1) A global motion planner to generate gross motion of the deformable object; (2) A local controller for refinement of the configuration of the deformable object; and (3) A novel deadlock prediction algorithm to determine when to use planning versus control. Figure~\ref{fig:main_loop_diagram} shows how these components are connected, switching between a local controller loop and planned path execution loop as needed. In the following sections we describe each component in turn, starting with the local controller.
+
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.8\columnwidth]{FrameworkBlockDiagram}
     \caption{Block diagram showing the major components of our framework. On each cycle we use either the local controller (dotted purple arrows) or a planned path (dashed red arrows) to predict if the system will be deadlocked in the future, planning a new path is needed to avoid deadlock.}
     \label{fig:main_loop_diagram}
 \end{figure}
-
-Global planners are effective at finding paths through complex configuration spaces, but for highly underactuated systems such as deformable objects achieving a specific configuration is very difficult even with high-fidelity models; this means that we cannot rely on them to complete a task independent of a local controller. In order for the local controller to complete the task, the system must be in the correct basin of attraction. From this point of view it is not the planner's responsibility to complete a task but rather to move the system into the right basin for the local controller to finish the task. By explicitly separating planning from control we can use different representations of the deformable object for each component; this allows us to use a highly-simplified model of the deformable object for global planning to generate gross motion of the deformable object, while using an independent local approximation for the controller. The key question then is when should we use global planning versus local control?
-
-Our framework can be broken down into three major components: (1) A global motion planner to generate gross motion of the deformable object; (2) A local controller for refinement of the configuration of the deformable object; and (3) A novel deadlock prediction algorithm to determine when to use planning versus control. Figure~\ref{fig:main_loop_diagram} shows how these components are connected, switching between a local controller loop and planned path execution loop as needed. In the following sections we describe each component in turn, starting with the local controller.
 
 
 \subsection{Local Control}
@@ -20,15 +20,14 @@ The role of the local controller is not to perform the whole task, but rather to
 
 An important limitation of this approach is that the individual navigation functions used by these controllers are defined and applied independently of each other; this means that the navigation functions that are combined to define the direction to move the deformable object can cause the controller to move the end effectors on opposite sides of an obstacle, leading to poor local minima, i.e. becoming stuck. Figure~\ref{fig:overstretch_example} shows our motivating example of this type of situation. Other examples of this kind of situation are shown in Section~\ref{sec:simulation_experiments}. In addition, while this local controller prevents collision between the robot and obstacles, it does not explicitly have any ability to \textit{go around} obstacles.
 
-In order to address these limitations we introduce a novel deadlock prediction algorithm to detect when the system $(\robotconfig_t, \deformconfig_t)$ is in a state that will lead to deadlock (i.e. becoming stuck) if we continue to use the local controller.
-
-
-\begin{figure}[t]
+\begin{figure}[h]
     \centering
     \includegraphics[width=\columnwidth]{OverstretchExample}
     \caption{Motivating example for deadlock prediction. The local controller moves the grippers on opposite sides of an obstacle, while the geodesic between the grippers (red line) cannot move past the pole, eventually leading to overstretch or tearing of the deformable object if the robot does not stop moving towards the goal.}
     \label{fig:overstretch_example}
 \end{figure}
+
+In order to address these limitations we introduce a novel deadlock prediction algorithm to detect when the system $(\robotconfig_t, \deformconfig_t)$ is in a state that will lead to deadlock (i.e. becoming stuck) if we continue to use the local controller.
 
 \subsection{Predicting Deadlock}
 \label{sec:predicting_deadlock}
@@ -51,9 +50,7 @@ In general we cannot predict if the system will get stuck in the limit; to do so
 
 The idea central to our prediction (Alg.~\ref{alg:predict_deadlock}) is that while we may not be able to determine precisely how a given controller will steer the system, we can capture the gross motion of the system and estimate if the controller will be deadlocked. We split the prediction into two parts; first we assume that controller $\Ctrl$ is able to manipulate the deformable object with a reasonable degree of accuracy within a local neighborhood of the current state. This allows us to approximate the motion of the deformable object by following the task-defined navigation functions for each $\deformconfigI \in \deformconfig$. Examples of this approximation are shown in Figure~\ref{fig:gross_deformable_motion}.
 
-Next we use a simplified version of LocalController() which omits the stretching avoidance terms (Alg.~\ref{alg:stretching_avoidance_controller} lines 3 and 4) to predict the commands sent to the robot. These terms are omitted as they can be sensitive to the exact configuration of the deformable object, which is not considered in this approximation. If we are executing a path then we can use the planned path directly to predict overstretch.
-
-\begin{algorithm}[t]
+\begin{algorithm}[h]
 \caption{PredictDeadlock$(\ErrorFn, \robotconfig_t, \deformconfig_t, \band_t, \target, \predictionhorizon, \textrm{Path})$}
 \begin{algorithmic}[1]
     \State ConfigHistory $\gets [\textrm{ConfigHistory}, q_t]$
@@ -82,7 +79,17 @@ Next we use a simplified version of LocalController() which omits the stretching
 \end{algorithm}
 
 
-\begin{algorithm}[t]
+Next we use a simplified version of LocalController() which omits the stretching avoidance terms (Alg.~\ref{alg:stretching_avoidance_controller} lines 3 and 4) to predict the commands sent to the robot. These terms are omitted as they can be sensitive to the exact configuration of the deformable object, which is not considered in this approximation. If we are executing a path then we can use the planned path directly to predict overstretch.
+
+\subsubsection{Predicting Overstretch}
+\label{sec:overstretch}
+
+Next we introduce the notion of a \textit{virtual elastic band} (VEB) between the robot's end-effectors. This VEB represents the shortest path through the deformable object between the end-effectors. The band approximates the constraint imposed by the deformable object on the motion of the robot; if the end-effectors move too far apart, then the VEB will be too long, and thus the deformable object is stretched beyond a task-specified maximum stretching factor $\stretchmax$. Similarly, if the VEB gets caught on an obstacle and becomes too long, then the deformable object is also overstretched. By considering only the geodesic between the end-effectors, we are assuming that the rest of deformable object will comply to the environment, and does not need to be considered when predicting overstretch. The VEB representation allows us to use a fast prediction method, but does not account for the part of the material that is slack. We discuss this trade-off further in Chapter \ref{chap:learning_when_to_trust}. This VEB is based on Quinlan's path deformation algorithm~\cite{Quinlan1994} and is used both in deadlock prediction as well as global planning (Section~\ref{sec:planning_goal} and Section~\ref{sec:global_planning})
+
+
+Denote the configuration of an VEB at time $t$ as a sequence of $\nbandpoints$ points $\band_t \subset \reals^3$. The number of points used to represent an VEB can change over time, but for any given environment and deformable object there is an upper limit $\nbandpointsmax$ on the number of points used. Define $\textrm{Path}(\band)$ to be the straight line interpolation of all points in $\band$. Define the length of a band to be the length of this straight line interpolation. At each timestep the VEB is initialized with the shortest path between the end effectors through the deformable object, and then ``pulled'' tight using the internal contraction force described in ~\cite{Quinlan1994} Section~5, and a hard constraint for collision avoidance. The endpoints of the band track the predicted translation of the end effectors (Alg.~\ref{alg:band_propogation}). This band represents the constraint that must be satisfied for the object not to tear. By considering only this constraint on the object in prediction, we are implicitly relying on the object to comply to contact as it is moved by the robot. We discuss the limitations of this assumption in the discussion (Section~\ref{sec:planning_discussion}).
+
+\begin{algorithm}[h]
 \caption{ForwardPropagateBand$(\band, \robotconfig)$}
 \begin{algorithmic}[1]
     \State $(p_0, p_1) \gets$ ForwardKinematics$(\robotconfig)$
@@ -95,22 +102,7 @@ Next we use a simplified version of LocalController() which omits the stretching
 \label{alg:band_propogation}
 \end{algorithm}
 
-
-
-
-
-\subsubsection{Predicting Overstretch}
-\label{sec:overstretch}
-
-
-Next we introduce the notion of a \textit{virtual elastic band} between the robot's end-effectors. This elastic band represents the shortest path through the deformable object between the end-effectors. The band approximates the constraint imposed by the deformable object on the motion of the robot; if the end-effectors move too far apart, then the elastic band will be too long, and thus the deformable object is stretched beyond a task-specified maximum stretching factor $\stretchmax$. Similarly, if the elastic band gets caught on an obstacle and becomes too long, then the deformable object is also overstretched. By considering only the geodesic between the end-effectors, we are assuming that the rest of deformable object will comply to the environment, and does not need to be considered when predicting overstretch. The elastic band representation allows us to use a fast prediction method, but does not account for the part of the material that is slack. We discuss this trade-off further in Chapter \ref{chap:learning_when_to_trust}. This virtual elastic band is based on Quinlan's path deformation algorithm~\cite{Quinlan1994} and is used both in deadlock prediction as well as global planning (Section~\ref{sec:planning_goal} and Section~\ref{sec:global_planning})
-
-
-Denote the configuration of an elastic band at time $t$ as a sequence of $\nbandpoints$ points $\band_t \subset \reals^3$. The number of points used to represent an elastic band can change over time, but for any given environment and deformable object there is an upper limit $\nbandpointsmax$ on the number of points used. Define $\textrm{Path}(\band)$ to be the straight line interpolation of all points in $\band$. Define the length of a band to be the length of this straight line interpolation. At each timestep the elastic band is initialized with the shortest path between the end effectors through the deformable object, and then ``pulled'' tight using the internal contraction force described in ~\cite{Quinlan1994} \textsection5, and a hard constraint for collision avoidance. The endpoints of the band track the predicted translation of the end effectors (Alg.~\ref{alg:band_propogation}). This band represents the constraint that must be satisfied for the object not to tear. By considering only this constraint on the object in prediction, we are implicitly relying on the object to comply to contact as it is moved by the robot. %We discuss the limitations of this assumption in the discussion (Section~\ref{sec:discussion}).
-
-
-
-Let $\bandlength_{t+n}$ be the length of the path defined by the virtual elastic band $\band_{t+n}$ at timestep $n$ in the future, and $\bandlengthmax$ be the longest allowable band length. To use this length sequence to predict if the controller will overstretch the deformable object, we perform three filtering steps: an annealing low-pass filter, a filter to eliminate cases where the band is in freespace, and the detector itself which predicts overstretch. We use a low-pass annealing filter with annealing constant $\bandlengthannealing \in [0, 1)$ to mitigate the effect of numerical and approximation errors which could otherwise lead to unnecessary planning:
+Let $\bandlength_{t+n}$ be the length of the path defined by the VEB $\band_{t+n}$ at timestep $n$ in the future, and $\bandlengthmax$ be the longest allowable band length. To use this length sequence to predict if the controller will overstretch the deformable object, we perform three filtering steps: an annealing low-pass filter, a filter to eliminate cases where the band is in freespace, and the detector itself which predicts overstretch. We use a low-pass annealing filter with annealing constant $\bandlengthannealing \in [0, 1)$ to mitigate the effect of numerical and approximation errors which could otherwise lead to unnecessary planning:
 \begin{equation}
     \begin{split}
         \tilde \bandlength_{t + 1} &= \bandlength_{t + 1} \\
@@ -119,58 +111,34 @@ Let $\bandlength_{t+n}$ be the length of the path defined by the virtual elastic
 \end{equation}
 Second, we discard from consideration any bands which are not in contact with an obstacle; we can eliminate these cases because our local controller includes an overstretch avoidance term which will prevent overstretch in this case in general. Last we compare the filtered length of any remaining band predictions to $\bandlengthmax$; if after filtering, there is an estimated band length $\tilde \bandlength$ that is larger than $\bandlengthmax$ then we predict that the local controller will be stuck. An example of this type of detection is shown in Figure~\ref{fig:overstretch_predicted}, where the local controller will wrap the cloth around the pole, eventually becoming deadlocked in the process.
 
-
-
-
-\begin{figure}[ht]
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.5\columnwidth]{GrossDeformableMotion}
     \caption{Example of estimating the gross motion of the deformable object for a prediction horizon $\predictionhorizon = 10$. The magenta lines start from the points of the deformable object that are closest to the target points (according to the navigation function). These lines show the paths those points would follow to reach the target when following the navigation function.}
     \label{fig:gross_deformable_motion}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.5\columnwidth]{OverstretchPredicted}
-    \caption{Estimated gross motion of the deformable object (magenta lines) and end effectors (blue spheres). The virtual elastic band (black lines) is forward propagated by tracking the end effector positions, changing to cyan lines when overstretch is predicted.}
+    \caption{Estimated gross motion of the deformable object (magenta lines) and end effectors (blue spheres). The VEB (black lines) is forward propagated by tracking the end effector positions, changing to cyan lines when overstretch is predicted.}
     \label{fig:overstretch_predicted}
 \end{figure}
-
-
-
-
-
-
 
 \subsubsection{Progress Detection}
 
 Last, we track the progress of the robot and task error to estimate if the controller $\Ctrl$ is making progress towards the task goal. This is designed to detect cases when the robot is trapped against an obstacle. Naively we could look for instances when $\robotvelact = 0$ however due to sensor noise, actuation error, and using discrete math in a computer, we need to use a threshold instead. At the same time we want to avoid false positives, where the robot is moving slowly but task error is decreasing. To address these concerns we record the configuration of the robot (stored in ConfigHistory) and the task error (stored in ErrorrHistory) every time we check for deadlock, and introduce three parameters to control what it means to be making progress: history window $\historywindow$, error improvement threshold $\errorprogressthreshold$, and configuration distance threshold $\motionprogressthreshold$. If over the last $\historywindow$ timesteps, the improvement in error is less than $\errorprogressthreshold$, and the robot has moved less than $\motionprogressthreshold$, then we predict that the controller will not be able to reach the goal from the current state and trigger global planning.
 
 
-
 \subsection{Setting the Global Planning Goal}
 \label{sec:planning_goal}
 
 
-In order to enable efficient planning, we need to approximate the configuration of the deformable object in a way that captures the gross motion of the deformable object without being prohibitively expensive to use. We use the same approach from Section~\ref{sec:overstretch}, but the interpretation in this use is slightly different; the virtual elastic band is a proxy for the leading edge of the deformable object. In this way we can plan to move the deformable object to a different part of the workspace without needing to simulate the entire deformable object, instead the deformable object conforms to the environment naturally.
+In order to enable efficient planning, we need to approximate the configuration of the deformable object in a way that captures the gross motion of the deformable object without being prohibitively expensive to use. We use the same approach from Section~\ref{sec:overstretch}, but the interpretation in this use is slightly different; the VEB is a proxy for the leading edge of the deformable object. In this way we can plan to move the deformable object to a different part of the workspace without needing to simulate the entire deformable object, instead the deformable object conforms to the environment naturally.
 
+In order to make progress towards achieving the task, we want to set the goal for the global planner to be a configuration that we have not explored with the local controller. We do so in two parts; we find the set of all target points $\target_U$ which are contributing to task error, split these points into two clusters, and use the cluster centers to define the goal region of the end effectors, $\eepositiongoal$; any end-effector position within a task-specified distance $\eegoalradius$ is considered to have reached the end-effector goal (Alg.~\ref{alg:call_global_planner} lines 1-3). Second, we set the goal configuration of the VEB to be any configuration that is not similar to a \textit{blacklist} of VEBs. This blacklist is the set of all band configurations from which we predicted that the local controller would be deadlocked in the future (Section~\ref{sec:predicting_deadlock}).
 
-
-In order to make progress towards achieving the task, we want to set the goal for the global planner to be a configuration that we have not explored with the local controller. We do so in two parts; we find the set of all target points $\target_U$ which are contributing to task error, split these points into two clusters, and use the cluster centers to define the goal region of the end effectors, $\eepositiongoal$; any end-effector position within a task-specified distance $\eegoalradius$ is considered to have reached the end-effector goal (Alg.~\ref{alg:call_global_planner} lines 1-3). Second, we set the goal configuration of the virtual elastic band to be any configuration that is not similar to a \textit{blacklist} of virtual elastic bands. This blacklist is the set of all band configurations from which we predicted that the local controller would be deadlocked in the future (Section~\ref{sec:predicting_deadlock}).
-
-
-To define similarity we use Jaillet and Sim\'{e}on's \textit{visibility deformation} definition to compare two virtual elastic bands (\cite{Jaillet2008}). Intuitively two virtual elastic bands are similar if you can sweep a straight line connecting the two bands from the start points to the end points of the two bands without intersecting an obstacle. Unlike the original use, we do not constrain the start and end points of each path to match, but the algorithm is identical. We use this as a heuristic to find states that are dissimilar from states where we have already predicted that the local controller would be deadlocked. Let VisCheck$(\band, \textrm{Blacklist}) \rightarrow \{0, 1\}$ denote this visibility deformation check, returning $1$ if $\band$ is similar to a band in the blacklist and $0$ otherwise. Then
-\begin{equation}
-    \bandgoal = \{\band \mid \text{VisCheck}(\band, \textrm{Blacklist}) = 0\}
-    \label{eqn:bandgoal}
-\end{equation}
-is the set of all virtual elastic bands that are dissimilar to the Blacklist.
-
-Combined, $\eepositiongoal, \eegoalradius$, and $\bandgoal$ define what it means for the planner to have found a path to the goal (Alg.~\ref{alg:goal_check}); the end-effectors must be in the right region, and the virtual elastic band must be dissimilar to any band in the Blacklist.
-
-
-
-\begin{algorithm}[t]
+\begin{algorithm}[h]
 \caption{PlanPath$(\robotconfig_t, \deformconfig_t, \band_t, \target, \textrm{Blacklist})$}
 \begin{algorithmic}[1]
     \State $\target_U \gets$ UncoveredTargetPoints$(\target, \deformconfig_t)$
@@ -187,14 +155,22 @@ Combined, $\eepositiongoal, \eegoalradius$, and $\bandgoal$ define what it means
 \label{alg:call_global_planner}
 \end{algorithm}
 
+To define similarity we use Jaillet and Sim\'{e}on's \textit{visibility deformation} definition to compare two VEBs (\cite{Jaillet2008}). Intuitively two VEBs are similar if you can sweep a straight line connecting the two bands from the start points to the end points of the two bands without intersecting an obstacle. Unlike the original use, we do not constrain the start and end points of each path to match, but the algorithm is identical. We use this as a heuristic to find states that are dissimilar from states where we have already predicted that the local controller would be deadlocked. Let VisCheck$(\band, \textrm{Blacklist}) \rightarrow \{0, 1\}$ denote this visibility deformation check, returning $1$ if $\band$ is similar to a band in the blacklist and $0$ otherwise. Then
+\begin{equation}
+    \bandgoal = \{\band \mid \text{VisCheck}(\band, \textrm{Blacklist}) = 0\}
+    \label{eqn:bandgoal}
+\end{equation}
+is the set of all VEBs that are dissimilar to the Blacklist.
 
-\begin{algorithm}[t]
+Combined, $\eepositiongoal, \eegoalradius$, and $\bandgoal$ define what it means for the planner to have found a path to the goal (Alg.~\ref{alg:goal_check}); the end-effectors must be in the right region, and the VEB must be dissimilar to any band in the Blacklist.
+
+\begin{algorithm}[h]
 \caption{GoalCheck$(\rrtnodeset, \eepositiongoal, \bandgoal)$}
 \begin{algorithmic}[1]
     \For {$\reducedstate = (\robotconfig, \band) \in \rrtnodeset$}
         \State $\eeposition \gets$ ForwardKinematics$(\robotconfig)$
-        \If {$\left\| \eeposition[0] - \eepositiongoal[0] \right\| \leq \eegoalradius$ \textbf{and} 
-             $\left\| \eeposition[1] - \eepositiongoal[1] \right\| \leq \eegoalradius$ \textbf{and} 
+        \If {$\| \eeposition[0] - \eepositiongoal[0] \| \leq \eegoalradius$ \textbf{and} 
+             $\| \eeposition[1] - \eepositiongoal[1] \| \leq \eegoalradius$ \textbf{and} 
              $\band \in \bandgoal$}
             \State \Return \texttt{true}
         \EndIf
@@ -205,13 +181,11 @@ Combined, $\eepositiongoal, \eegoalradius$, and $\bandgoal$ define what it means
 \end{algorithm}
 
 
+The combination of local control, deadlock prediction, and global planning are shown in the MainLoop function (Alg.~\ref{alg:interleaving_mainloop}). Because the VEB is an approximation we need to predict deadlock while executing the planned path. We use the same prediction method for path execution as for the local controller. To set the maximum band length $\bandlengthmax$ used by the global planner and the deadlock prediction algorithms, we calculate the geodesic distance between the grippers through the deformable object in its ``laid-flat'' state and scale it by the task specified maximum stretching factor $\stretchmax$.
 
+% \todoin{Check consistency of parameter inputs to functions in alg blocks}
 
-The combination of local control, deadlock prediction, and global planning are shown in the MainLoop function (Alg.~\ref{alg:interleaving_mainloop}). Because the virtual elastic band is an approximation we need to predict deadlock while executing the planned path. We use the same prediction method for path execution as for the local controller. To set the maximum band length $\bandlengthmax$ used by the global planner and the deadlock prediction algorithms, we calculate the geodesic distance between the grippers through the deformable object in its ``laid-flat'' state and scale it by the task specified maximum stretching factor $\stretchmax$.
-
-\todoin{Check consistency of parameter inputs to functions in alg blocks}
-
-\begin{algorithm}[t]
+\begin{algorithm}[h]
 \caption{MainLoop$(\target, \TermCond, \ErrorFn, \deformconfig_\textrm{relaxed}, \stretchmax)$}
 \begin{algorithmic}[1]
     \State $\RelaxedDistMatrix \gets$ GeodesicDistanceBetweenEndEffectors$(\deformconfig_\textrm{relaxed})$

@@ -77,7 +77,9 @@ be the path defined by linearly interpolating between each point in order. Then,
 
 \subsection{RRT-EB}
 
-\begin{algorithm}[t]
+Our planner, RRT for Elastic Bands (RRT-EB), (Alg.~\ref{alg:bandrrt}) is based on an RRT with changes to account for a virtual elastic band in addition to the robot configuration. Lines \ref{alg:bandrrt:basic_start}-\ref{alg:bandrrt:basic_end} perform random exploration with lines \ref{alg:bandrrt:bias_start}-\ref{alg:bandrrt:bias_end} biasing the tree expansion towards the goal region. The key variations are the BestNearest function (Alg.~\ref{alg:nearest}) and the goal bias method.
+
+\begin{algorithm}[h]
 \caption{RRT-EB$(\robotconfig_t, \band_t, \eepositiongoal, \eegoalradius, \bandgoal)$}
 \begin{algorithmic}[1]
     \State $\rrtnodeset \gets \{(\robotconfig_t, \band_t)\}$
@@ -113,7 +115,7 @@ be the path defined by linearly interpolating between each point in order. Then,
 \label{alg:bandrrt}
 \end{algorithm}
 
-\begin{algorithm}[t]
+\begin{algorithm}[h]
 \caption{BestNearest$(\rrtnodeset, \rrtedgeset, \bestneardist, \pstaterand)$}
 \begin{algorithmic}[1]
     \State $\Pstatenear \gets \{ \pstate \mid \pstate \in \rrtnodeset, d_\pstate(\pstate, \pstaterand) \leq \bestneardist \}$
@@ -128,8 +130,6 @@ be the path defined by linearly interpolating between each point in order. Then,
 \end{algorithmic}
 \label{alg:nearest}
 \end{algorithm}
-
-Our planner, RRT for Elastic Bands (RRT-EB), (Alg.~\ref{alg:bandrrt}) is based on an RRT with changes to account for a virtual elastic band in addition to the robot configuration. Lines \ref{alg:bandrrt:basic_start}-\ref{alg:bandrrt:basic_end} perform random exploration with lines \ref{alg:bandrrt:bias_start}-\ref{alg:bandrrt:bias_end} biasing the tree expansion towards the goal region. The key variations are the BestNearest function (Alg.~\ref{alg:nearest}) and the goal bias method.
 
 BestNearest is based on the selection method used by~\cite{LiAOKP2016}, selecting the node of smallest cost within a radius $\bestneardist$ if one exists, falling back to standard nearest neighbour behaviour if no node in the tree is within $\bestneardist$ of the random sample. We use path length in robot configuration space $\robotCspace$ as a cost function in our implementation. This helps reduce path length and ensures that we can specify lower bounds in Section~\ref{sec:delta_sim_traj_construction}. In order to avoid calculating distances in the full configuration space when it is not necessary, our method for finding the nearest neighbor is split into two parts, first searching in robot space, then searching in the full configuration space (see Figure~\ref{fig:nearest}). Section~\ref{sec:nn_equiv} shows that this method is equivalent to searching in the full configuration space directly. $\bestneardist$ is an additional parameter compared to a standard RRT; it controls how much focus is placed on path cost versus exploration. The smaller $\bestneardist$, the less impact it has as compared to a standard RRT.  The larger $\bestneardist$ is, the harder it is to find narrow passages. We discuss further constraints on $\bestneardist$ in Section~\ref{sec:select}.
 

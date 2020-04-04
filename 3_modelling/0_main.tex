@@ -31,7 +31,7 @@ Let the configuration of a deformable object be a set of $\ndeformpoints$ points
 \end{equation}
 where $\Pinvweight = \Pinvweightexpanded \in \reals^\ndeformpoints$ is a set of non-negative weights. The rest of the environment is denoted $\obstacle$ and is assumed to be both static, and known exactly.
 
-\begin{figure}[t]
+\begin{figure}[ht]
     \centering
     \includegraphics[height=1.5in]{EuclideanVsGeodesic}
     \caption{Euclidean distance measures length of the shortest path between $\deformconfigI$ and $\deformconfigJ$ in $\reals^3$ (gold). Geodesic distance measures the length of the shortest path, constrained to stay within the deformable object (red).}
@@ -73,13 +73,6 @@ Note that $\robotconfighist$ and $\deformconfig_0$ are need in $\DeformMapping$ 
 \section{Diminishing Rigidity Jacobian}
 \label{sec:diminishing_rigidity}
 
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=2in]{method_geodesic}
-    \caption{The length of the the red segment on the rope is the geodesic distance $\geodistIJ$. $\straightvecIJ$ is the vector showing the relative position of $\deformconfigJ$ with respect to $\deformconfigI$. \rev{Fix the notation in this image}}
-    \label{fig:distance_vec_defs}
-\end{figure}
-
 The key assumption used by this method~\cite{Berenson2013} is \textit{diminishing rigidity}: the closer a gripper is to a particular part of the deformable object, the more that part of the object moves in the same way that the gripper does (i.e. more ``rigidly''). The further away a given point on the object is, the less rigidly it behaves; the less it moves when the gripper moves. In this section we refine Berenson's method by redefining $\JrotIG$ and introducing an extra parameter. This results in two parameters $\drktrans \geq 0$ and $\drkrot \geq 0$ which control how the translational and rotational rigidity scales with distance. Small values entail very rigid objects such as steel cable; high values entail very deformable objects such as fine string.
 
 For every point $\deformidx$ and every gripper $\gripperidx$ we construct a Jacobian $\Jrigid(\deformidx, \gripperidx)$ such that if $\deformconfigI$ was rigidly attached to the gripper $\gripperconfigG$ then
@@ -119,7 +112,9 @@ and then combine the results into a single matrix
 \section{Constrained Directional Rigidity}
 \label{sec:constrained_model}
 
-\begin{figure}[t]
+While the diminishing rigidity Jacobian method has been used to do practical manipulation tasks with a deformable object~\cite{Berenson2013}, we observe that this rigidity does not only diminish as the distance from the gripper increases. Instead, it is a function of a larger set of variables derived from the configuration of the object. First, the rigidity also depends on the direction of gripper motion. Figure~\ref{fig:intro_directional_rigidity} shows an example of an object's \textit{directional rigidity}. In addition capturing the effects of directional rigidity, in this section we seek to address contact with the environment, increasing the accuracy of the approximation.
+
+\begin{figure}[h!]
     \centering
     \includegraphics[width=.49\linewidth]{Intro_drag}\hfill
     \includegraphics[width=.49\linewidth]{Intro_pull}%
@@ -127,10 +122,7 @@ and then combine the results into a single matrix
     \label{fig:intro_directional_rigidity}
 \end{figure}
 
-While the diminishing rigidity Jacobian method has been used to do practical manipulation tasks with a deformable object~\cite{Berenson2013}, we observe that this rigidity does not only diminish as the distance from the gripper increases. Instead, it is a function of a larger set of variables derived from the configuration of the object. First, the rigidity also depends on the direction of gripper motion. Figure~\ref{fig:intro_directional_rigidity} shows an example of an object's \textit{directional rigidity}. In addition capturing the effects of directional rigidity, in this section we seek to address contact with the environment, increasing the accuracy of the approximation.
-
 \subsection{Model Overview}
-% The approximate model locally describes the object's motion when given a motion of the grippers. Below we describe our approach first by specifying the model and then enforcing collision constraints on the prediction this model makes.
 
 In Section~\ref{sec:diminishing_rigidity}, $\Jacobian$ is assumed to be independent of $\grippervel$ and $\obstacle$, yielding $\frac{\partial \DeformMapping}{\partial \gripperconfig} = \Jacobian(\gripperconfig, \robotconfighist, \deformconfig_0) = \Jacobian(\gripperconfig, \deformconfig)$, which is analogous to a rigid-body Jacobian. While these assumptions allow a linear relationship between $\grippervel$ and $\deformvel$, and thus computational convenience, they are not accurate in many situations (see Figure~\ref{fig:intro_directional_rigidity} for an example). In this section we augment the definition of $\Jacobian$ to include effects from $\grippervel$ and $\obstacle$:
 \begin{equation}
@@ -150,6 +142,13 @@ To incorporate the above effects into our model, we define the following variabl
     \item $\gripperconfigG$: the configuration of gripper $\gripperidx$.
     \item $\grippervelG$: the velocity of gripper $\gripperidx$.
 \end{itemize}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=2in]{method_geodesic}
+    \caption{The length of the the red segment on the rope is the geodesic distance $\geodistIJ$. $\straightvecIJ$ is the vector showing the relative position of $\deformconfigJ$ with respect to $\deformconfigI$. \rev{Fix the notation in this image}}
+    \label{fig:distance_vec_defs}
+\end{figure}
 
 Furthermore, let $\closestpointIG$ be the index of the point with the minimal geodesic distance to $\deformconfigI$ among the ones grasped by the $\gripperidx$'th gripper. We address the notion of rigidity in object motion by considering the slackness of the object and reformulating the rigidity as a function of $\geodistIG$, $\straightvecIG$, and $\grippervelG$. For each point $\deformidx$ and gripper $\gripperidx$ we compute
 \begin{equation}
@@ -217,13 +216,6 @@ Through experimentation, we obtained good results with the following functions:
 \end{equation}
 where $\drkdir$, $\drkdist$, and $\drkrot$ are non-negative parameters. Specifically, a larger $\drkdir$ indicates a greater impact on the diminishing in the rigidity from the motion reducing tension. A larger $\drkdist$ indicates a greater impact on the diminishing in the rigidity from the slackness of the object in the current state. A larger $\drkrot$ indicates a faster decrease in rotational rigidity as the distance from $\deformconfigI$ to the gripper increases. 
 
-\begin{figure}
-    \centering
-    \includegraphics[width=3in]{point_projection}
-    \caption{Projection process for points that are predicted to be in collision after movement.}
-    \label{fig:point_projection}
-\end{figure}
-
 \subsubsection{Obstacle Penetration Constraints}
 
 By combining the contributions of each individual gripper using the model developed above, we get a prediction of a point's movement from
@@ -245,85 +237,107 @@ When the prediction of $\deformconfigI$ enters the obstacle, we project any pene
 \end{equation}
 To generate $\Jacobian$ for all the points and grippers we compute $\Jacobian_\deformidx(\gripperconfig, \grippervel, \deformconfig)$ for each $\deformconfigI$. These matrices are modified using penetration constraints to get $\Jacobian_\deformidx(\gripperconfig, \grippervel, \deformconfig, \obstacle)$. These matrices are then stacked to obtain $\Jacobian(\gripperconfig, \grippervel, \deformconfig, \obstacle)$. Finally, we arrive at our approximate model: $\DeformForwardFnFull = \JacobianFull \grippervel$.
 
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=3in]{point_projection}
+    \caption{Projection process for points that are predicted to be in collision after movement.}
+    \label{fig:point_projection}
+\end{figure}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Results}
 \label{sec:modelling_results}
 
-Our goal for the constrained directional regidity model is to improve the accuracy of the deformable object motion model (for use in the controller in Section~\ref{sec:stretching_constraint_controller}), while maintaing reasonable computation speed. Our benchmark model is the diminishing rigidity model described in Section~\ref{sec:diminishing_rigidity}. To evaluate our method we perform experiments in simulation and on a physical robot. The simulator used is Bullet physics \cite{Coumans2010}, however, we emphasize that our method has no knowledge of the simulation parameters or simulation methods used therein. The simulator is used as a ``black-box,'' mainly to stand in for a perception system and to allow us to do repeatable experiments. The physical robot consists of two KUKA iiwa 7DoF arms with Robotiq 3-finger hands.
+Our goal for the constrained directional rigidity model is to improve the accuracy of the deformable object motion model (for use in the controller in Section~\ref{sec:stretching_constraint_controller}), while maintaining reasonable computation speed. Our benchmark model is the diminishing rigidity model described in Section~\ref{sec:diminishing_rigidity}. To evaluate our method we perform experiments in simulation and on a physical robot. The simulator used is Bullet physics \cite{Coumans2010}, however, we emphasize that our method has no knowledge of the simulation parameters or simulation methods used therein. The simulator is used as a ``black-box,'' mainly to stand in for a perception system and to allow us to do repeatable experiments. The physical robot consists of two KUKA iiwa 7DoF arms with Robotiq 3-finger hands.
 
-We ran experiments with scenarios involving both cloth and rope. The parameters are set as $\drkdir = 4$, $\drkdist = 10$, $\drkrot = 20$ for the new model. The parameters we used for the benchmark method are its default best value found in \cite{Berenson2013}: $\drktrans = \drkrot = 10$ for rope and $\drktrans = \drkrot = 14$ for cloth. All experiments were run on a i7-8700K 3.7 GHz CPU with 32 GB of RAM. A video showing the experiments can be found at \url{https://www.youtube.com/watch?v=Y-wPsPdQVgg}.
+We ran experiments with scenarios involving both cloth and rope.  The parameters we used for the benchmark method (Section~\ref{sec:diminishing_rigidity}) are its default best value found in \cite{Berenson2013}: $\drktrans = \drkrot = 10$ for rope and $\drktrans = \drkrot = 14$ for cloth. The parameters for the new model (Section~\ref{sec:constrained_model}) are set as $\drkdir = 4$, $\drkdist = 10$, $\drkrot = 20$ for the new model. All experiments were run on a i7-8700K 3.7 GHz CPU with 32 GB of RAM. A video showing the experiments can be found at \irosurl.
 
 \subsection{Simulation Environment Model Accuracy Results}
 
-\begin{figure}[ht]
+We evaluated model accuracy by pulling the rope in a straight line along the direction of the rope, then turning the gripper and pulling back towards the rope as shown in Figure~\ref{fig:intro_directional_rigidity}. As shown in Figure~\ref{fig:rope_model_accuracy_plot}, our new model is a better approximation of the true motion when the gripper is pulling the rope. When the gripper is turning, both the baseline and the new model produce comparable error, but when the gripper starts pulling again (this time in the opposite direction), the new model is a significantly better approximation.
+
+We also evaluated model accuracy by pulling the cloth in a similar fashion; pulling the cloth one way, turning the grippers, and then pulling in the opposite direction. As shown in Figure~\ref{fig:cloth_model_accuracy_plot}, our new model is a better approximation of the true motion when the grippers are pulling the cloth. As in the rope test, when rotating the grippers both models produce comparable error. While the cloth is folded on itself both models produce noisy results, but when the cloth lies flat again, the new model achieves lower error.
+
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.85\columnwidth]{rope_model_accuracies}
     \caption{RMS model prediction error for the simulated rope model accuracy test. The gripper pulls the rope for the first 4.5 seconds, then turns for half a second, then moves in the opposite direction at the 5 second mark.}
     \label{fig:rope_model_accuracy_plot}
 \end{figure}
-
-\begin{figure}[ht]
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.85\columnwidth]{cloth_model_accuracies}
     \caption{RMS model prediction error for the simulated cloth model accuracy test. The grippers pull the cloth for the first 2.3 seconds, then turn for 0.63 seconds, then move in the opposite direction at the 2.93 second mark. At the 5 second mark the cloth is no longer folded. }
     \label{fig:cloth_model_accuracy_plot}
 \end{figure}
 
-We evaluated model accuracy by pulling the rope in a straight line along the direction of the rope, then turning the gripper and pulling back towards the rope as shown in Figure~\ref{fig:intro_directional_rigidity}. As shown in Figure~\ref{fig:rope_model_accuracy_plot}, our new model is a better approximation of the true motion when the gripper is pulling the rope. When the gripper is turning, both the baseline and the new model produce comparable error, but when the gripper starts pulling again (this time in the opposite direction), the new model is a significantly better approximation.
-
-We also evaluated model accuracy by pulling the cloth in a similar fashion; pulling the cloth one way, turning the grippers, and then pulling in the opposite direction. As shown in Figure~\ref{fig:cloth_model_accuracy_plot}, our new model is a better approximation of the true motion when the grippers are pulling the cloth. As in the rope test, when rotating the grippers both models produce comparable error. While the cloth is folded on itself both models produce noisy results, but when the cloth lies flat again, the new model achieves lower error.
-
-
+\FloatBarrier
 
 \subsection{Physical Robot Experiments}
 
-\begin{figure}[ht]
+To evaluate our new model on a physical system, we set up an experiment with a cloth-like object manipulated by two 7DoF KUKA iiwa arms (Figure~\ref{fig:physical_experiment_screenshots}). To sense the position of the cloth, we use the AprilTags~\cite{olson2011tags} and IAI Kinect2~\cite{iai_kinect2} libraries. We use the same parameters as we used for simulated experiments. This test, which evaluates model accuracy, uses a motion profile similar to the simulation accuracy tests (Figure~\ref{fig:cloth_model_accuracies_live}). Similar to the simulation results, the new model improves performance when dragging the cloth (first and last sections of Figure~\ref{fig:cloth_model_accuracies_live}), and is comparable during rotational motion and when the cloth is resting on edge perpendicular to the table (see video).
+
+\begin{figure}[h]
     \centering
-    \includegraphics[width=.5\columnwidth,trim=0 0 6.7in 0,clip]{physical_robot_experiment_screenshots}
+    \includegraphics[width=.8\columnwidth,trim=0 0 6.7in 0,clip]{physical_robot_experiment_screenshots}
     \caption{Initial setup for the physical robot model accuracy experiment.}
     \label{fig:physical_experiment_screenshots}
 \end{figure}
-
-To evaluate our new model on a physical system, we set up an experiment with a cloth-like object manipulated by two 7DoF KUKA iiwa arms (Figure~\ref{fig:physical_experiment_screenshots}). To sense the position of the cloth, we use the AprilTags~\cite{olson2011tags} and IAI Kinect2~\cite{iai_kinect2} libraries. The parameters are set as $\drkdir = 4$, $\drkdist = 10$, $\drkrot = 10$ for the new model. This test, which evaluates model accuracy, uses a motion profile similar to the simulation accuracy tests (Figure~\ref{fig:cloth_model_accuracies_live}). Similar to the simulation results, the new model improves performance when dragging the cloth (first and last sections of Figure~\ref{fig:cloth_model_accuracies_live}), and is comparable during rotational motion and when the cloth is resting on edge perpendicular to the table (see video).
-
-\begin{figure}[ht]
+\begin{figure}[h]
     \centering
     \includegraphics[width=\columnwidth]{cloth_model_accuracies_live.png}
-    \caption{RMS model prediction error. The grippers pull the cloth toward the robot for the first 10 timesteps, upward for 5 timesteps, rotate for 15 timesteps, diagonally down and away for 9 timesteps, then directly away from the robot.}
+    \caption{RMS model prediction error for the physical cloth accuracy test. The grippers pull the cloth toward the robot for the first 10 timesteps, upward for 5 timesteps, rotate for 15 timesteps, diagonally down and away for 9 timesteps, then directly away from the robot.}
     \label{fig:cloth_model_accuracies_live}
 \end{figure}
 
+\FloatBarrier
+
 \subsection{Computation Time}
 
-\begin{figure}[t]
+To verify the practicality of our method, we gathered data comparing its computation time to the benchmark's and to using the Bullet simulator for a variety of tasks (see Figure~\ref{fig:modelling_timing_tests} and Section~\ref{sec:stretching_constraint_controller_results}). Table~\ref{tbl:simulation_time_report} shows a comparison between the average time needed to evaluate the new model and the time needed to simulate a gripper motion with the Bullet simulator. Note that the amount of time required for the simulator to converge to a stable estimate depends on many conditions, including what object is being simulated. Through experimentation we determined that 4 simulation steps were adequate for rope and 10 for cloth. Comparing the time needed to do this simulation to the time needed to evaluate our model, we see that the new model is indeed faster by at least an order of magnitude, in some cases by two orders of magnitude, confirming that, despite being slower than the diminishing rigidity model, our method still outperforms the simulator in terms of computation time. This is particularly important given the average number of times a model is evaluated in a control loop.
+
+\begin{figure}[h]
     \centering
-    \includegraphics[width=.45\linewidth]{rope_cylinder}\hfill
-    \includegraphics[width=.45\linewidth]{rope_zig_match}\\
-    \includegraphics[width=.45\linewidth]{cloth_wafr}\hfill
-    \includegraphics[width=.45\linewidth]{cloth_single_pole}%
-    \caption{Initial state of four experiments for model computation time tests, where the red points act as attractors for the deformable object. TL: rope-wrapping-cylinder; TR: rope-matching-zig-path; BR: cloth-passing-single-pole: BL: cloth-wrapping-two-cylinders.}
+    \begin{subfigure}{0.248\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{rope_cylinder}%
+        \caption{}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.248\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{cloth_single_pole}%
+        \caption{}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.248\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{cloth_wafr}%
+        \caption{}
+    \end{subfigure}\hfill
+    \begin{subfigure}{0.248\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{rope_zig_match}%
+        \caption{}
+    \end{subfigure}%
+    \caption{Initial state of the four experiments, where the red points act as attractors for the deformable object. (a) Rope wrapping cylinder. (b) Cloth passing single pole. (c) Cloth covering two cylinders. (d) Rope matching zig-path}
     \label{fig:modelling_timing_tests}
 \end{figure}
 
-
-\begin{table}[ht]
+\begin{table}[h]
 \centering
 \caption{Top two rows: Mean computation time (ms) per model prediction for a given gripper motion. BT: Bullet simulator; CDR: constrained directional rigidity. Bottom row: Mean number of times the model was evaluated when executing the controller in Section~\ref{sec:stretching_constraint_controller}.}
 \label{tbl:simulation_time_report}
 \begin{tabular}{ccccc}
-\hline
+\hline\noalign{\smallskip}
             & \makecell{rope-wrapping\\-cylinder} 
             & \makecell{rope-matching\\-cylinder}
             & \makecell{cloth-passing\\-single-pole}
             & \makecell{cloth-wrapping\\-two-cylinder} \\
-\hline
+\noalign{\smallskip}\hline\noalign{\smallskip}
 BT          & 0.686 & 0.571 & 19.29 & 3.680 \\
 CDR         & 0.029 & 0.014 & 1.172 & 0.339 \\
-\hline
+\noalign{\smallskip}\hline\noalign{\smallskip}
 \# evals    & 50.72 & 143.5 & 83.81 & 63.32 \\
-\hline
+\noalign{\smallskip}\hline
 \end{tabular}
 \end{table}
-
-To verify the practicality of our method, we gathered data comparing its computation time to the benchmark's and to using the Bullet simulator for a variety of tasks (see Figure~\ref{fig:modelling_timing_tests} and Section~\ref{sec:stretching_constraint_controller_results}). Table~\ref{tbl:simulation_time_report} shows a comparison between the average time needed to evaluate the new model and the time needed to simulate a gripper motion with the Bullet simulator. Note that the amount of time required for the simulator to converge to a stable estimate depends on many conditions, including what object is being simulated. Through experimentation we determined that 4 simulation steps were adequate for rope and 10 for cloth. Comparing the time needed to do this simulation to the time needed to evaluate our model, we see that the new model is indeed faster by at least an order of magnitude, in some cases by two orders of magnitude, confirming that, despite being slower than the diminishing rigidity model, our method still outperforms the simulator in terms of computation time. This is particularly important given the average number of times a model is evaluated in a control loop.
