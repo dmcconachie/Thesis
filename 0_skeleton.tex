@@ -25,9 +25,14 @@
 
 \usepackage{placeins}
 
-\reversemarginpar
-\usepackage{todonotes}
-% \usepackage[disable]{todonotes}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \reversemarginpar
+% \usepackage{todonotes}
+\usepackage[disable]{todonotes}
+\newcommand{\todoin}[1][]{\todo[inline,#1]}
+% \newcommand{\rev}[1]{\textcolor{red}{#1}}
+\newcommand{\rev}[1]{}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -94,8 +99,8 @@
 % \dedicationpage{For all the people}
 
 % Optional Acknowledgements page
-% \startacknowledgementspage
-% \input{intro/acknowledgements}
+\startacknowledgementspage
+\input{1_intro/acknowledgements}
 
 % Optional Preface page
 %\startprefacepage
@@ -129,6 +134,7 @@
 \subimport{5_mab/}{0_main}
 \subimport{6_interleaving_framework/}{0_main}
 \subimport{7_classifier_learning/}{0_main}
+\subimport{8_conclusion/}{conclusion}
 
 % \startappendices
 % \input{appendices/0_main}
