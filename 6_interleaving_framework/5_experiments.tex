@@ -201,7 +201,7 @@ In order to show that our method is practical for a physical robotic system, not
 \subsection{Experiment Setup}
 
 \subsubsection{Robotic Platform:}
-Val is a stationary robotic platform with a 2-DOF torso, two 7-DOF arms, and a rotary pincer per arm. As in the simulated environments it is assumed that Val is already holding the cloth, leaving 16 DOF to be controlled and planned for ($\robotCspace = \reals^{16})$.
+Val is a stationary robotic platform with a 2-DoF torso, two 7-DoF arms, and a rotary pincer per arm. As in the simulated environments it is assumed that Val is already holding the cloth, leaving 16 DoF to be controlled and planned for ($\robotCspace = \reals^{16})$.
 
 
 \subsubsection{Cloth Perception:}
@@ -230,7 +230,7 @@ $K_T$ and $K_L$ are task defined scale factors which we set to $1.5$ and $1.0001
 
 \subsection{Experiment Results}
 
-We use the same deadlock, distance, and planner parameters as used in the simulation experiments, performing 500 smoothing iterations once a path is found. We constrain the rotation of the end-effectors to stay within 1.6 radians of their starting orientation during the planning process as well as constrain the grippers to stay close to the table. This forces the planner to move the placemat around the obstacle rather than over the obstacle. Last, we also introduce planning restarts \cite{Wedge2008} into the planning process in order to address the greater complexity added by using a 16-DOF robot and the relatively strict workspace constraints; the restart timeout we set is 60 seconds.
+We use the same deadlock, distance, and planner parameters as used in the simulation experiments, performing 500 smoothing iterations once a path is found. We constrain the rotation of the end-effectors to stay within 1.6 radians of their starting orientation during the planning process as well as constrain the grippers to stay close to the table. This forces the planner to move the placemat around the obstacle rather than over the obstacle. Last, we also introduce planning restarts \cite{Wedge2008} into the planning process in order to address the greater complexity added by using a 16-DoF robot and the relatively strict workspace constraints; the restart timeout we set is 60 seconds.
 
 Tables~\ref{tab:live_robot_stats_planning} and \ref{tab:live_robot_stats_smoothing} show the planning and smoothing statistics across 100 planning trials with identical starting configurations, but different random seeds. On average planning and smoothing takes less than 60 seconds, with forward kinematics and collision checking dominating the planning time. The restart timeout was unused in 68 out of 100 trials, with the other 32 trials requiring a total of 50 restarts between them. Figure~\ref{fig:placemat_planning_time} shows that the planning time follows a ``heavy tail'' distribution typical of sampling-based planners.
 

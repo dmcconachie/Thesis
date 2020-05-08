@@ -1,6 +1,7 @@
 \chapter{Estimating Model Utility}
+\label{chap:mab}
 
-In the previous chapters, we have been working with a single model and a single controller for any given task. When given a new task however, a new choice needs to be made for what model and controller is most suitable. Rather than assuming we have a single high-fidelity model of a deformable object interacting with its environment, our approach in this chapter is to have multiple models available for use, any one of which may be useful at a given time. We do not assume these models are correct, we simply treat the models as having some measurable \textit{utility} to the task. The \textit{utility} of a given model is the expected reduction in task error when using this model to generate robot motion. As the task proceeds, the utility of a given model may change, making other models more suitable for the current part of the task. However, without testing a model's prediction, we do not know its true utility. Testing every model in the set is impractical, as all models would need to be tested at every step, and performing a test changes the state of the object and may drive it into a local minimum. The key question is then which model should be selected for testing at a given time.
+In the previous chapters, we have been working with a single model and a single controller for any given task. When given a new task however, a new choice needs to be made for what model and controller is most suitable. Rather than assuming we have a single high-fidelity model of a deformable object interacting with its environment, our approach in this chapter is to have multiple models available for use, any one of which may be useful at a given time. We do not assume these models are correct, we simply treat the models as having some measurable \textit{utility} for the task. The \textit{utility} of a given model is the expected reduction in task error when using this model to generate robot motion. As the task proceeds, the utility of a given model may change, making other models more suitable for the current part of the task. However, without testing a model's prediction, we do not know its true utility. Testing every model in the set is impractical, as all models would need to be tested at every step, and performing a test changes the state of the object and may drive it into a local minimum. The key question is then which model should be selected for testing at a given time.
 
 The central contribution of this chapter is framing the model selection problem as a Multi-armed Bandit (MAB) problem where the goal is to find the model that has the highest utility for a given task. An arm represents a single model of the deformable object; to ``pull'' an arm is to use the arm's model to generate and execute a velocity command for the robot. The reward received is the reduction in task error after executing the command. In order to determine which model has the highest utility we need to explore the model space, however we also want to exploit the information we have gained by using models that we estimate to have high utility. One of the primary challenges in performing this exploration versus exploitation trade-off is that our models are inherently coupled and non-stationary; performing an action changes the state of the system which can change the utility of every model, as well as the reward of pulling each arm. While there is work that frames robust trajectory selection as a MAB problem~\cite{Koval2015}, we are not aware of any previous work which either 1) frames model selection for deformable objects as a MAB problem; or 2) addresses the coupling between arms for non-stationary MAB problems.
 
@@ -18,14 +19,14 @@ which maps a change in robot configuration $\grippervel$ to a change in object c
 \begin{equation}
     \DeformBackwardFn : \deformCspace \times \reals^\ndeformpoints \rightarrow \gripperVspace
 \end{equation}
-which maps a desired deformable object velocity $\deformvel$ and weight $\Pinvweight$ (Section~\ref{sec:reducing_error}) to a robot velocity command $\grippervel$. $\DeformBackwardFn$ and $\DeformBackwardFn$ also take the object and robot configuration $(\deformconfig, \gripperconfig)$ and environment $\obstacle$ as additional input, however these are frequently omitted for brevity. When a model $\modelidx$ is selected for testing, the model generates a gripper command
+which maps a desired deformable object velocity $\deformvel$ and weight $\Pinvweight$ (Section~\ref{sec:reducing_error}) to a robot velocity command $\grippervel$. The deformation model $\DeformForwardFn$ and robot command function $\DeformBackwardFn$ also take the object and robot configuration $(\deformconfig, \gripperconfig)$ and environment $\obstacle$ as additional input, however these are frequently omitted for brevity. When a model $\modelidx$ is selected for testing, the model generates a gripper command
 \begin{equation}
     \grippervel_{\modelidx}(t) = \DeformBackwardFn_\modelidx(\deformvel(t), \Pinvweight(t))
     \label{eqn:grippervel}
 \end{equation}
 which is then executed for one unit of time, moving the deformable object to configuration $\deformconfig(t+1)$.
 
-The problem we address in this chapter is which model $\modelidx \in \modelset$ to select in order to to move $\ngrippers$ grippers such that the points in $\deformconfig$ align as closely as possible with some task-defined set of $\ntargetpoints$ target points $\target \subset \reals^3$, while avoiding gripper collision and excessive stretching of the deformable object. Each task defines a function $\ErrorFn$ which measures the alignment error between $\deformconfig$ and $\target$. The method we present is a local method which picks a single model $\modelidx_{*}$ at each timestep to treat as the true model. This model is then used to reduce error as much as possible while avoiding collision and excessive stretching. 
+The problem we address in this chapter is which model $\modelidx \in \modelset$ to select in order to move $\ngrippers$ grippers such that the points in $\deformconfig$ align as closely as possible with some task-defined set of $\ntargetpoints$ target points $\target \subset \reals^3$, while avoiding gripper collision and excessive stretching of the deformable object. Each task defines a function $\ErrorFn$ which measures the alignment error between $\deformconfig$ and $\target$. The method we present is a local method which picks a single model $\modelidx^*$ at each timestep to treat as the true model. This model is then used to reduce error as much as possible while avoiding collision and excessive stretching. 
 \begin{equation}
     \modelidx^* = \argmin_{\modelidx \in \modelset} \ErrorFn(\target, \deformconfig(t+1))
     \label{eqn:modelselection}
@@ -227,7 +228,7 @@ To define the process noise $\utilityprocessnoise$ we want to leverage correlati
 \label{eqn:processnoise}
 \end{split}
 \end{equation}}
-$\transitionnoisefactor$ is the standard Kalman Filter transition noise factor tuning parameter. $\correlationfactor \in [0,1]$ is the correlation strength factor; larger $\correlationfactor$ gives more weight to the arm correlation, while smaller $\correlationfactor$ gives lower weight. When $\correlationfactor$ is zero then KF-MANDB will have the same update rule as KF-MANB, thus we can view KF-MANDB as a generalizion of KF-MANB, allowing for correlation between arms.
+$\transitionnoisefactor$ is the standard Kalman Filter transition noise factor tuning parameter. $\correlationfactor \in [0,1]$ is the correlation strength factor; larger $\correlationfactor$ gives more weight to the arm correlation, while smaller $\correlationfactor$ gives lower weight. When $\correlationfactor$ is zero then KF-MANDB will have the same update rule as KF-MANB, thus we can view KF-MANDB as a generalization of KF-MANB, allowing for correlation between arms.
 
 After estimating the utility of each model and the noise parameters at the current timestep, these values are then passed into a Kalman filter which estimates a new joint distribution. The next step is the same as KF-MANB; we draw a sample from the resulting distribution, then use the model that yields the largest sample to generate the next robot command. In this way we automatically switch between exploration and exploitation as the system evolves; if we are uncertain of the utility of our models then we are more likely to choose different models from one timestep to the next. If we believe that we have accurate estimates of utility, then we are more likely to choose the model with the highest utility.
 
@@ -244,20 +245,20 @@ We test our method on three synthetic tests and three deformable object manipula
 \label{tab:controller_param_table}
 \begin{tabular}{lcccccc}
 \hline\noalign{\smallskip}
-                                                        &                       & \makecell{Synthetic\\Trials} 
-                                                                                & \makecell{Rope\\Winding}
-                                                                                & \makecell{Table\\Coverage}
-                                                                                & \makecell{Two Stage\\Coverage} \\
+                                                        &                        & \makecell{Synthetic\\Trials} 
+                                                                                 & \makecell{Rope\\Winding}
+                                                                                 & \makecell{Table\\Coverage}
+                                                                                 & \makecell{Two Stage\\Coverage} \\
 \noalign{\smallskip}\hline\noalign{\smallskip}
-\makecell[l]{$\tanse{3}$ inner\\product constant}      & $\rotvelweight$        &   - & 0.0025 & 0.0025 & 0.0025 \\
+\makecell[l]{$\tanse{3}$ inner\\product constant}       & $\rotvelweight$        &   - & 0.0025 & 0.0025 & 0.0025 \\
 \noalign{\smallskip}
-\makecell[l]{Servoing max\\gripper velocity}           & $\grippervelmaxservo$  & 0.1 &    0.2 &    0.2 &    0.2 \\
+\makecell[l]{Servoing max\\gripper velocity}            & $\grippervelmaxservo$  & 0.1 &    0.2 &    0.2 &    0.2 \\
 \noalign{\smallskip}
-\makecell[l]{Obstacle avoidance\\max gripper velocity} & $\grippervelmaxobs$    &   - &    0.2 &    0.2 &    0.2 \\
+\makecell[l]{Obstacle avoidance\\max gripper velocity}  & $\grippervelmaxobs$    &   - &    0.2 &    0.2 &    0.2 \\
 \noalign{\smallskip}
-\makecell[l]{Obstacle avoidance\\scale factor}         & $\obsavoidfactor$      &   - &    200 &   1000 &   1000 \\
+\makecell[l]{Obstacle avoidance\\scale factor}          & $\obsavoidfactor$      &   - &    200 &   1000 &   1000 \\
 \noalign{\smallskip}
-\makecell[l]{Stretching correction\\scale factor}      & $\stretchweightfactor$ &   - &  0.005 &   0.03 &   0.03 \\
+\makecell[l]{Stretching correction\\scale factor}       & $\stretchweightfactor$ &   - &  0.005 &   0.03 &   0.03 \\
 \noalign{\smallskip}\hline
 \end{tabular}
 

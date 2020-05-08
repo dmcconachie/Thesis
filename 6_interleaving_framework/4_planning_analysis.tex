@@ -1,7 +1,7 @@
 \section{Probabilistic Completeness of Global Planning}
 \label{sec:analysis}
 
-Proving probablistic completeness in $\pspace$ is challenging due to the multi-modal nature of the problem. Specifically, as the virtual elastic band moves in and out of contact the dimensionality of the manifold that the system is operating in can change. In addition, the virtual elastic band forward propagation function (Alg.~\ref{alg:band_propogation}) can allow the band to ``snap tight'' as the grippers move past the edge of an obstacle, changing the number of points in the band representation as it does so. By leveraging the assumptions from Section~\ref{sec:rpath_assumptions}, we are able to bypass most of these challenges by focusing on the portion of $\pspace$ that can be analyzed; i.e. $\robotCspace$.
+Proving probabilistic completeness in $\pspace$ is challenging due to the multi-modal nature of the problem. Specifically, as the virtual elastic band moves in and out of contact the dimensionality of the manifold that the system is operating in can change. In addition, the virtual elastic band forward propagation function (Alg.~\ref{alg:band_propogation}) can allow the band to ``snap tight'' as the grippers move past the edge of an obstacle, changing the number of points in the band representation as it does so. By leveraging the assumptions from Section~\ref{sec:rpath_assumptions}, we are able to bypass most of these challenges by focusing on the portion of $\pspace$ that can be analyzed; i.e. $\robotCspace$.
 
 This section proves the probabilistic completeness of the planning approach in two major steps.  First, it will show that the approach for selecting the nearest node in the tree for expansion is equivalent to performing a nearest-neighbor query in the full space.  Second, it proves that our algorithm will eventually return a path that is $\deltar$-similar to an optimal $\delta$-robust solution to the planning problem with probability 1 (if it exists), or it will terminate early having found an alternate path to the goal region. Recall that we do not require an optimal path, only a feasible one.
 
@@ -133,7 +133,7 @@ Denote $\robotconfig^*_k$ to be the center of the $k^{th}$ covering hyper-ball f
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.7\columnwidth]{CoveringBallSequence}
-    \caption{Example covering ball sequence for an example reference path with a distance along the path of $\ballseparation$ between each ball. Given that the path is $\deltar$-robust, each ball is a subset of $\robotCvalid$. \rev{Update figure with correct notation}}
+    \caption{Example covering ball sequence for an example reference path with a distance along the path of $\ballseparation$ between each ball. Given that the path is $\deltar$-robust, each ball is a subset of $\robotCvalid$.}
     \label{fig:covering_ball_sequence}
 \end{figure}
 
@@ -305,7 +305,7 @@ follows directly.
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.3\columnwidth]{nearest_neighbour_domination_region}
-    \caption{Minimum domination region for a node $\pstate_i$, adapted from \citet{LiAOKP2016} Lemma 23. Sampling $\pstaterand$ in the shaded region guarantees that a node $\pstatenear \in \hyperball_{\deltar}(\pstate_k^*)$ is selected for propagation so that either $\pstatenear = \pstate_i$ or $\cost(\pstatenear) < \cost(\pstate_i)$. \rev{Update notation in this figure}}
+    \caption{Minimum domination region for a node $\pstate_i$, adapted from \citet{LiAOKP2016} Lemma 23. Sampling $\pstaterand$ in the shaded region guarantees that a node $\pstatenear \in \hyperball_{\deltar}(\pstate_k^*)$ is selected for propagation so that either $\pstatenear = \pstate_i$ or $\cost(\pstatenear) < \cost(\pstate_i)$.}
     \label{fig:Yanbo_lemma_23_figure}
 \end{figure}
 

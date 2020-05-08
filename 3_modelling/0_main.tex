@@ -10,7 +10,7 @@ One of the key challenges in manipulating deformable objects is the inherent dif
 \end{align*}
 Computation of an exact Jacobian $\Jacobian(\gripperconfig)$ at a given configuration $\gripperconfig$ is often computationally intractable and requires high-fidelity models anbd simulators, so instead approximations are frequently used.
 
-In this chapter we discuss a \textit{diminishing-rigidty} based approximation first introduced by \citet{Berenson2013} and extensions of this model. The diminishing-rigidity model assumes that points on the deformable object that are near a gripper move ``almost rigidly'' with respect to the gripper while points that are further away move ``less rigidly''. In addition to this Jacobian-based model, we also introduce a non-linear modification of the diminishing-rigidity Jacobian which more accurately captures the effect of the direction of gripper motion and obstacles.
+In this chapter we discuss a \textit{diminishing-rigidity} based approximation first introduced by \citet{Berenson2013} and extensions of this model. The diminishing-rigidity model assumes that points on the deformable object that are near a gripper move ``almost rigidly'' with respect to the gripper while points that are further away move ``less rigidly''. In addition to this Jacobian-based model, we also introduce a non-linear modification of the diminishing-rigidity Jacobian which more accurately captures the effect of the direction of gripper motion and obstacles.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -18,14 +18,14 @@ In this chapter we discuss a \textit{diminishing-rigidty} based approximation fi
 
 Let the robot be represented by a set of $\ngrippers$ grippers with configuration $\gripperconfig \in \gripperCspace$.  We assume that the robot configuration can be measured exactly; in this work we assume the robot to be a set of free floating grippers; in practice we can track the motion of these with inverse kinematics on robot arms (see Sec~\ref{sec:stretching_avoidance_controller_physical_robot_implementation} for an implementation). We use the Lie algebra~\cite{Murray1994} of $\se3$ to represent robot gripper velocities. This is the tangent space of $\se3$, denoted as $\tanse3$. The velocity of a single gripper $\gripperidx$ is then $\grippervelG = \grippervelindiv \in \tanse{3}$ where $\transvelG$ and $\rotvelG$ are the translational and rotational components of the gripper velocity. We define the velocity of the entire robot to be $\grippervel = \grippervelexpanded \in \gripperVspace$. We define the inner product of two gripper velocities $\grippervel_1, \grippervel_2 \in \tanse3$ to be 
 \begin{equation}
-    \grippervelinnerprod = \grippervelinnerprodfull = \grippervelinnerprodexpanded \enspace,
+    \grippervelinnerprod = \grippervelinnerprodexpanded \enspace,
 \end{equation}
-where $\rotvelweight$ is a non-negative scaling factor relating rotational and translational velocities. This defines the $\tanse3$ norm
+where $\rotvelweight > 0$ is scaling factor relating rotational and translational velocities. This defines the $\tanse3$ norm
 \begin{equation}
-    \grippervelGnormsq = \innerprod{\grippervelG}{\grippervelG}_\rotvelweight \enspace .
+    \grippervelGnormsq = \innerprod{\grippervelG}{\grippervelG} \enspace .
 \end{equation}
 
-Let the configuration of a deformable object be a set of $\ndeformpoints$ points with configuration $\deformconfig = \deformconfigexpanded \in \deformCspace$. We assume that we have a method of sensing $\deformconfig$. Let $\RelaxedDistMatrix$ be a symmetric $\ndeformpoints \times \ndeformpoints$ matrix where $\geodistIJ$ is the the geodesic distance (see Figure~\ref{fig:geodesic}) between $\deformconfigI$ and $\deformconfigJ$ when the deformable object is in its ``natural'' or ``relaxed'' state. To measure the norm of a deformable object velocity $\deformvel = \deformvelexpanded \in \deformVspace$ we will use a weighted Euclidean norm
+Let the configuration of a deformable object be a set of $\ndeformpoints$ points with configuration $\deformconfig = \deformconfigexpanded \in \deformCspace$. We assume that we have a method of sensing $\deformconfig$. Let $\RelaxedDistMatrix$ be a symmetric $\ndeformpoints \times \ndeformpoints$ matrix where $\geodistIJ$ is the the geodesic distance (see Figure~\ref{fig:geodesic}) between $\deformconfigI$ and $\deformconfigJ$ when the deformable object is in its ``natural'' or ``relaxed'' state. To measure the norm of a deformable object velocity $\deformvel = \deformvelexpanded \in \deformVspace$ we will use a weighted Euclidean seminorm
 \begin{equation}
     \deformvelnormsq = \deformvelnormsqexpanded
 \end{equation}
@@ -49,7 +49,7 @@ Let a \textit{deformation model} $\DeformForwardFn$ be defined as a function whi
 \end{equation}
 For brevity this will frequently be shortened to $\deformvel = \DeformForwardFn(\grippervel)$.
 
-For Jacobian based models, we take the time derivitive of Eq.~\eqref{eqn:deform_mapping} to get
+For Jacobian based models, we take the time derivative of Eq.~\eqref{eqn:deform_mapping} to get
 \begin{equation}
 \frac{d \deformconfig}{d t} = 
     \frac{\partial \DeformMapping}{\partial \gripperconfig}  \frac{\partial \gripperconfig}{\partial t} + 
@@ -62,7 +62,7 @@ Only the first term is non-zero, thus
     \deformvel = \frac{\partial \DeformMappingExpanded}{\partial \gripperconfig} \grippervel = \JacobianFull \grippervel.
     \label{eqn:jacobian}
 \end{equation}
-Note that $\robotconfighist$ and $\deformconfig_0$ are need in $\DeformMapping$ to compute the current state of the object, but if we can sense $\deformconfig$ directly (as we assume), then $\robotconfighist$ and $\deformconfig_0$ are not needed to compute the Jacobian $\Jacobian$. Thus for Jacobian based models Eq.~\eqref{eqn:jacobian} directly defines the deformation model $\DeformForwardFn$
+Note that $\robotconfighist$ and $\deformconfig_0$ are needed in $\DeformMapping$ to compute the current state of the object, but if we can sense $\deformconfig$ directly (as we assume), then $\robotconfighist$ and $\deformconfig_0$ are not needed to compute the Jacobian $\Jacobian$. Thus for Jacobian based models Eq.~\eqref{eqn:jacobian} directly defines the deformation model $\DeformForwardFn$
 \begin{equation}
     \DeformForwardFn(\grippervel) \approx \JacobianFull \grippervel \enspace.
     \label{eqn:jacobianforwardfunction}
@@ -80,7 +80,7 @@ For every point $\deformidx$ and every gripper $\gripperidx$ we construct a Jaco
     \deformvelI = \JrigidIG \grippervelG = 
     \begin{bmatrix} \JtransIG & \JrotIG \end{bmatrix} \grippervelG \enspace .
 \end{equation}
-We then modify this Jacobian to account for the effects of \textit{diminishing rigidity}. Let the indices of the set of points grasped by gripper $\gripperidx$ be $\GraspedPointsFull \subseteq \{1, \dots, \ndeformpoints \}$. Let $\closestpointIG$ be the index of the point with minimial relaxed geodesic distance to $\deformconfigI$ among the ones grasped by gripper $\gripperidx$:
+We then modify this Jacobian to account for the effects of \textit{diminishing rigidity}. Let the indices of the set of points grasped by gripper $\gripperidx$ be $\GraspedPointsFull \subseteq \{1, \dots, \ndeformpoints \}$. Let $\closestpointIG$ be the index of the point with minimal relaxed geodesic distance to $\deformconfigI$ among the ones grasped by gripper $\gripperidx$:
 \begin{equation}
     \closestpointIG = \argmin_{j \in \GraspedPointsFull} \geodistIJ \enspace .
 \end{equation}
@@ -133,7 +133,7 @@ We now describe how $\Jacobian$ is approximated, focusing on how it accounts for
 
 \subsection{Directional Rigidity}
 
-We build on the idea proposed by Berenson~\cite{Berenson2013}, which approximates $\Jacobian$ based on the observation that the deformable object behaves rigidly near points grasped by the robot grippers. \cite{Berenson2013} encoded this effect through a simple function that only considered the distance of a point from the the nearest gripper. However, we find that we can exploit geometric information in the object's configuration to better predict the object's motion when we use a more complex model. We have observed that the key features of the deformable object configuration for predicting its motion are its deformability (which is determined by its material properties) and where it is slack. The deformation influences the transmission of the force from the grippers, i.e. the more stretchable the object, the more it will stretch when force is applied. However, when a region of the object is taut, regardless of how stretchable it is, it will move as if it were rigidly connected to a gripper (e.g. imagine a rope held taut by two grippers). We also must take into account that points are not influenced equally by different grippers, i.e. grippers farther away contribute less to the motion of a point than those closer to it.
+We build on the idea proposed by Berenson~\cite{Berenson2013}, which approximates $\Jacobian$ based on the observation that the deformable object behaves rigidly near points grasped by the robot grippers. \cite{Berenson2013} encoded this effect through a simple function that only considered the distance of a point from the the nearest gripper. However, we find that we can exploit geometric information in the object's configuration to better predict the object's motion when we use a more complex model. We have observed that the key features of the deformable object configuration for predicting its motion are its deformability (which is determined by its material properties) and where it is slack. The deformation influences the transmission of the force from the grippers, i.e., the more stretchable the object, the more it will stretch when force is applied. However, when a region of the object is taut, regardless of how stretchable it is, it will move as if it were rigidly connected to a gripper (e.g. imagine a rope held taut by two grippers). We also must take into account that points are not influenced equally by different grippers; i.e., grippers farther away contribute less to the motion of a point than those closer to it.
 
 To incorporate the above effects into our model, we define the following variables, which can be derived from $\gripperconfig, \grippervel$, and $\deformconfig$:
 \begin{itemize}
@@ -146,7 +146,7 @@ To incorporate the above effects into our model, we define the following variabl
 \begin{figure}[ht]
     \centering
     \includegraphics[width=2in]{method_geodesic}
-    \caption{The length of the the red segment on the rope is the geodesic distance $\geodistIJ$. $\straightvecIJ$ is the vector showing the relative position of $\deformconfigJ$ with respect to $\deformconfigI$. \rev{Fix the notation in this image}}
+    \caption{The length of the the red segment on the rope is the geodesic distance $\geodistIJ$. $\straightvecIJ$ is the vector showing the relative position of $\deformconfigJ$ with respect to $\deformconfigI$.}
     \label{fig:distance_vec_defs}
 \end{figure}
 
@@ -225,7 +225,7 @@ By combining the contributions of each individual gripper using the model develo
         \Jacobian(\deformidx, \ngrippers)
     \end{bmatrix} \grippervel = \Jacobian_{\deformidx}(\gripperconfig, \grippervel, \deformconfig) \grippervel
 \end{equation}
-However, at this stage, we haven't take into account the effect from the obstacles $\obstacle$. Thus the predicted $\approxPVI$ can move $\deformconfigI$ into an obstacle.
+However, at this stage, we haven't taken into account the effect from the obstacles $\obstacle$. Thus the predicted $\approxPVI$ can move $\deformconfigI$ into an obstacle.
 
 When the prediction of $\deformconfigI$ enters the obstacle, we project any penetration by the predicted $\approxPVI$ into the tangent space of the obstacle surface (Figure~\ref{fig:point_projection}). Let $d_\deformidx < \| \approxPVI \|$ be the distance to collision in direction $\approxPVI$ from point $\deformconfigI$; let $\lambda_\deformidx = \frac{d_\deformidx}{\| \approxPVI \|}$; let $n_\deformidx$ be the unit surface normal of the obstacle in contact; and let $N_\deformidx = (\eye_{3\times 3} - \vec{n}_\deformidx \vec{n}_\deformidx^+)$. Then to account for obstacles we compute
 \begin{equation}

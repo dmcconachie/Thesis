@@ -1,7 +1,7 @@
 \chapter{Local Control}
 \label{chap:local_control}
 
-The previous chapter presented multiple models that approximate the effects of gripper motion on the deformable object. Next we introduce controllers that use these models to as part of our framework for performing a broad range of tasks.
+The previous chapter presented multiple models that approximate the effects of gripper motion on the deformable object. Next we introduce controllers that use these models as part of our framework for performing a broad range of tasks.
 
 The role of the local controller is not to perform the whole task, but rather to refine the configuration of the deformable object locally. For our local controller we use a controller of the form introduced in \cite{Berenson2013} and \cite{McConachie2018}. These controllers locally minimize error while avoiding robot collision and excessive stretching of the deformable object. We present two different methods for addressing overstretch in sections \ref{sec:stretching_avoidance_controller} and \ref{sec:stretching_constraint_controller}. Both of these controllers rely on the same method for computing the direction to move the deformable object in order to reduce task error.
 
@@ -19,7 +19,7 @@ where $\deformconfig_{t+1}$ is the result of executing $\grippervel_t$ for one u
 \section{Reducing Task Error}
 \label{sec:reducing_error}
 
-We build on previous work~\cite{Berenson2013}, splitting the desired deformable object movement into two parts: an error correction part and a stretching correction part. When defining the direction we want to move the deformable object to minimize error we calculate two values; which direction to move the deformable object points $\deformvel_e$ and the importance of moving each deformable object point $\Pinvweight_e$. This is analogous to computing the gradient of error, as well as an ``importance factor'' for each part of the gradient. We need these weights to be able to differentiate between points of the object where the error function is a plateau versus points where the error function is at a local minimum~(Figure~\ref{fig:error_examples}). Typically this is achieved using a Hessian, however our error function does not have a second derivative at many points. 
+We build on previous work~\cite{Berenson2013}, splitting the desired deformable object movement into two parts: an error correction part and a stretching correction part. When defining the direction we want to move the deformable object to minimize error we calculate two values: which direction to move the deformable object points $\deformvel_e$ and the importance of moving each deformable object point $\Pinvweight_e$. This is analogous to computing the gradient of error, as well as an ``importance factor'' for each part of the gradient. We need these weights to be able to differentiate between points of the object where the error function is a plateau versus points where the error function is at a local minimum~(Figure~\ref{fig:error_examples}). Typically this is achieved using a Hessian, however our error function does not have a second derivative at many points. 
 
 \begin{figure}[h!]
     \centering
@@ -28,7 +28,7 @@ We build on previous work~\cite{Berenson2013}, splitting the desired deformable 
     \label{fig:error_examples}
 \end{figure}
 
-In order to calculate $\deformvel_e$ and $\Pinvweight_e$, we start by defining a workspace navigation for each target point $\targetK \in \target$ towards $\targetK$ using Dijkstra's algorithm. This gives us the shortest collision-free path between any point in the workspace and the target point, as well as the distance travelled along that path. Using these distances, at every timestep we for every target point $\targetK$, we recalculate which point on the deformable object $\deformconfigI$ is closest (Alg.~\ref{alg:calculate_correspondences}). The directions each navigation function indicates are added together to define the overall direction to manipulate a point (Alg.~\ref{alg:follow_nav_function} line \ref{alg:follow_nav:accumulate}). For the importance factors $\Pinvweight_{e,\deformidx}$, we take only the largest distance that $\deformconfigI$ would have to move as a way to mitigate discretization effects (Alg.~\ref{alg:follow_nav_function} line \ref{alg:follow_nav:max}).
+In order to calculate $\deformvel_e$ and $\Pinvweight_e$, we start by defining a workspace navigation function for each target point $\targetK \in \target$ towards $\targetK$ using Dijkstra's algorithm. This gives us the shortest collision-free path between any point in the workspace and the target point, as well as the distance travelled along that path. Using these distances, at every timestep for every target point $\targetK$, we recalculate which point on the deformable object $\deformconfigI$ is closest (Alg.~\ref{alg:calculate_correspondences}). The directions each navigation function indicates are added together to define the overall direction to manipulate a point (Alg.~\ref{alg:follow_nav_function} line \ref{alg:follow_nav:accumulate}). For the importance factors $\Pinvweight_{e,\deformidx}$, we take only the largest distance that $\deformconfigI$ would have to move as a way to mitigate discretization effects (Alg.~\ref{alg:follow_nav_function} line \ref{alg:follow_nav:max}).
 
 \begin{algorithm}[t]
 \caption{CalculateCorrespondences$(\deformconfig, \target)$}
@@ -273,7 +273,7 @@ A conical constraint is constructed for each gripper and points along the \texti
 \begin{figure}[h]
     \centering
     \includegraphics[width=.8\linewidth]{Stretching_vector_method}
-    \caption{The arrows in gray show the direction of each stretching vector at the corresponding gripper with respect to the gripper pair $\gripperconfigG$ and $\gripperconfigK$. Left: stretching vectors on the rope when the rope is at rest (above) or is deformed (below). Right: stretching vectors on the cloth when the cloth is at rest (above) or is deformed (below). The red lines denote the geodesic connecting the corresponding $\deformconfigGK$ and $\deformconfigKG$ on the object. \rev{check/update notation in image}}
+    \caption{The arrows in gray show the direction of each stretching vector at the corresponding gripper with respect to the gripper pair $\gripperconfigG$ and $\gripperconfigK$. Left: stretching vectors on the rope when the rope is at rest (above) or is deformed (below). Right: stretching vectors on the cloth when the cloth is at rest (above) or is deformed (below). The red lines denote the geodesic connecting the corresponding $\deformconfigGK$ and $\deformconfigKG$ on the object.}
     \label{Fig:stretching_avoidance_vector_method}
 \end{figure}
 
@@ -295,7 +295,6 @@ Many functions can satisfy the requirements of $s$. In our work, we specify the 
 \end{equation}
 where $l(\gripperconfigG)$ is the function returning the distance from the gripper to its closest obstacle. $\mathfrak{n}(\gripperconfigG)$ returns the unit surface normal of the obstacle closest to the $\gripperidx$th gripper. The idea is to make each gripper keep at least the safe distance away from the closest obstacle. While we consider free-flying grippers in this section, similar constraints can be imposed on the entire geometry of a robot arm to avoid collisions all along the arm as was done in Section~\ref{sec:stretching_avoidance_controller_physical_robot_implementation}.
 
-
 \subsection{Optimization Method}
 
 Given these constraints, we then formulate an optimization problem similar to Eq.~\eqref{eqn:jacobianbackwardfunction_sim}, replacing the approximate Jacobian model with the directional rigidity model (Section~\ref{sec:constrained_model}), and adding the new stretching and collision constraints.
@@ -313,7 +312,7 @@ Given these constraints, we then formulate an optimization problem similar to Eq
 \label{Eq:Optimization Problem}
 \end{equation}
 
-Because our objective function is not necessarily convex, we used a custom optimization method to solve the problem specified in Eq.~\ref{Eq:Optimization Problem}. Our method is a type of numerical gradient descent with an additional projection step to enforce constraints.
+Because our objective function is not necessarily convex, we used a custom optimization method to solve the problem specified in Eq.~\ref{Eq:Optimization Problem}. Our method is a type of numerical gradient descent with an additional projection step to enforce constraints. This addresses the constraints, but we are still using a local optimization method to solve a non-convex problem. In practice this has been a significant limitation for our experiments.
 
 Our method's outer loop computes the numerical gradient of the objective function. An inner loop then performs backtracking line search to find the gradient step size. However, the gradient step may cross a constraint boundary, thus after we compute the step size, we check if any constraint has been violated after taking the step. If it has, we project the step back to the feasible space. A simple projection to the boundary of a violated constraint may satisfy that constraint but violate others. Instead, to perform the projection, we solve a convex optimization problem (using the Gurobi optimizer \cite{Gurobi2016}) to find the nearest feasible point. This is possible because all the constraints in our problem are convex. Once such a point is found, the outer loop continues to iterate until convergence.
 

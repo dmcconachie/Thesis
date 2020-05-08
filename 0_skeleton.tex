@@ -31,11 +31,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % \reversemarginpar
-% \usepackage{todonotes}
-\usepackage[disable]{todonotes}
+\usepackage{todonotes}
+% \usepackage[disable]{todonotes}
 \newcommand{\todoin}[1][]{\todo[inline,#1]}
-% \newcommand{\rev}[1]{\textcolor{red}{#1}}
-\newcommand{\rev}[1]{}
+\newcommand{\rev}[1]{\textcolor{red}{#1}}
+% \newcommand{\rev}[1]{}
+\usepackage[normalem]{ulem}
+% \newcommand\rsout{\bgroup\markoverwith{\textcolor{red}{\rule[0.5ex]{2pt}{0.4pt}}}\ULon}
+\newcommand{\rsout}[1]{\rev{\sout{#1}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -82,7 +85,7 @@
 {Associate Professor \dmitry, Chair\\
  Professor Jessie Grizzle\\
  Associate Professor Chad Jenkins\\
- Professor Leslie Pack Kaelbling}
+ Professor Leslie Pack Kaelbling, Massachusetts Institute of Technology}
 
 % Begin the front matter as required by Rackham dissertation guidelines
 \initializefrontsections
@@ -90,7 +93,7 @@
 % Optional Frontispiece
 % \frontispiece{\includegraphics[width=6in]{intro/happy} Find a cool picture to go here.}
 
-% Optional, but recommended, Copyright page
+% Copyright page, copyright is optional, the rest is not.
 \copyrightpage{\dale}{dmcconac@umich.edu}{0000-0002-2615-3473}
 
 % Page numbering. If you don't include a frontispiece or copyright page, you'll need to change this for two-sided printing.

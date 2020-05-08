@@ -1,6 +1,6 @@
 \chapter{Related Work}
 
-Robotic manipulation of deformable objects has been studied in many contexts ranging from surgery to industrial manipulation (see \cite{Khalil2010, Jimenez2012, Sanchez2018deformablesurvey} for surveys). Below we discuss the most relevant methods to the work presented in this dissertation, starting with methods of modelling and simulating deformable objects. We then discuss visual servoing and other local control methods for performing deformable object manipulation tasks. Next we discuss related work for model selection and using multiple models for control. We then describe work relevant to combining local controllers and global planners for acomplishing tasks. We conclude with related work in motion planning for deformable objects and ways to consider topology in planning.
+Robotic manipulation of deformable objects has been studied in many contexts ranging from surgery to industrial manipulation (see \cite{Khalil2010, Jimenez2012, Sanchez2018deformablesurvey} for surveys). Below we discuss the most relevant methods to the work presented in this dissertation, starting with methods of modelling and simulating deformable objects. We then discuss visual servoing and other local control methods for performing deformable object manipulation tasks. Next we discuss related work for model selection and using multiple models for control. We then describe work relevant to combining local controllers and global planners for accomplishing tasks. We conclude with related work in motion planning for deformable objects and ways to consider topology in planning.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -16,11 +16,7 @@ Our work is complementary to methods that adapt the model of the object during m
 
 \section{Local Control for Manipulation Tasks}
 
-% \citet{Hirai2000} proposes an iterative visual-servoing controller, which aligns interest points on the deformable object to targets. Its control law is based on modeling the deformable object as a lattice of interconnected springs. \citet{Wada2001} uses a similar spring model to formulate a PID controller that aligns interest points to targets. While effective, these methods rely on models like those above and thus suffer from the above issues.
-
 Given a model such as those above, researchers have investigated various control methods to manipulate deformable objects. Model-based visual servoing approaches bypass planning entirely, and instead use a local controller to determine how to move the robot end-effector for a given task \cite{Hirai2000, Wada2001, Smolen2009}. Other approaches \cite{Berenson2013, Navarro-Alarcon2014, NavarroAlarcon2016, NavarroAlarcon2018} bypass the need for an explicit deformable object model, instead using approximations of the Jacobian to drive the deformable object to the attractor of the starting state. More recent work by \citet{Hu2018deformable_gpr} has enabled the use of Gaussian process regression while controlling a deformable object. Our work builds on \citet{Berenson2013}, capturing overstretching and obstacle avoidance into control constraints that are more effective at preventing damage to the deformable object.
-
-\todoin{Platt and Groupen?}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -47,7 +43,6 @@ Previous approaches to proving probabilistic completeness for efficient planning
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Interleaving Planning and Control for Deformable Object Manipulation}
-\todoin{Rename this section - reference TAMP somewhere}
 
 The use of a local controller is not considered in the above methods, instead relying on a global planner (and thus implicitly the accuracy of the simulator) to generate a path that completes the entire task. In contrast, our framework combines the strengths of global planning with the strengths of local control in order to perform tasks.
 
